@@ -1,0 +1,613 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Create Account - Stefi Travel{% endblock %}
+
+{% block extra_css %}
+<style>
+    .registration-section {
+        background: linear-gradient(135deg, 
+            rgba(59, 113, 254, 0.03) 0%, 
+            rgba(118, 75, 162, 0.03) 100%),
+            url('{% static "images/registration-bg.jpg" %}') center/cover;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 0;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .registration-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, 
+            rgba(59, 113, 254, 0.1) 0%, 
+            rgba(118, 75, 162, 0.1) 100%);
+        z-index: 1;
+    }
+    
+    .registration-container {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+    
+    .registration-card {
+        background: rgba(255, 255, 255, 0.97);
+        backdrop-filter: blur(20px);
+        border-radius: 25px;
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+        display: flex;
+        min-height: 700px;
+    }
+    
+    .registration-left {
+        flex: 1;
+        background: linear-gradient(135deg, var(--primary-color), #2a5bcc);
+        color: white;
+        padding: 3rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .registration-left::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 100%;
+        height: 200%;
+        background: url('{% static "images/pattern.svg" %}') center/cover;
+        opacity: 0.1;
+        transform: rotate(15deg);
+    }
+    
+    .registration-right {
+        flex: 1.5;
+        padding: 3rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        overflow-y: auto;
+    }
+    
+    .registration-logo {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .registration-logo-icon {
+        background: linear-gradient(135deg, var(--primary-color), #2a5bcc);
+        width: 70px;
+        height: 70px;
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        box-shadow: 0 10px 30px rgba(59, 113, 254, 0.3);
+    }
+    
+    .registration-form .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .registration-form .form-label {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+    }
+    
+    .registration-form .form-label i {
+        margin-right: 0.75rem;
+        color: var(--primary-color);
+        width: 20px;
+    }
+    
+    .registration-form .form-control {
+        border: 2px solid #e9ecef;
+        border-radius: 12px;
+        padding: 0.875rem 1.25rem;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: #fff;
+    }
+    
+    .registration-form .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(59, 113, 254, 0.15);
+        transform: translateY(-1px);
+    }
+    
+    .registration-form .form-control::placeholder {
+        color: #9aa0a6;
+    }
+    
+    .password-strength {
+        height: 4px;
+        background: #e9ecef;
+        border-radius: 2px;
+        margin-top: 0.5rem;
+        overflow: hidden;
+    }
+    
+    .password-strength-bar {
+        height: 100%;
+        width: 0%;
+        transition: all 0.3s ease;
+        border-radius: 2px;
+    }
+    
+    .password-requirements {
+        font-size: 0.875rem;
+        color: #6c757d;
+        margin-top: 0.5rem;
+    }
+    
+    .password-requirements ul {
+        padding-left: 1.5rem;
+        margin-bottom: 0;
+    }
+    
+    .password-requirements li {
+        margin-bottom: 0.25rem;
+    }
+    
+    .password-requirements .valid {
+        color: #28a745;
+    }
+    
+    .password-requirements .invalid {
+        color: #6c757d;
+    }
+    
+    .btn-register {
+        background: linear-gradient(135deg, var(--primary-color), #2a5bcc);
+        border: none;
+        border-radius: 12px;
+        padding: 1rem 2rem;
+        font-weight: 600;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        width: 100%;
+        margin-top: 1rem;
+        box-shadow: 0 4px 15px rgba(59, 113, 254, 0.3);
+    }
+    
+    .btn-register:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(59, 113, 254, 0.4);
+    }
+    
+    .registration-links {
+        text-align: center;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid #e9ecef;
+    }
+    
+    .feature-list {
+        list-style: none;
+        padding: 0;
+        margin: 2rem 0;
+    }
+    
+    .feature-list li {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        font-size: 1.1rem;
+    }
+    
+    .feature-list li i {
+        background: rgba(255, 255, 255, 0.2);
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        font-size: 1.2rem;
+    }
+    
+    .progress-steps {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 2rem;
+        position: relative;
+    }
+    
+    .progress-steps::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: #e9ecef;
+        z-index: 1;
+    }
+    
+    .step {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: white;
+        border: 2px solid #e9ecef;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 0.875rem;
+        position: relative;
+        z-index: 2;
+    }
+    
+    .step.active {
+        background: var(--primary-color);
+        border-color: var(--primary-color);
+        color: white;
+    }
+    
+    .step.completed {
+        background: #28a745;
+        border-color: #28a745;
+        color: white;
+    }
+    
+    .step-label {
+        position: absolute;
+        top: -25px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #6c757d;
+        white-space: nowrap;
+    }
+    
+    .step.active .step-label {
+        color: var(--primary-color);
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 992px) {
+        .registration-card {
+            flex-direction: column;
+            min-height: auto;
+        }
+        
+        .registration-left {
+            order: 2;
+            padding: 2rem;
+        }
+        
+        .registration-right {
+            order: 1;
+            padding: 2rem;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .registration-section {
+            padding: 1rem;
+        }
+        
+        .registration-card {
+            border-radius: 20px;
+        }
+        
+        .registration-left,
+        .registration-right {
+            padding: 1.5rem;
+        }
+        
+        .progress-steps {
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .progress-steps::before {
+            display: none;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Remove floating search bar for registration page -->
+<div class="registration-section">
+    <div class="registration-container">
+        <div class="registration-card">
+            <!-- Left Side - Benefits Content -->
+            <div class="registration-left">
+                <div>
+                    <h1 class="display-5 fw-bold mb-4">Join Our Travel Community</h1>
+                    <p class="lead mb-4">Create your account and start planning your dream vacations with ease.</p>
+                    
+                    <ul class="feature-list">
+                        <li>
+                            <i class="fas fa-route"></i>
+                            <span>Plan unlimited trips</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-heart"></i>
+                            <span>Save favorite destinations</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-percent"></i>
+                            <span>Exclusive member discounts</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-bell"></i>
+                            <span>Personalized travel alerts</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Secure payment processing</span>
+                        </li>
+                    </ul>
+                    
+                    <div class="mt-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <span>No credit card required</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <span>Free to sign up</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right Side - Registration Form -->
+            <div class="registration-right">
+                <div>
+                    <div class="registration-logo">
+                        <div class="registration-logo-icon">
+                            <i class="fas fa-user-plus fa-1x text-white"></i>
+                        </div>
+                        <h3 class="fw-bold text-primary mb-1">Create Account</h3>
+                        <p class="text-muted">Join thousands of travelers worldwide</p>
+                    </div>
+
+                    <!-- Progress Steps -->
+                    <div class="progress-steps">
+                        <div class="step active">
+                            <span>1</span>
+                            <span class="step-label">Account</span>
+                        </div>
+                        <div class="step">
+                            <span>2</span>
+                            <span class="step-label">Profile</span>
+                        </div>
+                        <div class="step">
+                            <span>3</span>
+                            <span class="step-label">Complete</span>
+                        </div>
+                    </div>
+
+                    <!-- Messages -->
+                    {% if messages %}
+                    <div class="mb-4">
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                            <i class="fas fa-{% if message.tags == 'success' %}check-circle{% else %}exclamation-triangle{% endif %} me-2"></i>
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <form method="post" class="registration-form">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="username" class="form-label">
+                                        <i class="fas fa-user"></i>Username
+                                    </label>
+                                    <input type="text" class="form-control" id="username" name="username" 
+                                           placeholder="Choose a username" required
+                                           value="{{ request.POST.username }}">
+                                    <div class="form-text">3-20 characters, letters and numbers only</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="mobile_number" class="form-label">
+                                        <i class="fas fa-phone"></i>Mobile Number
+                                    </label>
+                                    <input type="tel" class="form-control" id="mobile_number" name="mobile_number" 
+                                           placeholder="+91 1234567890" required
+                                           value="{{ request.POST.mobile_number }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email" class="form-label">
+                                <i class="fas fa-envelope"></i>Email Address
+                            </label>
+                            <input type="email" class="form-control" id="email" name="email" 
+                                   placeholder="your.email@example.com" required
+                                   value="{{ request.POST.email }}">
+                            <div class="form-text">We'll never share your email with anyone else.</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password" class="form-label">
+                                <i class="fas fa-lock"></i>Password
+                            </label>
+                            <input type="password" class="form-control" id="password" name="password" 
+                                   placeholder="Create a strong password" required>
+                            <div class="password-strength">
+                                <div class="password-strength-bar" id="passwordStrengthBar"></div>
+                            </div>
+                            <div class="password-requirements">
+                                <ul>
+                                    <li id="lengthReq" class="invalid">At least 8 characters</li>
+                                    <li id="upperReq" class="invalid">One uppercase letter</li>
+                                    <li id="lowerReq" class="invalid">One lowercase letter</li>
+                                    <li id="numberReq" class="invalid">One number</li>
+                                    <li id="specialReq" class="invalid">One special character</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirm_password" class="form-label">
+                                <i class="fas fa-lock"></i>Confirm Password
+                            </label>
+                            <input type="password" class="form-control" id="confirm_password" name="confirm_password" 
+                                   placeholder="Confirm your password" required>
+                            <div class="form-text" id="passwordMatchText">Passwords must match</div>
+                        </div>
+
+                        <div class="form-check mb-4">
+                            <input type="checkbox" class="form-check-input" id="terms" name="terms" required>
+                            <label class="form-check-label" for="terms">
+                                I agree to the <a href="#" class="text-primary">Terms of Service</a> and <a href="#" class="text-primary">Privacy Policy</a>
+                            </label>
+                        </div>
+
+                        <div class="form-check mb-4">
+                            <input type="checkbox" class="form-check-input" id="newsletter" name="newsletter" checked>
+                            <label class="form-check-label" for="newsletter">
+                                Send me travel tips and special offers
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn btn-register">
+                            <i class="fas fa-user-plus me-2"></i>Create Account
+                        </button>
+                    </form>
+
+                    <div class="registration-links">
+                        <p class="text-muted mb-2">Already have an account?</p>
+                        <a href="{% url 'home:login' %}" class="fw-medium text-primary">Sign in here</a>
+                        <span class="text-muted mx-2">•</span>
+                        <a href="{% url 'home:landing_page' %}" class="fw-medium text-primary">Back to home</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    // Remove floating search bar for registration page
+    $('.floating-search-container').remove();
+    
+    // Password strength checker
+    $('#password').on('input', function() {
+        const password = $(this).val();
+        let strength = 0;
+        
+        // Check password requirements
+        const hasLength = password.length >= 8;
+        const hasUpper = /[A-Z]/.test(password);
+        const hasLower = /[a-z]/.test(password);
+        const hasNumber = /[0-9]/.test(password);
+        const hasSpecial = /[^A-Za-z0-9]/.test(password);
+        
+        // Update requirement indicators
+        $('#lengthReq').toggleClass('valid', hasLength).toggleClass('invalid', !hasLength);
+        $('#upperReq').toggleClass('valid', hasUpper).toggleClass('invalid', !hasUpper);
+        $('#lowerReq').toggleClass('valid', hasLower).toggleClass('invalid', !hasLower);
+        $('#numberReq').toggleClass('valid', hasNumber).toggleClass('invalid', !hasNumber);
+        $('#specialReq').toggleClass('valid', hasSpecial).toggleClass('invalid', !hasSpecial);
+        
+        // Calculate strength
+        if (hasLength) strength += 20;
+        if (hasUpper) strength += 20;
+        if (hasLower) strength += 20;
+        if (hasNumber) strength += 20;
+        if (hasSpecial) strength += 20;
+        
+        // Update strength bar
+        $('#passwordStrengthBar').css('width', strength + '%');
+        
+        // Set color based on strength
+        let color = '#dc3545'; // Weak
+        if (strength >= 60) color = '#ffc107'; // Medium
+        if (strength >= 80) color = '#28a745'; // Strong
+        
+        $('#passwordStrengthBar').css('background-color', color);
+    });
+    
+    // Password confirmation check
+    $('#confirm_password').on('input', function() {
+        const password = $('#password').val();
+        const confirmPassword = $(this).val();
+        const matchText = $('#passwordMatchText');
+        
+        if (confirmPassword.length > 0) {
+            if (password === confirmPassword) {
+                matchText.html('✓ Passwords match').css('color', '#28a745');
+            } else {
+                matchText.html('✗ Passwords do not match').css('color', '#dc3545');
+            }
+        } else {
+            matchText.html('Passwords must match').css('color', '#6c757d');
+        }
+    });
+    
+    // Form validation
+    $('form').on('submit', function(e) {
+        let isValid = true;
+        const password = $('#password').val();
+        const confirmPassword = $('#confirm_password').val();
+        
+        // Check if passwords match
+        if (password !== confirmPassword) {
+            e.preventDefault();
+            $('#confirm_password').focus();
+            alert('Passwords do not match. Please check and try again.');
+            isValid = false;
+        }
+        
+        // Check if terms are accepted
+        if (!$('#terms').is(':checked')) {
+            e.preventDefault();
+            $('#terms').focus();
+            alert('Please accept the Terms of Service to continue.');
+            isValid = false;
+        }
+        
+        if (isValid) {
+            // Show loading state
+            const submitBtn = $(this).find('button[type="submit"]');
+            submitBtn.html('<i class="fas fa-spinner fa-spin me-2"></i>Creating account...');
+            submitBtn.prop('disabled', true);
+        }
+    });
+    
+    // Auto-hide alerts after 5 seconds
+    setTimeout(function() {
+        $('.alert').alert('close');
+    }, 5000);
+});
+</script>
+{% endblock %}

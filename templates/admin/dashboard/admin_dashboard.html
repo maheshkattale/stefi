@@ -1,0 +1,464 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Admin Dashboard - Stefi Travel{% endblock %}
+
+{% block extra_css %}
+<style>
+    .admin-dashboard {
+        background: #f8f9fa;
+        min-height: 100vh;
+    }
+    
+    .admin-sidebar {
+        background: linear-gradient(135deg, #2c3e50, #34495e);
+        color: white;
+        height: 100vh;
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 280px;
+        padding: 2rem 0;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+    }
+    
+    .admin-content {
+        margin-left: 280px;
+        padding: 2rem;
+        min-height: 100vh;
+    }
+    
+    .admin-brand {
+        text-align: center;
+        padding: 0 1.5rem 2rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        margin-bottom: 2rem;
+    }
+    
+    .admin-nav .nav-link {
+        color: rgba(255, 255, 255, 0.8);
+        padding: 0.75rem 1.5rem;
+        border-left: 3px solid transparent;
+        transition: all 0.3s ease;
+        margin: 0.25rem 0;
+    }
+    
+    .admin-nav .nav-link:hover,
+    .admin-nav .nav-link.active {
+        color: white;
+        background: rgba(255, 255, 255, 0.1);
+        border-left-color: #3498db;
+    }
+    
+    .admin-nav .nav-link i {
+        width: 20px;
+        margin-right: 0.75rem;
+        font-size: 1.1rem;
+    }
+    
+    /* Stats Cards */
+    .stats-card {
+        background: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        height: 100%;
+        border: none;
+    }
+    
+    .stats-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+    
+    .stats-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+        font-size: 1.5rem;
+    }
+    
+    .stats-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+    
+    .stats-label {
+        color: #6c757d;
+        font-weight: 500;
+    }
+    
+    .stats-trend {
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+    
+    .trend-up { color: #28a745; }
+    .trend-down { color: #dc3545; }
+    
+    /* Charts and Graphs */
+    .chart-container {
+        background: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        margin-bottom: 1.5rem;
+        height: 100%;
+    }
+    
+    .chart-header {
+        display: flex;
+        justify-content: between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+    
+    /* Tables */
+    .admin-table {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    }
+    
+    .admin-table .table {
+        margin-bottom: 0;
+    }
+    
+    .admin-table .table th {
+        background: #f8f9fa;
+        border: none;
+        padding: 1rem;
+        font-weight: 600;
+        color: #2c3e50;
+    }
+    
+    .admin-table .table td {
+        padding: 1rem;
+        vertical-align: middle;
+        border-color: #f1f3f4;
+    }
+    
+    /* Quick Actions */
+    .quick-actions .btn {
+        border-radius: 10px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    
+    .quick-actions .btn:hover {
+        transform: translateY(-2px);
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .admin-sidebar {
+            width: 100%;
+            height: auto;
+            position: relative;
+        }
+        
+        .admin-content {
+            margin-left: 0;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-dashboard">
+    <!-- Sidebar -->
+    <div class="admin-sidebar">
+        <div class="admin-brand">
+            <div class="admin-logo-icon bg-primary rounded-circle p-3 d-inline-block mb-3">
+                        <img src="{% static 'assets/logo/stefi.png'%}" width="80" alt="">
+            </div>
+            <h4 class="fw-bold mb-1 text-white">Stefi Admin</h4>
+            <small class="text-white-60">Travel Management System</small>
+        </div>
+        
+        <nav class="admin-nav">
+            <a href="{% url 'home:admin_dashboard' %}" class="nav-link active">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+            </a>
+            <a href="trips/tripplan/" class="nav-link">
+                <i class="fas fa-suitcase"></i> Trips Management
+            </a>
+            <a href="masters/destination/" class="nav-link">
+                <i class="fas fa-map-marker-alt"></i> Destinations
+            </a>
+            <a href="masters/state/" class="nav-link">
+                <i class="fas fa-globe-asia"></i> States
+            </a>
+            <a href="auth/user/" class="nav-link">
+                <i class="fas fa-users"></i> User Management
+            </a>
+            <a href="trips/tripinvoice/" class="nav-link">
+                <i class="fas fa-file-invoice-dollar"></i> Invoices
+            </a>
+            <a href="reports/" class="nav-link">
+                <i class="fas fa-chart-bar"></i> Reports
+            </a>
+            
+            <div class="mt-4 pt-3 border-top border-white-10">
+                <a href="{% url 'home:landing_page' %}" class="nav-link">
+                    <i class="fas fa-external-link-alt"></i> View Website
+                </a>
+                <a href="" class="nav-link">
+                    <i class="fas fa-cog"></i> Django Admin
+                </a>
+                <a href="{% url 'home:logout' %}" class="nav-link text-danger">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="admin-content">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="fw-bold text-dark mb-1">Admin Dashboard</h2>
+                <p class="text-muted mb-0">Welcome back, {{ user.username }}! Here's what's happening today.</p>
+            </div>
+            <div class="d-flex align-items-center">
+                <span class="badge bg-success me-3">
+                    <i class="fas fa-circle me-1"></i> Online
+                </span>
+                <span class="text-muted">{{ now|date:"F j, Y" }}</span>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="row mb-4">
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="stats-card">
+                    <div class="stats-icon bg-primary bg-gradient">
+                        <i class="fas fa-suitcase text-white"></i>
+                    </div>
+                    <div class="stats-number text-primary">{{ total_trips }}</div>
+                    <div class="stats-label">Total Trips</div>
+                    <div class="stats-trend trend-up">
+                        <i class="fas fa-arrow-up me-1"></i> {{ recent_trips }} new this month
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="stats-card">
+                    <div class="stats-icon bg-success bg-gradient">
+                        <i class="fas fa-users text-white"></i>
+                    </div>
+                    <div class="stats-number text-success">{{ total_users }}</div>
+                    <div class="stats-label">Registered Users</div>
+                    <div class="stats-trend trend-up">
+                        <i class="fas fa-arrow-up me-1"></i> {{ new_users }} new this month
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="stats-card">
+                    <div class="stats-icon bg-info bg-gradient">
+                        <i class="fas fa-rupee-sign text-white"></i>
+                    </div>
+                    <div class="stats-number text-info">₹{{ total_revenue|floatformat:0 }}</div>
+                    <div class="stats-label">Total Revenue</div>
+                    <div class="stats-trend trend-up">
+                        <i class="fas fa-arrow-up me-1"></i> 12% growth
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="stats-card">
+                    <div class="stats-icon bg-warning bg-gradient">
+                        <i class="fas fa-map-marker-alt text-white"></i>
+                    </div>
+                    <div class="stats-number text-warning">{{ popular_destinations|length }}+</div>
+                    <div class="stats-label">Active Destinations</div>
+                    <div class="stats-trend trend-up">
+                        <i class="fas fa-arrow-up me-1"></i> 5 new locations
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="row mb-4">
+            <div class="col-xl-8 mb-4">
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h5 class="mb-0">Revenue Overview (Last 6 Months)</h5>
+                        <span class="badge bg-primary">₹{{ total_revenue|floatformat:0 }} Total</span>
+                    </div>
+                    <div style="height: 300px;">
+                        <!-- This would be replaced with a real chart library like Chart.js -->
+                        <div class="text-center py-5 bg-light rounded">
+                            <i class="fas fa-chart-line fa-3x text-primary mb-3"></i>
+                            <p class="text-muted">Revenue chart would be displayed here</p>
+                            <small class="text-muted">Integration with Chart.js or similar</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-xl-4 mb-4">
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h5 class="mb-0">Popular Destinations</h5>
+                    </div>
+                    <div class="list-group list-group-flush">
+                        {% for dest in popular_destinations %}
+                        <div class="list-group-item border-0 px-0">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-medium">{{ dest.destination }}</span>
+                                <span class="badge bg-primary rounded-pill">{{ dest.trip_count }} trips</span>
+                            </div>
+                            <div class="progress mt-2" style="height: 6px;">
+                                <div class="progress-bar bg-primary" style="width: {{ dest.trip_count }}%"></div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions & Recent Activity -->
+        <div class="row">
+            <div class="col-lg-4 mb-4">
+                <div class="chart-container">
+                    <h5 class="mb-3">Quick Actions</h5>
+                    <div class="quick-actions">
+                        <div class="d-grid gap-2">
+                            <a href="trips/tripplan/add/" class="btn btn-primary">
+                                <i class="fas fa-plus me-2"></i>Create New Trip
+                            </a>
+                            <a href="masters/destination/add/" class="btn btn-success">
+                                <i class="fas fa-map-marker-alt me-2"></i>Add Destination
+                            </a>
+                            <a href="auth/user/add/" class="btn btn-info">
+                                <i class="fas fa-user-plus me-2"></i>Add User
+                            </a>
+                            <a href="trips/tripinvoice/add/" class="btn btn-warning">
+                                <i class="fas fa-file-invoice me-2"></i>Create Invoice
+                            </a>
+                            <a href="reports/" class="btn btn-secondary">
+                                <i class="fas fa-download me-2"></i>Generate Reports
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-8 mb-4">
+                <div class="admin-table">
+                    <div class="card-header bg-transparent">
+                        <h5 class="mb-0">Recent Trip Activities</h5>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Trip</th>
+                                    <th>User</th>
+                                    <th>Destination</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for trip in recent_activities %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ trip.title|truncatewords:3 }}</strong>
+                                    </td>
+                                    <td>{{ trip.user.username }}</td>
+                                    <td>{{ trip.destination }}</td>
+                                    <td>{{ trip.created_at|date:"M d, Y" }}</td>
+                                    <td>
+                                        <span class="badge bg-{% if trip.status == 'completed' %}success{% elif trip.status == 'planned' %}info{% else %}warning{% endif %}">
+                                            {{ trip.get_status_display }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Status -->
+        <div class="row">
+            <div class="col-12">
+                <div class="chart-container">
+                    <h5 class="mb-3">System Status</h5>
+                    <div class="row">
+                        <div class="col-md-3 text-center">
+                            <div class="mb-2">
+                                <i class="fas fa-database fa-2x text-primary"></i>
+                            </div>
+                            <h6>Database</h6>
+                            <span class="badge bg-success">Online</span>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <div class="mb-2">
+                                <i class="fas fa-server fa-2x text-info"></i>
+                            </div>
+                            <h6>API Server</h6>
+                            <span class="badge bg-success">Online</span>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <div class="mb-2">
+                                <i class="fas fa-shield-alt fa-2x text-warning"></i>
+                            </div>
+                            <h6>Security</h6>
+                            <span class="badge bg-success">Active</span>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <div class="mb-2">
+                                <i class="fas fa-tachometer-alt fa-2x text-success"></i>
+                            </div>
+                            <h6>Performance</h6>
+                            <span class="badge bg-success">Optimal</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    // Remove floating search bar for admin
+    $('.floating-search-container').remove();
+    
+    // Admin sidebar navigation
+    $('.admin-nav .nav-link').on('click', function() {
+        $('.admin-nav .nav-link').removeClass('active');
+        $(this).addClass('active');
+    });
+    
+    // Auto refresh data every 5 minutes
+    setInterval(function() {
+        console.log('Auto-refreshing dashboard data...');
+        // Here you would typically make AJAX calls to refresh data
+    }, 300000);
+});
+</script>
+{% endblock %}

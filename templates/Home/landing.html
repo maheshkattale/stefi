@@ -1,0 +1,942 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Stefi - Plan Your Perfect Trip{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Hero Section */
+    .hero-section {
+        background: linear-gradient(135deg, rgba(59, 113, 254, 0.9), rgba(118, 75, 162, 0.9)),
+        url('{% static "images/hero-bg.jpg" %}') center/cover;
+        color: white;
+        padding: 6rem 0;
+        position: relative;
+    }
+
+    /* Floating Search Bar */
+    .floating-search-container {
+        position: fixed;
+        top: 80px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1050;
+        width: 90%;
+        max-width: 600px;
+        transition: all 0.3s ease;
+    }
+
+    .floating-search-container.scrolled {
+        top: 10px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .search-input {
+        border: none;
+        border-radius: 50px;
+        padding: 1rem 2rem;
+        font-size: 1.1rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .search-input:focus {
+        box-shadow: 0 4px 25px rgba(59, 113, 254, 0.3);
+    }
+
+    .search-results {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        max-height: 300px;
+        overflow-y: auto;
+        display: none;
+    }
+
+    .search-result-item {
+        padding: 1rem;
+        border-bottom: 1px solid #eee;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+    }
+
+    .search-result-item:hover {
+        background-color: #f8f9fa;
+    }
+
+    .search-result-item:last-child {
+        border-bottom: none;
+    }
+
+    /* State Carousel */
+    .state-carousel {
+        padding: 2rem 0;
+    }
+
+    .state-card {
+        border: none;
+        border-radius: 15px;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        height: 100%;
+    }
+
+    .state-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .state-image {
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .state-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+        padding: 1rem;
+        color: white;
+    }
+
+    /* Destination Grid */
+    .destination-card {
+        border: none;
+        border-radius: 15px;
+        overflow: hidden;
+        transition: transform 0.3s ease;
+        height: 100%;
+    }
+
+    .destination-card:hover {
+        transform: translateY(-3px);
+    }
+
+    .destination-image {
+        height: 250px;
+        object-fit: cover;
+    }
+
+    .badge-destination {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: var(--primary-color);
+        color: white;
+    }
+
+    /* Features Section */
+    .feature-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, var(--primary-color), #2a5bcc);
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+    }
+
+    /* Statistics */
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary-color);
+    }
+    /* Destination Selection Styles */
+.destination-selection {
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.destination-main-image {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.option-card {
+    transition: all 0.3s ease;
+    cursor: pointer;
+    height: 100%;
+}
+
+.option-card:hover {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+}
+
+.option-icon {
+    width: 60px;
+    height: 60px;
+    transition: transform 0.3s ease;
+}
+
+.option-card:hover .option-icon {
+    transform: scale(1.1);
+}
+
+.stat {
+    padding: 0.5rem;
+}
+
+.stat-number {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.stat-label {
+    color: #6c757d;
+    font-size: 0.8rem;
+}
+
+.trip-item {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.trip-item:hover {
+    border-color: var(--primary-color);
+    background: #f8f9fa;
+}
+
+.hover-lift {
+    transition: all 0.3s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-2px);
+}
+
+/* Toast positioning */
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Floating Search Bar -->
+<div class="floating-search-container">
+    <div class="input-group">
+        <input type="text" class="form-control search-input" placeholder="Search destinations, states, or activities..."
+            id="globalSearch">
+        <span class="input-group-text bg-primary text-white border-0" style="border-radius: 0 50px 50px 0;">
+            <i class="fas fa-search"></i>
+        </span>
+    </div>
+    <div class="search-results" id="searchResults"></div>
+</div>
+
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center min-vh-75">
+            <div class="col-lg-8 mx-auto text-center">
+                <h1 class="display-3 fw-bold mb-4">Discover Your Next Adventure</h1>
+                <p class="lead mb-5">Plan perfect trips with detailed itineraries, budget management, and instant
+                    invoice generation</p>
+                <div class="d-flex gap-3 justify-content-center flex-wrap">
+                    <a href="{% url 'home:login' %}" class="btn btn-light btn-lg px-4 py-2">
+                        <i class="fas fa-rocket me-2"></i>Start Planning
+                    </a>
+                    <a href="#states" class="btn btn-outline-light btn-lg px-4 py-2">
+                        <i class="fas fa-compass me-2"></i>Explore Destinations
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Statistics Section -->
+<section class="py-5 bg-white">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-3 col-6 mb-4">
+                <div class="stat-number" id="statDestinations">0</div>
+                <p class="text-muted">Destinations</p>
+            </div>
+            <div class="col-md-3 col-6 mb-4">
+                <div class="stat-number" id="statTrips">0</div>
+                <p class="text-muted">Trips Planned</p>
+            </div>
+            <div class="col-md-3 col-6 mb-4">
+                <div class="stat-number" id="statHappy">0</div>
+                <p class="text-muted">Happy Travelers</p>
+            </div>
+            <div class="col-md-3 col-6 mb-4">
+                <div class="stat-number">24/7</div>
+                <p class="text-muted">Support</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- States Carousel Section -->
+<section id="states" class="state-carousel py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Explore by State</h2>
+            <p class="text-muted">Discover amazing destinations across India</p>
+        </div>
+
+        <div class="row" id="statesContainer">
+            <div class="col-12 text-center">
+                <div class="loading-spinner mx-auto"></div>
+                <p class="text-muted mt-2">Loading states...</p>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="#" class="btn btn-primary">
+                <i class="fas fa-globe-asia me-2"></i>View All States
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Popular Destinations Section -->
+<section class="py-5 bg-white">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Popular Destinations</h2>
+            <p class="text-muted">Most loved places by travelers</p>
+        </div>
+
+        <div class="row" id="destinationsContainer">
+            <div class="col-12 text-center">
+                <div class="loading-spinner mx-auto"></div>
+                <p class="text-muted mt-2">Loading destinations...</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section id="features" class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Why Choose Stefi?</h2>
+            <p class="text-muted">Everything you need for perfect trip planning</p>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="text-center">
+                    <div class="feature-icon">
+                        <i class="fas fa-route fa-2x text-white"></i>
+                    </div>
+                    <h4>Detailed Itineraries</h4>
+                    <p class="text-muted">Create hour-by-hour plans with activities, timings, and locations</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="text-center">
+                    <div class="feature-icon">
+                        <i class="fas fa-calculator fa-2x text-white"></i>
+                    </div>
+                    <h4>Budget Management</h4>
+                    <p class="text-muted">Track expenses and manage your travel budget effectively</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="text-center">
+                    <div class="feature-icon">
+                        <i class="fas fa-file-invoice-dollar fa-2x text-white"></i>
+                    </div>
+                    <h4>Instant Invoices</h4>
+                    <p class="text-muted">Generate professional invoices for your trips and expenses</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Trip Selection Modal -->
+<div class="modal fade" id="tripSelectionModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Select Trip</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="tripSelectionContent">
+                <!-- Content will be loaded here -->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Destination Selection Modal -->
+<div class="modal fade" id="destinationSelectionModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Select Destination</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="destinationSelectionContent">
+                <!-- Content will be loaded here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CTA Section -->
+<section class="py-5 bg-primary text-white">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h2 class="fw-bold mb-3">Ready to Plan Your Adventure?</h2>
+                <p class="lead mb-0">Join thousands of travelers who trust Stefi for their trip planning needs</p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <a href="{% url 'home:login' %}" class="btn btn-light btn-lg px-4">
+                    <i class="fas fa-user-plus me-2"></i>Get Started
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function showToast(title, message, type = 'info') {
+    const toast = document.createElement('div');
+    toast.className = `toast align-items-center text-white bg-${type} border-0`;
+    toast.innerHTML = `
+        <div class="d-flex">
+            <div class="toast-body">
+                <strong>${title}:</strong> ${message}
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+    `;
+    
+    document.body.appendChild(toast);
+    const bsToast = new bootstrap.Toast(toast);
+    bsToast.show();
+    
+    // Remove toast after it's hidden
+    toast.addEventListener('hidden.bs.toast', () => {
+        document.body.removeChild(toast);
+    });
+}
+    function showTripSelectionModal(destinationId, destinationName) {
+    // Simulate loading user trips (replace with actual API call)
+    const userTrips = [
+        { id: 1, name: "Summer Vacation", destination: "Goa", date: "Aug 15-20, 2024" },
+        { id: 2, name: "Business Trip", destination: "Delhi", date: "Sep 1-5, 2024" },
+        { id: 3, name: "Family Holiday", destination: "Manali", date: "Dec 20-28, 2024" }
+    ];
+
+    let tripsHtml = '';
+    if (userTrips.length === 0) {
+        tripsHtml = `
+            <div class="text-center py-4">
+                <i class="fas fa-suitcase fa-3x text-muted mb-3"></i>
+                <h6>No trips found</h6>
+                <p class="text-muted">You don't have any active trips yet.</p>
+                <button class="btn btn-primary" onclick="startNewTrip('${destinationId}', '${destinationName}')">
+                    Create New Trip
+                </button>
+            </div>
+        `;
+    } else {
+        tripsHtml = `
+            <h6 class="mb-3">Select a trip to add ${destinationName}:</h6>
+            <div class="trip-list">
+        `;
+        
+        userTrips.forEach(trip => {
+            tripsHtml += `
+                <div class="trip-item card mb-2 hover-lift" onclick="addDestinationToTrip('${destinationId}', '${trip.id}')">
+                    <div class="card-body">
+                        <h6 class="card-title mb-1">${trip.name}</h6>
+                        <p class="card-text text-muted small mb-1">${trip.destination}</p>
+                        <p class="card-text text-muted small mb-0">${trip.date}</p>
+                    </div>
+                </div>
+            `;
+        });
+        
+        tripsHtml += `</div>`;
+    }
+
+    $('#tripSelectionContent').html(tripsHtml);
+    
+    const modal = new bootstrap.Modal(document.getElementById('tripSelectionModal'));
+    modal.show();
+}
+
+function addDestinationToTrip(destinationId, tripId) {
+    console.log('Adding destination to trip:', destinationId, tripId);
+    
+    // Close the modal
+    $('#tripSelectionModal').modal('hide');
+    
+    showToast('Success', 'Destination added to your trip', 'success');
+    
+    // Redirect to trip detail page
+    setTimeout(() => {
+        window.location.href = `/trips/${tripId}/`;
+    }, 1000);
+}
+    function startNewTrip(destinationId, destinationName) {
+    console.log('Starting new trip to:', destinationName);
+    
+    // Close the modal
+    $('#destinationSelectionModal').modal('hide');
+    
+    // Show success message
+    showToast('Success', `Starting new trip to ${destinationName}`, 'success');
+    
+    // Redirect to trip creation page after a short delay
+    setTimeout(() => {
+        window.location.href = `/trips/create/?destination=${encodeURIComponent(destinationName)}`;
+    }, 1000);
+}
+
+function addToExistingTrip(destinationId, destinationName) {
+    console.log('Adding to existing trip:', destinationName);
+    
+    // Close the modal
+    $('#destinationSelectionModal').modal('hide');
+    
+    // Show trip selection modal
+    showTripSelectionModal(destinationId, destinationName);
+}
+
+function addToWishlist(destinationId) {
+    console.log('Adding to wishlist:', destinationId);
+    showToast('Added to Wishlist', 'Destination saved to your wishlist', 'success');
+}
+
+function viewDestinationDetails(destinationId) {
+    console.log('Viewing details for:', destinationId);
+    window.location.href = `/destinations/${destinationId}/`;
+}
+
+function shareDestination(destinationId) {
+    console.log('Sharing destination:', destinationId);
+    
+    if (navigator.share) {
+        navigator.share({
+            title: 'Amazing Destination',
+            text: 'Check out this beautiful destination I found!',
+            url: window.location.origin + '/destinations/' + destinationId + '/'
+        });
+    } else {
+        showToast('Share', 'Copy the link to share', 'info');
+    }
+}
+    function showDestinationSelection(destination) {
+    // Hide search results
+    searchResults.hide();
+    
+    // Create selection content
+    const selectionContent = `
+        <div class="destination-selection">
+            <!-- Destination Header -->
+            <div class="destination-header text-center mb-4">
+                <img src="${destination.image_url}" alt="${destination.name}" 
+                     class="destination-main-image rounded-3 mb-3" style="height: 200px; width: 100%; object-fit: cover;">
+                <h3 class="mb-2">${destination.name}</h3>
+                <p class="text-muted mb-3">
+                    <i class="fas fa-map-marker-alt me-1"></i>${destination.state}
+                    <span class="mx-2">•</span>
+                    ${destination.type}
+                </p>
+            </div>
+
+            <!-- Trip Options -->
+            <div class="trip-options mb-4">
+                <h6 class="mb-3">How would you like to proceed?</h6>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="option-card text-center p-4 rounded-3 border hover-lift" 
+                             onclick="startNewTrip('${destination.id}', '${destination.name}')">
+                            <div class="option-icon bg-primary rounded-circle p-3 mb-3 mx-auto">
+                                <i class="fas fa-plus text-white fa-2x"></i>
+                            </div>
+                            <h6 class="mb-2">Plan New Trip</h6>
+                            <p class="text-muted small mb-0">Create a new trip to ${destination.name}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="option-card text-center p-4 rounded-3 border hover-lift" 
+                             onclick="addToExistingTrip('${destination.id}', '${destination.name}')">
+                            <div class="option-icon bg-success rounded-circle p-3 mb-3 mx-auto">
+                                <i class="fas fa-suitcase text-white fa-2x"></i>
+                            </div>
+                            <h6 class="mb-2">Add to Existing Trip</h6>
+                            <p class="text-muted small mb-0">Add this destination to one of your current trips</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions mb-4">
+                <h6 class="mb-3">Quick Actions</h6>
+                <div class="d-flex flex-wrap gap-2">
+                    <button class="btn btn-outline-primary btn-sm" onclick="addToWishlist('${destination.id}')">
+                        <i class="fas fa-heart me-1"></i>Save to Wishlist
+                    </button>
+                    <button class="btn btn-outline-secondary btn-sm" onclick="viewDestinationDetails('${destination.id}')">
+                        <i class="fas fa-info-circle me-1"></i>View Details
+                    </button>
+                    <button class="btn btn-outline-info btn-sm" onclick="shareDestination('${destination.id}')">
+                        <i class="fas fa-share me-1"></i>Share
+                    </button>
+                </div>
+            </div>
+
+            <!-- Recent Activities (if any) -->
+            <div class="recent-activities">
+                <h6 class="mb-3">Recent Visitor Activities</h6>
+                <div class="activity-stats">
+                    <div class="row text-center">
+                        <div class="col-4">
+                            <div class="stat">
+                                <div class="stat-number text-primary">124</div>
+                                <div class="stat-label small">Trips Planned</div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="stat">
+                                <div class="stat-number text-success">4.8</div>
+                                <div class="stat-label small">Average Rating</div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="stat">
+                                <div class="stat-number text-info">89%</div>
+                                <div class="stat-label small">Recommend</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Load content into modal
+    $('#destinationSelectionContent').html(selectionContent);
+    
+    // Show modal
+    const modal = new bootstrap.Modal(document.getElementById('destinationSelectionModal'));
+    modal.show();
+    
+    // Add hover effects
+    $('.option-card').hover(
+        function() {
+            $(this).css('transform', 'translateY(-3px)');
+            $(this).css('border-color', 'var(--primary-color)');
+        },
+        function() {
+            $(this).css('transform', 'translateY(0)');
+            $(this).css('border-color', '#dee2e6');
+        }
+    );
+}
+
+    function renderDestinations(destinations) {
+        let html = '';
+        destinations.forEach(dest => {
+            console.log(dest);
+            html += `
+                <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+                    <div class="destination-card card shadow-sm">
+                        <div class="position-relative">
+                            <img src="${dest.image_url}" class="destination-image card-img-top" alt="${dest.name}">
+                            <span class="badge badge-destination">${dest.type}</span>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">${dest.name}</h5>
+                            <p class="card-text text-muted small">
+                                <i class="fas fa-map-marker-alt me-1"></i>
+                                ${dest.state}
+                            </p>
+                            <p class="card-text">${dest.description}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="badge bg-info">
+                                    <i class="fas fa-star me-1"></i>Popular
+                                </span>
+                                <a href="${dest.url}" class="btn btn-sm btn-primary">Plan Trip</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+
+        $('#destinationsContainer').html(html);
+    }
+    const searchInput = $('#globalSearch');
+    function displaySearchResults(results) {
+        if (results.length === 0) {
+            searchResults.html(`
+            <div class="search-result-item">
+                <div class="text-center text-muted py-4">
+                    <i class="fas fa-search fa-2x mb-3"></i>
+                    <h6>No destinations found</h6>
+                    <p class="small">Try different search terms or browse all destinations</p>
+                </div>
+            </div>
+        `).show();
+            return;
+        }
+
+        let html = '';
+        results.forEach(result => {
+            html += `
+            <div class="search-result-item" data-destination='${JSON.stringify(result)}'>
+                <div class="d-flex align-items-center">
+                    <img src="${result.image_url}" alt="${result.name}" 
+                         class="rounded me-3" width="50" height="50" style="object-fit: cover;">
+                    <div class="flex-grow-1">
+                        <h6 class="mb-1">${result.name}</h6>
+                        <small class="text-muted">
+                            <i class="fas fa-map-marker-alt me-1"></i>${result.state}
+                            <span class="mx-2">•</span>
+                            ${result.type}
+                        </small>
+                    </div>
+                    <div class="ms-3">
+                        <i class="fas fa-chevron-right text-muted"></i>
+                    </div>
+                </div>
+            </div>
+        `;
+        });
+
+        searchResults.html(html).show();
+
+        // Add click handler for destination selection
+        $('.search-result-item').on('click', function () {
+            const destination = $(this).data('destination');
+            showDestinationSelection(destination);
+        });
+    }
+
+
+
+    const searchResults = $('#searchResults');
+
+    $(document).ready(function () {
+        // Initialize counters with animation
+        function animateCounter(element, target) {
+            let current = 0;
+            const increment = target / 100;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    clearInterval(timer);
+                    element.text(target.toLocaleString());
+                } else {
+                    element.text(Math.floor(current).toLocaleString());
+                }
+            }, 20);
+        }
+
+        // Animate statistics
+        setTimeout(() => {
+            animateCounter($('#statDestinations'), 500);
+            animateCounter($('#statTrips'), 10000);
+            animateCounter($('#statHappy'), 95);
+        }, 1000);
+
+        // Floating search bar behavior
+        const searchContainer = $('.floating-search-container');
+        $(window).scroll(function () {
+            if ($(this).scrollTop() > 100) {
+                searchContainer.addClass('scrolled');
+            } else {
+                searchContainer.removeClass('scrolled');
+            }
+        });
+
+        // Load states via API
+
+        // Load popular destinations via API
+
+
+
+        // Load data on page load
+        loadStates();
+        loadPopularDestinations();
+
+        // Search functionality (using API)
+        let searchTimeout;
+
+        searchInput.on('input', function () {
+            const query = $(this).val().trim();
+
+            clearTimeout(searchTimeout);
+
+            if (query.length < 2) {
+                searchResults.hide().empty();
+                return;
+            }
+
+            searchTimeout = setTimeout(() => {
+                performSearch(query);
+            }, 300);
+        });
+
+
+
+        // Hide results when clicking outside
+        $(document).on('click', function (e) {
+            if (!$(e.target).closest('.floating-search-container').length) {
+                searchResults.hide();
+            }
+        });
+    });
+
+
+    // Define API URLs using Django template tags
+    const API_URLS = {
+        search: "{% url 'home:api_search' %}",
+        states: "{% url 'home:api_states' %}",
+        popularDestinations: "{% url 'home:api_popular_destinations' %}",
+        destinationTypes: "{% url 'home:api_destination_types' %}"
+    };
+
+    function renderStates(states) {
+        let html = '';
+        states.forEach(state => {
+            html += `
+                <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+                    <div class="state-card card shadow-sm">
+                        <div class="position-relative">
+                            <img src="${state.image_url}" class="state-image card-img-top" alt="${state.name}">
+                            <div class="state-overlay">
+                                <h5 class="card-title mb-0">${state.name}</h5>
+                                <small>${state.destination_count} destinations</small>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text text-muted small">${state.description}</p>
+                            <a href="${state.url}" class="btn btn-sm btn-outline-primary">Explore ${state.code}</a>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+
+        $('#statesContainer').html(html);
+
+        // Add hover effects
+        $('.state-card').hover(
+            function () {
+                $(this).find('.state-overlay').css('background', 'linear-gradient(transparent, var(--primary-color))');
+            },
+            function () {
+                $(this).find('.state-overlay').css('background', 'linear-gradient(transparent, rgba(0, 0, 0, 0.8))');
+            }
+        );
+    }
+
+    // Load states via API
+    function loadStates() {
+        $.ajax({
+            url: API_URLS.states,
+            type: 'GET',
+            success: function (response) {
+                console.log(response);
+                if (response.success) {
+                    renderStates(response.states);
+                } else {
+                    $('#statesContainer').html(`
+                    <div class="col-12 text-center">
+                        <i class="fas fa-exclamation-triangle fa-2x text-warning mb-3"></i>
+                        <p class="text-muted">Failed to load states. Please try again.</p>
+                    </div>
+                `);
+                }
+            },
+            error: function () {
+                $('#statesContainer').html(`
+                <div class="col-12 text-center">
+                    <i class="fas fa-exclamation-triangle fa-2x text-danger mb-3"></i>
+                    <p class="text-muted">Error loading states. Please refresh the page.</p>
+                </div>
+            `);
+            }
+        });
+    }
+
+    // Load popular destinations via API
+    function loadPopularDestinations() {
+        $.ajax({
+            url: API_URLS.popularDestinations,
+            type: 'GET',
+            success: function (response) {
+                console.log("response", response);
+                if (response.success) {
+                    renderDestinations(response.destinations);
+                } else {
+                    $('#destinationsContainer').html(`
+                    <div class="col-12 text-center">
+                        <i class="fas fa-exclamation-triangle fa-2x text-warning mb-3"></i>
+                        <p class="text-muted">Failed to load destinations.</p>
+                    </div>
+                `);
+                }
+            },
+            error: function () {
+                $('#destinationsContainer').html(`
+                <div class="col-12 text-center">
+                    <i class="fas fa-exclamation-triangle fa-2x text-danger mb-3"></i>
+                    <p class="text-muted">Error loading destinations.</p>
+                </div>
+            `);
+            }
+        });
+    }
+
+    // Search functionality
+    function performSearch(query) {
+        showLoading(searchInput);
+
+        $.ajax({
+            url: API_URLS.search,
+            type: 'GET',
+            data: { q: query },
+            success: function (response) {
+                hideLoading(searchInput);
+
+                if (response.success) {
+                    displaySearchResults(response.results);
+                } else {
+                    searchResults.html(`
+                    <div class="search-result-item">
+                        <div class="text-center text-muted py-3">
+                            ${response.message}
+                        </div>
+                    </div>
+                `).show();
+                }
+            },
+            error: function () {
+                hideLoading(searchInput);
+                searchResults.html(`
+                <div class="search-result-item">
+                    <div class="text-center text-danger py-3">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        Search failed. Please try again.
+                    </div>
+                </div>
+            `).show();
+            }
+        });
+    }
+</script>
+{% endblock %}
