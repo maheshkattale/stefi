@@ -175,3 +175,4 @@ def generate_invoice(request, trip_id):
                 'status': 'error'
             }
         }, status=status.HTTP_404_NOT_FOUND)
+        

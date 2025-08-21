@@ -417,7 +417,57 @@
             }, 5000);
         });
     </script>
-    
+    <script>
+        // Example AJAX call that should work
+function loadTripDetails(tripId) {
+    $.ajax({
+        url: `/api/trips/detail/${tripId}/`,
+        type: 'GET',
+        dataType: 'json',
+        xhrFields: {
+            withCredentials: true  // This is important!
+        },
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),  // Include CSRF token
+            'Authorization': `Bearer ${getAuthToken()}`  // Include auth token if using JWT
+        },
+        success: function(response) {
+            if (response.success) {
+                renderTripDetails(response.trip, response.itinerary);
+            } else {
+                console.error('Failed to load trip details:', response.message);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('API call failed:', error);
+            // Fallback to regular page load
+            window.location.href = `/trips/${tripId}/`;
+        }
+    });
+}
+
+// Helper function to get CSRF token
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// Helper function to get auth token
+function getAuthToken() {
+    // Get from localStorage, cookies, or wherever you store the token
+    return localStorage.getItem('authToken') || '';
+}
+    </script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>

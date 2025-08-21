@@ -306,6 +306,7 @@
                     </div>
 
                     <div class="row">
+
                         <div class="col-md-8">
                             <div class="mb-3">
                                 <label for="title" class="form-label">
@@ -464,6 +465,7 @@
                         <div class="form-text">Optional: Add any special instructions or preferences</div>
                     </div>
                 </div>
+                <input type="text" name="destination" id="destination" value="{% if request.GET.destination %}{{ request.GET.destination }}{% endif %}" hidden>
 
                 <!-- Form Actions -->
                 <div class="d-flex gap-3 justify-content-between pt-3 border-top">

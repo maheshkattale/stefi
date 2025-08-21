@@ -7,6 +7,8 @@ from helpers.validations import hosturl
 from Masters.models import *
 from User.models import *
 from User.serializers import *
+from trips.models import *
+from trips.serializers import *
 # API URLs
 login_url = hosturl + "/api/User/login"
 logout_url = hosturl + "/api/User/logout"
@@ -171,21 +173,30 @@ def create_trip(request):
     """Create new trip page"""
     # Get destination from query parameter if available
     destination = request.GET.get('destination', '')
-    
+    print("destination", destination)
+    user_id = request.session.get('user_id')
+    if not user_id:
+        messages.error(request, 'Please login first')
+        return redirect('home:login')
+
+
     if request.method == 'POST':
-        try:
+        if request.method == 'POST':
+        # try:
+            destination = request.POST.get('destination', '')
+
             # Prepare data for serializer
             post_data = request.POST.copy()
-            
+            print("post_data", post_data)
             # Create serializer instance
             serializer = TripPlanSerializer(data=post_data)
-            
+            print("destination2", destination)
             if serializer.is_valid():
                 # Save the trip
                 trip = TripPlan(
-                    user=request.user,
+                    user=user_id,
                     title=serializer.validated_data['title'],
-                    destination=serializer.validated_data['destination'],
+                    destination=destination,
                     persons=serializer.validated_data['persons'],
                     travel_method=serializer.validated_data['travel_method'],
                     budget=serializer.validated_data['budget'],
@@ -194,7 +205,6 @@ def create_trip(request):
                     notes=serializer.validated_data.get('notes', '')
                 )
                 trip.save()
-                
                 messages.success(request, 'Trip created successfully!')
                 return redirect('home:trip_detail', trip_id=trip.id)
             else:
@@ -202,9 +212,11 @@ def create_trip(request):
                 for field, errors in serializer.errors.items():
                     for error in errors:
                         messages.error(request, f"{field.title()}: {error}")
-                        
-        except Exception as e:
-            messages.error(request, f'Error creating trip: {str(e)}')
+                        print(f"Validation error in {field}: {error}")
+                return render(request, 'customer/trips/create.html', {'destination': destination})
+        # except Exception as e:
+        #     print("Error creating trip:", e)
+        #     messages.error(request, f'Error creating trip: {str(e)}')
     
     # Pre-fill initial data
     initial_data = {}
@@ -247,7 +259,7 @@ def trip_detail(request, trip_id):
             
     except requests.RequestException:
         messages.error(request, 'Connection error. Please try again.')
-    
+        
     # Add itinerary item
     if request.method == 'POST':
         itinerary_data = {
@@ -279,10 +291,37 @@ def trip_detail(request, trip_id):
         except requests.RequestException:
             messages.error(request, 'Connection error. Please try again.')
     
-    return render(request, 'home/trips/detail.html', {
+    return render(request, 'customer/trips/detail.html', {
         'trip': trip,
         'itinerary': itinerary
     })
+
+
+# from django.shortcuts import get_object_or_404
+
+# # @login_required
+# def trip_detail(request, trip_id):
+#     """Trip detail page"""
+#     try:
+#         # Use get_object_or_404 for better error handling
+#         trip = get_object_or_404(TripPlan, id=trip_id, user=user_id=request.session.get('user_id'))
+#         itinerary_items = trip.itinerary.all().order_by('date', 'time_of_day')
+        
+#         # Calculate trip duration
+#         trip.duration = (trip.end_date - trip.start_date).days + 1
+        
+#         context = {
+#             'trip': trip,
+#             'itinerary_items': itinerary_items
+#         }
+        
+#         return render(request, 'home/trips/detail.html', context)
+        
+#     except Exception as e:
+#         messages.error(request, f'Error loading trip: {str(e)}')
+#         return redirect('home:trip_list')
+    
+
 
 def delete_itinerary_item(request, item_id):
     token = request.session.get('token')
@@ -587,3 +626,13 @@ def admin_dashboard(request):
     }
     
     return render(request, 'admin/dashboard/admin_dashboard.html', context)
+
+
+
+
+
+
+
+
+
+
