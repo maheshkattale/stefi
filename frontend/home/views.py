@@ -166,7 +166,7 @@ def trip_list(request):
 
 from datetime import datetime
 
-@login_required
+# @login_required
 def create_trip(request):
     """Create new trip page"""
     # Get destination from query parameter if available
