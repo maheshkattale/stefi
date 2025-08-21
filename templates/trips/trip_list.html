@@ -1,56 +1,93 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block content %}
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>My Trips</h1>
-        <a href="{% url 'home:create_trip' %}" class="btn btn-primary">
-            <i class="fas fa-plus"></i> Plan New Trip
-        </a>
-    </div>
+{% block title %}My Trips - Stefi{% endblock %}
 
-    {% if trips %}
+{% block content %}
+<div class="container py-5">
     <div class="row">
-        {% for trip in trips %}
-        <div class="col-md-6 col-lg-4 mb-4">
-            <div class="card h-100">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="card-title mb-0">{{ trip.title }}</h5>
-                </div>
-                <div class="card-body">
-                    <h6 class="card-subtitle mb-2 text-muted">
-                        <i class="fas fa-map-marker-alt"></i> {{ trip.destination }}
-                    </h6>
-                    <p class="card-text">
-                        <i class="fas fa-calendar"></i> {{ trip.start_date }} to {{ trip.end_date }}<br>
-                        <i class="fas fa-users"></i> {{ trip.persons }} person{{ trip.persons|pluralize }}<br>
-                        <i class="fas fa-tag"></i> {{ trip.get_travel_method_display }}<br>
-                        <i class="fas fa-wallet"></i> ₹{{ trip.budget }}
-                    </p>
-                    <div class="badge bg-{% if trip.status == 'completed' %}success{% elif trip.status == 'planned' %}info{% else %}secondary{% endif %}">
-                        {{ trip.get_status_display }}
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <a href="{% url 'trip_detail' trip.id %}" class="btn btn-sm btn-outline-primary">
-                        <i class="fas fa-eye"></i> View Details
-                    </a>
-                    <a href="{% url 'delete_trip' trip.id %}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete this trip?')">
-                        <i class="fas fa-trash"></i> Delete
-                    </a>
-                </div>
+        <div class="col-12">
+            <!-- Page Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="display-5 fw-bold text-dark">My Trips</h1>
+                <a href="{% url 'home:create_trip' %}" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>Plan New Trip
+                </a>
             </div>
+
+            <!-- List of Trips -->
+            {% if trips %}
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                    {% for trip in trips %}
+                    <div class="col">
+
+                        <div class="card h-100 trip-card">
+                            <!-- Optional: You could add a trip image here later -->
+                            <!-- <img src="{% static 'assets/images/paris.jpg' %}" class="card-img-top" alt="{{ trip.destination }}" style="height: 200px; object-fit: cover;"> -->
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h5 class="card-title fw-bold">{{ trip.title }}</h5>
+                                    <span class="badge bg-info fs-6">{{ trip.status|default:"Planning" }}</span>
+                                </div>
+                                <h6 class="card-subtitle mb-3 text-muted">
+                                    <i class="fas fa-map-marker-alt me-1"></i> {{ trip.destination }}
+                                </h6>
+                                <p class="card-text text-dark">{{ trip.description|truncatewords:20 }}</p>
+                                
+                                <div class="mt-auto">
+                                    <div class="d-flex justify-content-between text-muted small mb-3">
+                                        <div>
+                                            <i class="fas fa-calendar-day me-1"></i>
+                                            <strong>Start:</strong> {{ trip.start_date }}
+                                        </div>
+                                        <div>
+                                            <i class="fas fa-calendar-check me-1"></i>
+                                            <strong>End:</strong> {{ trip.end_date }}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="d-flex gap-2">
+                                        <a href="/trip_detail/{{trip.id}}" class="btn btn-outline-primary btn-sm flex-fill">
+                                            <i class="fas fa-eye me-1"></i> View Details
+                                        </a>
+                                        <a href="/trip_update/{{trip.id}}" class="btn btn-outline-secondary btn-sm">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-transparent">
+                                <small class="text-muted">
+                                    Created on {{ trip.created_at|slice:":10" }}
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <!-- Empty State Message -->
+                <div class="text-center py-5 my-5">
+                    <div class="mb-4">
+                        <i class="fas fa-suitcase-rolling fa-4x text-muted"></i>
+                    </div>
+                    <h3 class="text-muted mb-3">No Trips Planned Yet</h3>
+                    <p class="text-muted mb-4">Start your adventure by planning your first trip!</p>
+                    <a href="{% url 'home:create_trip' %}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-plus me-2"></i>Create Your First Trip
+                    </a>
+                </div>
+            {% endif %}
         </div>
-        {% endfor %}
     </div>
-    {% else %}
-    <div class="text-center py-5">
-        <img src="{% static 'assets/logo/stefi.png'%}" width="80" alt="">
-        <h3>No trips planned yet</h3>
-        <p class="text-muted">Start planning your adventure by creating your first trip!</p>
-        <a href="{% url 'home:create_trip' %}" class="btn btn-primary">Plan Your First Trip</a>
-    </div>
-    {% endif %}
 </div>
+
+<style>
+    .trip-card {
+        transition: transform 0.2s ease-in-out;
+    }
+    .trip-card:hover {
+        transform: translateY(-5px);
+    }
+</style>
 {% endblock %}

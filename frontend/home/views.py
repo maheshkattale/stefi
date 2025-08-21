@@ -12,6 +12,7 @@ from trips.serializers import *
 # API URLs
 login_url = hosturl + "/api/User/login"
 logout_url = hosturl + "/api/User/logout"
+from rest_framework.response import Response
 
 # Trip API URLs
 create_trip_url = hosturl + "/api/trips/create"
@@ -24,7 +25,6 @@ delete_itinerary_item_url = hosturl + "/api/trips/itinerary/delete"
 def landing_page(request):
     """Landing page with state-wise destination filtering"""
     # Get states with the most destinations
-    print("jhiiii")
     states = State.objects.annotate(
         destination_count=Count('destinations')
     ).filter(is_active=True, destination_count__gt=0).order_by('-destination_count')[:12]
@@ -44,7 +44,6 @@ def landing_page(request):
         'popular_destinations': popular_destinations,
         'destination_types': destination_types,
     }
-    print("context",context)
     
     return render(request, 'home/landing.html', context)
 
@@ -76,7 +75,7 @@ def search_destinations(request):
             'name': dest.name,
             'state': dest.state.name,
             'type': dest.get_destination_type_display(),
-            'image_url': dest.image.url if dest.image else '/static/images/default-destination.jpg',
+            'image_url': dest.image.url if dest.image else '/static/assets/images/default-destination.jpg',
             'url': f"/destinations/{dest.id}/"
         })
     
@@ -157,6 +156,7 @@ def trip_list(request):
     
     try:
         response = requests.get(get_trips_url, headers=headers)
+        print("response",response)
         if response.status_code == 200:
             trips_data = response.json()
             if trips_data['response']['n'] == 1:
@@ -164,75 +164,53 @@ def trip_list(request):
     except requests.RequestException:
         messages.error(request, 'Failed to load trips')
     
-    return render(request, 'home/trips/list.html', {'trips': trips})
+    return render(request, 'trips/trip_list.html', {'trips': trips})
 
 from datetime import datetime
 
 # @login_required
+from django.http import JsonResponse
+from django.urls import reverse
+
 def create_trip(request):
-    """Create new trip page"""
-    # Get destination from query parameter if available
-    destination = request.GET.get('destination', '')
-    print("destination", destination)
-    user_id = request.session.get('user_id')
-    if not user_id:
+    token = request.session.get('token')
+    if not token:
         messages.error(request, 'Please login first')
         return redirect('home:login')
 
-
     if request.method == 'POST':
-        if request.method == 'POST':
-        # try:
-            destination = request.POST.get('destination', '')
+        trip_data = {
+            "name": request.POST.get("name"),
+            "destination": request.POST.get("destination"),
+            "start_date": request.POST.get("start_date"),
+            "end_date": request.POST.get("end_date"),
+        }
+        headers = {"Authorization": f"Bearer {token}"}
 
-            # Prepare data for serializer
-            post_data = request.POST.copy()
-            print("post_data", post_data)
-            # Create serializer instance
-            serializer = TripPlanSerializer(data=post_data)
-            print("destination2", destination)
-            if serializer.is_valid():
-                # Save the trip
-                trip = TripPlan(
-                    user=user_id,
-                    title=serializer.validated_data['title'],
-                    destination=destination,
-                    persons=serializer.validated_data['persons'],
-                    travel_method=serializer.validated_data['travel_method'],
-                    budget=serializer.validated_data['budget'],
-                    start_date=serializer.validated_data['start_date'],
-                    end_date=serializer.validated_data['end_date'],
-                    notes=serializer.validated_data.get('notes', '')
-                )
-                trip.save()
-                messages.success(request, 'Trip created successfully!')
-                return redirect('home:trip_detail', trip_id=trip.id)
+        try:
+            response = requests.post(create_trip_url, data=trip_data, headers=headers)
+            if response.status_code == 200:
+                result = response.json()
+                if result['response']['n'] == 1:
+                    trip_id = result['data']['trip']['id']
+
+                    redirect_url = reverse("home:trip_detail", kwargs={"trip_id": trip_id})
+
+                    if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                        # AJAX request → return JSON with redirect URL
+                        return JsonResponse({"success": True, "redirect_url": redirect_url})
+                    else:
+                        # Normal form submit
+                        return redirect("home:trip_detail", trip_id=trip_id)
+
+                else:
+                    messages.error(request, result['response']['msg'])
             else:
-                # Show validation errors
-                for field, errors in serializer.errors.items():
-                    for error in errors:
-                        messages.error(request, f"{field.title()}: {error}")
-                        print(f"Validation error in {field}: {error}")
-                return render(request, 'customer/trips/create.html', {'destination': destination})
-        # except Exception as e:
-        #     print("Error creating trip:", e)
-        #     messages.error(request, f'Error creating trip: {str(e)}')
-    
-    # Pre-fill initial data
-    initial_data = {}
-    if destination:
-        initial_data['title'] = f'Trip to {destination}'
-        initial_data['destination'] = destination
-    
-    context = {
-        'initial_data': json.dumps(initial_data),
-        'destination': destination,
-        'today': datetime.now().strftime('%Y-%m-%d')
-    }
+                messages.error(request, "Failed to create trip")
+        except requests.RequestException:
+            messages.error(request, "Connection error. Please try again.")
 
-
-    
-    return render(request, 'customer/trips/create.html',context)
+    return render(request, "customer/trips/create.html")
 
 def trip_detail(request, trip_id):
     token = request.session.get('token')
@@ -243,12 +221,17 @@ def trip_detail(request, trip_id):
     headers = {'Authorization': f'Bearer {token}'}
     trip = None
     itinerary = []
-    
+    # trip = get_object_or_404(TripPlan, id=trip_id, user=request.user)
+    # itinerary = trip.itinerary_set.all()  # if related_name = "itinerary"
+    print("heelll",trip_id)
+
     # Fetch trip details
     try:
         response = requests.get(f"{get_trip_detail_url}/{trip_id}", headers=headers)
         if response.status_code == 200:
             trip_data = response.json()
+            print("trip_data",trip_data)
+
             if trip_data['response']['n'] == 1:
                 trip = trip_data['data']['trip']
                 itinerary = trip_data['data']['itinerary']
@@ -283,6 +266,7 @@ def trip_detail(request, trip_id):
                 if result['response']['n'] == 1:
                     messages.success(request, 'Activity added successfully!')
                     return redirect('home:trip_detail', trip_id=trip_id)
+
                 else:
                     messages.error(request, result['response']['msg'])
             else:
@@ -290,14 +274,14 @@ def trip_detail(request, trip_id):
                 
         except requests.RequestException:
             messages.error(request, 'Connection error. Please try again.')
-    
+    print("hello1")
     return render(request, 'customer/trips/detail.html', {
         'trip': trip,
         'itinerary': itinerary
     })
 
 
-# from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404
 
 # # @login_required
 # def trip_detail(request, trip_id):
@@ -349,6 +333,7 @@ def delete_itinerary_item(request, item_id):
     trip_id = request.GET.get('trip_id')
     if trip_id:
         return redirect('home:trip_detail', trip_id=trip_id)
+
     return redirect('home:trip_list')
 
 def generate_invoice(request, trip_id):
@@ -375,6 +360,7 @@ def generate_invoice(request, trip_id):
         messages.error(request, 'Connection error. Please try again.')
     
     return redirect('home:trip_detail', trip_id=trip_id)
+
 
 def view_invoice(request, trip_id):
     token = request.session.get('token')
@@ -549,7 +535,6 @@ def admin_login(request):
 
         login_request = requests.post(login_url, data=data)
         login_response = login_request.json()
-        print("login_response",login_response)
         if login_response['response']['n'] == 1:
             token = login_response['data']['token']
             request.session['token'] = token 
@@ -568,7 +553,6 @@ def admin_login(request):
 
       
     else:
-        print("hiii")
         return render(request, 'admin/authentication/login.html')
 
 # @user_passes_test(lambda u: u.is_staff)

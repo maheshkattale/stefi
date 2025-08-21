@@ -16,6 +16,8 @@ class TripPlan(models.Model):
     user = models.CharField(max_length=255,null=True, blank=True)
     title = models.CharField(max_length=255, default="My Trip")
     destination = models.CharField(max_length=255)
+    currency = models.CharField(max_length=255,null=True, blank=True)
+
     persons = models.PositiveIntegerField(default=1)
     travel_method = models.CharField(max_length=20, choices=TRAVEL_METHODS, default="road")
     budget = models.DecimalField(max_digits=12, decimal_places=2, default=0)

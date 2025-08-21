@@ -11,7 +11,7 @@
     }
     
     .dashboard-header {
-        background: linear-gradient(135deg, var(--primary-color), #2a5bcc);
+        background: linear-gradient(135deg, #11ccf1, #057b93);
         color: white;
         padding: 2rem 0;
         margin-bottom: 2rem;
@@ -83,10 +83,10 @@
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
         margin-bottom: 1.5rem;
     }
-    
+
     .section-header {
         display: flex;
-        justify-content: between;
+        justify-content: space-between;
         align-items: center;
         margin-bottom: 1.5rem;
         padding-bottom: 1rem;
@@ -121,8 +121,7 @@
         text-align: center;
         padding: 1rem;
         border-radius: 12px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
+        background: linear-gradient(135deg, #10c6ea 0%, #068099 100%);        color: white;
         margin-bottom: 1rem;
     }
     
@@ -293,7 +292,7 @@
                 <!-- Upcoming Trips -->
                 <div class="dashboard-section dashboard-animate">
                     <div class="section-header">
-                        <h5 class="mb-0">Upcoming Trips</h5>
+                        <h5 class="mb-0 me-2">Upcoming Trips</h5>
                         <a href="{% url 'home:trip_list' %}" class="btn btn-sm btn-outline-primary">View All</a>
                     </div>
                     

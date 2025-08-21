@@ -30,7 +30,7 @@ def api_search_destinations(request):
             'name': dest.name,
             'state': dest.state.name,
             'type': dest.get_destination_type_display(),
-            'image_url': dest.image.url if dest.image else '/static/images/default-destination.jpg',
+            'image_url': dest.image.url if dest.image else '/static/assets/images/default-destination.jpg',
             'url': f"/destinations/{dest.id}/"
         })
     
@@ -78,7 +78,7 @@ def api_get_popular_destinations(request):
             'name': dest.name,
             'state': dest.state.name,
             'type': dest.get_destination_type_display(),
-            'image_url': dest.image.url if dest.image else '/static/images/default-destination.jpg',
+            'image_url': dest.image.url if dest.image else '/static/assets/images/default-destination.jpg',
             'description': dest.description,
             'url': f"/destinations/{dest.id}/"
         })

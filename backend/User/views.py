@@ -42,7 +42,6 @@ class login(GenericAPIView):
         email = request.data.get("email")
         Password = request.data.get("password")
         source = request.data.get("source")
-        print("Password",Password)
         if email is None or Password is None :
             return Response( {
                     "data" : {'token':'','username':'','short_name':'','user_id':'','Menu':[],'role':'','role_name':'','ifservice_provider':False,'email':'','service_provider_details':{}},
@@ -100,7 +99,6 @@ class login(GenericAPIView):
 
 
 
-                print("userexist.role",userexist.role)
                 
                 Token = createtoken(useruuid,email,source)
                 
@@ -190,7 +188,6 @@ class forgetpasswordmail(GenericAPIView):
     def post(self,request):
         data={}
         data['email']=request.data.get('email')
-        print("request.data",request.data)
         userdata = User.objects.filter(email=data['email'],isActive=True,status=True).first()
         if userdata is not None:
             email =   data['email']

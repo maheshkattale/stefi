@@ -6,6 +6,7 @@ urlpatterns = [
 
     path('addstate', addstate.as_view(), name = 'addstate'),
     path('adddestination', adddestination.as_view(), name = 'adddestination'),
+    path('updatedestination', updatedestination.as_view(), name = 'updatedestination'),
 
 
 

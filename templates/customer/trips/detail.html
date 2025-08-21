@@ -1,513 +1,122 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% load static %}
 
-{% block title %}{{ trip.title }} - Stefi Travel{% endblock %}
-
-{% block extra_css %}
-<style>
-    .trip-detail-page {
-        background: #f8fafc;
-        min-height: 100vh;
-        padding: 2rem 0;
-    }
-    
-    .trip-header {
-        background: linear-gradient(135deg, var(--primary-color), #2a5bcc);
-        color: white;
-        padding: 2rem 0;
-        margin-bottom: 2rem;
-    }
-    
-    .trip-image {
-        height: 300px;
-        object-fit: cover;
-        border-radius: 15px;
-        width: 100%;
-    }
-    
-    .trip-card {
-        background: white;
-        border-radius: 15px;
-        padding: 1.5rem;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-        margin-bottom: 1.5rem;
-        border: none;
-    }
-    
-    .trip-stats {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1rem;
-        margin-bottom: 2rem;
-    }
-    
-    .stat-item {
-        text-align: center;
-        padding: 1rem;
-        background: #f8f9fa;
-        border-radius: 10px;
-    }
-    
-    .stat-number {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: var(--primary-color);
-        margin-bottom: 0.5rem;
-    }
-    
-    .stat-label {
-        color: #6c757d;
-        font-size: 0.9rem;
-    }
-    
-    .section-title {
-        font-size: 1.3rem;
-        font-weight: 600;
-        color: #2c3e50;
-        margin-bottom: 1rem;
-        padding-bottom: 0.5rem;
-        border-bottom: 2px solid #f1f3f4;
-    }
-    
-    .itinerary-timeline {
-        position: relative;
-        padding-left: 30px;
-    }
-    
-    .timeline-item {
-        position: relative;
-        margin-bottom: 2rem;
-        padding-left: 20px;
-    }
-    
-    .timeline-item::before {
-        content: '';
-        position: absolute;
-        left: -30px;
-        top: 0;
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        background: var(--primary-color);
-        border: 3px solid white;
-        box-shadow: 0 0 0 3px var(--primary-color);
-    }
-    
-    .timeline-item::after {
-        content: '';
-        position: absolute;
-        left: -21px;
-        top: 20px;
-        bottom: -2rem;
-        width: 2px;
-        background: var(--primary-color);
-    }
-    
-    .timeline-item:last-child::after {
-        display: none;
-    }
-    
-    .activity-card {
-        background: white;
-        border: 1px solid #e9ecef;
-        border-radius: 12px;
-        padding: 1rem;
-        margin-bottom: 1rem;
-        transition: all 0.3s ease;
-    }
-    
-    .activity-card:hover {
-        border-color: var(--primary-color);
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        transform: translateY(-2px);
-    }
-    
-    .cost-breakdown {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 1.5rem;
-        border-radius: 15px;
-        margin-bottom: 1.5rem;
-    }
-    
-    .cost-item {
-        display: flex;
-        justify-content: between;
-        align-items: center;
-        padding: 0.5rem 0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    
-    .cost-item:last-child {
-        border-bottom: none;
-    }
-    
-    .action-buttons {
-        display: flex;
-        gap: 1rem;
-        flex-wrap: wrap;
-    }
-    
-    .btn-action {
-        border-radius: 10px;
-        padding: 0.75rem 1.5rem;
-        font-weight: 500;
-        transition: all 0.3s ease;
-    }
-    
-    .btn-action:hover {
-        transform: translateY(-2px);
-    }
-    
-    .status-badge {
-        padding: 0.5rem 1rem;
-        border-radius: 20px;
-        font-weight: 500;
-        font-size: 0.9rem;
-    }
-    
-    .empty-state {
-        text-align: center;
-        padding: 2rem;
-        background: #f8f9fa;
-        border-radius: 12px;
-        color: #6c757d;
-    }
-    
-    /* Responsive Design */
-    @media (max-width: 768px) {
-        .trip-stats {
-            grid-template-columns: 1fr;
-        }
-        
-        .action-buttons {
-            flex-direction: column;
-        }
-        
-        .btn-action {
-            width: 100%;
-        }
-        
-        .trip-image {
-            height: 200px;
-        }
-    }
-    
-    /* Animation */
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    
-    .detail-animate {
-        animation: fadeInUp 0.6s ease-out;
-    }
-</style>
-{% endblock %}
-
 {% block content %}
-<div class="trip-detail-page">
-    <!-- Trip Header -->
-    <div class="trip-header">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-8">
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{% url 'home:trip_list' %}" class="text-white">My Trips</a></li>
-                            <li class="breadcrumb-item active text-white-50" aria-current="page">Trip Details</li>
-                        </ol>
-                    </nav>
-                    <h1 class="display-5 fw-bold mb-2">{{ trip.title }}</h1>
-                    <div class="d-flex align-items-center flex-wrap gap-3">
-                        <span class="status-badge bg-{% if trip.status == 'completed' %}success{% elif trip.status == 'in_progress' %}info{% elif trip.status == 'planned' %}primary{% else %}warning{% endif %}">
-                            {{ trip.get_status_display }}
-                        </span>
-                        <span class="text-white-50">
-                            <i class="fas fa-map-marker-alt me-1"></i>{{ trip.destination }}
-                        </span>
-                        <span class="text-white-50">
-                            <i class="fas fa-calendar-alt me-1"></i>
-                            {{ trip.start_date|date:"M d, Y" }} - {{ trip.end_date|date:"M d, Y" }}
-                        </span>
-                    </div>
-                </div>
-                <div class="col-md-4 text-md-end">
-                    <div class="action-buttons">
-                        <a href="" class="btn btn-success btn-action">
-                            <i class="fas fa-file-invoice me-2"></i>Generate Invoice
-                        </a>
-                        <a href="{% url 'home:trip_list' %}" class="btn btn-light btn-action">
-                            <i class="fas fa-arrow-left me-2"></i>Back to Trips
-                        </a>
-                    </div>
-                </div>
-            </div>
+<div class="container mt-4">
+
+  <!-- Trip Header -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h2 class="card-title mb-1">{{ trip.title }}</h2>
+      <h5 class="text-muted">{{ trip.destination }}</h5>
+      <hr>
+      <div class="row">
+        <div class="col-md-4">
+          <p><strong>Budget:</strong> ₹{{ trip.budget }}</p>
         </div>
-    </div>
-
-    <div class="container">
-        <!-- Trip Overview -->
-        <div class="row">
-            <!-- Left Column - Trip Details -->
-            <div class="col-lg-8">
-                <!-- Trip Image -->
-                <div class="trip-card detail-animate">
-                    <img src="{% static 'images/destinations/' %}{{ trip.destination|lower }}.jpg" 
-                         alt="{{ trip.destination }}" class="trip-image mb-4"
-                         onerror="this.src='{% static 'images/default-destination.jpg' %}'">
-                    
-                    {% if trip.description %}
-                    <div class="mb-4">
-                        <h5 class="section-title">About This Trip</h5>
-                        <p class="text-muted">{{ trip.description }}</p>
-                    </div>
-                    {% endif %}
-                    
-                    <!-- Quick Stats -->
-                    <div class="trip-stats">
-                        <div class="stat-item">
-                            <div class="stat-number">{{ trip.duration }} days</div>
-                            <div class="stat-label">Duration</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-number">{{ trip.persons }}</div>
-                            <div class="stat-label">Travelers</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-number">₹{{ trip.budget }}</div>
-                            <div class="stat-label">Total Budget</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-number">{{ trip.get_travel_method_display }}</div>
-                            <div class="stat-label">Travel Method</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Itinerary Section -->
-                <div class="trip-card detail-animate">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="section-title mb-0">Trip Itinerary</h5>
-                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addActivityModal">
-                            <i class="fas fa-plus me-1"></i>Add Activity
-                        </button>
-                    </div>
-
-                    {% if itinerary_items %}
-                    <div class="itinerary-timeline">
-                        {% for item in itinerary_items %}
-                        <div class="timeline-item">
-                            <div class="activity-card">
-                                <div class="d-flex justify-content-between align-items-start mb-2">
-                                    <h6 class="mb-0">{{ item.title }}</h6>
-                                    <span class="badge bg-{% if item.type == 'travel' %}primary{% elif item.type == 'hotel' %}success{% elif item.type == 'activity' %}info{% else %}secondary{% endif %}">
-                                        {{ item.get_type_display }}
-                                    </span>
-                                </div>
-                                
-                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <span class="text-muted small">
-                                        <i class="fas fa-calendar-alt me-1"></i>{{ item.date|date:"M d, Y" }}
-                                    </span>
-                                    <span class="text-muted small">
-                                        <i class="fas fa-clock me-1"></i>{{ item.get_time_of_day_display }}
-                                    </span>
-                                </div>
-                                
-                                {% if item.location %}
-                                <p class="text-muted small mb-2">
-                                    <i class="fas fa-map-marker-alt me-1"></i>{{ item.location }}
-                                </p>
-                                {% endif %}
-                                
-                                <p class="mb-2">{{ item.description }}</p>
-                                
-                                {% if item.cost_per_person > 0 %}
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span class="text-success fw-bold">
-                                        ₹{{ item.total_cost }} total
-                                    </span>
-                                    <small class="text-muted">
-                                        (₹{{ item.cost_per_person }} per person × {{ item.persons }})
-                                    </small>
-                                </div>
-                                {% endif %}
-                                
-                                {% if item.notes %}
-                                <div class="mt-2 p-2 bg-light rounded">
-                                    <small class="text-muted">{{ item.notes }}</small>
-                                </div>
-                                {% endif %}
-                                
-                                <div class="d-flex gap-2 mt-3">
-                                    <button class="btn btn-outline-primary btn-sm">
-                                        <i class="fas fa-edit me-1"></i>Edit
-                                    </button>
-                                    <button class="btn btn-outline-danger btn-sm">
-                                        <i class="fas fa-trash me-1"></i>Delete
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                    {% else %}
-                    <div class="empty-state">
-                        <i class="fas fa-calendar-plus fa-3x mb-3"></i>
-                        <h5>No activities planned yet</h5>
-                        <p>Start building your itinerary by adding activities</p>
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addActivityModal">
-                            <i class="fas fa-plus me-2"></i>Add First Activity
-                        </button>
-                    </div>
-                    {% endif %}
-                </div>
-            </div>
-
-            <!-- Right Column - Sidebar -->
-            <div class="col-lg-4">
-                <!-- Cost Summary -->
-                <div class="trip-card detail-animate">
-                    <h5 class="section-title">Cost Summary</h5>
-                    
-                    <div class="cost-breakdown">
-                        <div class="cost-item">
-                            <span>Activities</span>
-                            <span class="fw-bold">₹1,200</span>
-                        </div>
-                        <div class="cost-item">
-                            <span>Accommodation</span>
-                            <span class="fw-bold">₹3,500</span>
-                        </div>
-                        <div class="cost-item">
-                            <span>Transportation</span>
-                            <span class="fw-bold">₹1,800</span>
-                        </div>
-                        <div class="cost-item">
-                            <span>Food & Dining</span>
-                            <span class="fw-bold">₹2,000</span>
-                        </div>
-                        <div class="cost-item" style="border-top: 2px solid rgba(255,255,255,0.3);">
-                            <span class="fw-bold">Total Estimated</span>
-                            <span class="fw-bold">₹8,500</span>
-                        </div>
-                    </div>
-                    
-                    <div class="progress mb-3" style="height: 8px;">
-                        <div class="progress-bar bg-success" style="width: 65%"></div>
-                    </div>
-                    
-                    <div class="text-center">
-                        <small class="text-muted">65% of budget used (₹8,500 of ₹{{ trip.budget }})</small>
-                    </div>
-                </div>
-
-                <!-- Quick Actions -->
-                <div class="trip-card detail-animate">
-                    <h5 class="section-title">Quick Actions</h5>
-                    
-                    <div class="d-grid gap-2">
-                        <a href="#" class="btn btn-outline-primary">
-                            <i class="fas fa-edit me-2"></i>Edit Trip Details
-                        </a>
-                        <a href="" class="btn btn-outline-success">
-                            <i class="fas fa-file-invoice me-2"></i>Generate Invoice
-                        </a>
-                        <a href="#" class="btn btn-outline-info">
-                            <i class="fas fa-share me-2"></i>Share Trip
-                        </a>
-                        <a href="#" class="btn btn-outline-warning">
-                            <i class="fas fa-download me-2"></i>Export Itinerary
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Trip Notes -->
-                {% if trip.notes %}
-                <div class="trip-card detail-animate">
-                    <h5 class="section-title">Trip Notes</h5>
-                    <p class="text-muted">{{ trip.notes }}</p>
-                </div>
-                {% endif %}
-
-                <!-- Recent Activity -->
-                <div class="trip-card detail-animate">
-                    <h5 class="section-title">Recent Activity</h5>
-                    <div class="list-group list-group-flush">
-                        <div class="list-group-item border-0 px-0">
-                            <small class="text-muted">Today</small>
-                            <p class="mb-1">Trip created</p>
-                        </div>
-                        <div class="list-group-item border-0 px-0">
-                            <small class="text-muted">2 hours ago</small>
-                            <p class="mb-1">Added hotel booking</p>
-                        </div>
-                        <div class="list-group-item border-0 px-0">
-                            <small class="text-muted">1 hour ago</small>
-                            <p class="mb-1">Updated budget</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="col-md-4">
+          <p><strong>Dates:</strong> {{ trip.start_date }} → {{ trip.end_date }}</p>
         </div>
+        <div class="col-md-4">
+          <p><strong>Travel Method:</strong> {{ trip.travel_method|title }}</p>
+        </div>
+      </div>
+      <span class="badge bg-info">{{ trip.status|upper }}</span>
     </div>
+  </div>
+
+  <!-- Itinerary -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-primary text-white">
+      <h5 class="mb-0">Itinerary</h5>
+    </div>
+    <div class="card-body">
+      {% if itinerary %}
+        <ul class="list-group list-group-flush">
+          {% for item in itinerary %}
+            <li class="list-group-item">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <h6 class="mb-1">{{ item.title }}</h6>
+                  <p class="mb-0 text-muted">{{ item.date }} - {{ item.time_of_day }}</p>
+                  <small>{{ item.description }}</small>
+                </div>
+                <div class="text-end">
+                  <span class="badge bg-secondary">{{ item.type }}</span>
+                  <p class="mb-0">₹{{ item.cost_per_person }} × {{ item.persons }}</p>
+                  <small>{{ item.duration_hours }} hrs</small>
+                </div>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="text-muted mb-0">No activities added yet.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Add Activity Form -->
+  <div class="card shadow-sm">
+    <div class="card-header bg-success text-white">
+      <h5 class="mb-0">Add Activity</h5>
+    </div>
+    <div class="card-body">
+      <form method="post">
+        {% csrf_token %}
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Date</label>
+            <input type="date" name="date" class="form-control" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Time of Day</label>
+            <select name="time_of_day" class="form-select">
+              <option value="morning">Morning</option>
+              <option value="afternoon">Afternoon</option>
+              <option value="evening">Evening</option>
+              <option value="night">Night</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Type</label>
+            <input type="text" name="type" class="form-control">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Title</label>
+            <input type="text" name="title" class="form-control" required>
+          </div>
+          <div class="col-12">
+            <label class="form-label">Description</label>
+            <textarea name="description" class="form-control" rows="2"></textarea>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Location</label>
+            <input type="text" name="location" class="form-control">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Cost per Person</label>
+            <input type="number" name="cost_per_person" class="form-control">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Persons</label>
+            <input type="number" name="persons" class="form-control" value="{{ trip.persons }}">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Duration (hours)</label>
+            <input type="number" name="duration_hours" class="form-control">
+          </div>
+          <div class="col-12">
+            <label class="form-label">Notes</label>
+            <textarea name="notes" class="form-control" rows="2"></textarea>
+          </div>
+        </div>
+        <div class="mt-3">
+          <button type="submit" class="btn btn-success w-100">Add Activity</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
 </div>
-
-<!-- Add Activity Modal -->
-<div class="modal fade" id="addActivityModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add New Activity</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p class="text-muted">Add activities to your itinerary to plan your perfect trip</p>
-                <!-- Activity form would go here -->
-                <div class="text-center py-4">
-                    <i class="fas fa-plus-circle fa-3x text-muted mb-3"></i>
-                    <p>Activity form will be implemented here</p>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary">Add Activity</button>
-            </div>
-        </div>
-    </div>
-</div>
-{% endblock %}
-
-{% block extra_js %}
-<script>
-$(document).ready(function() {
-    // Remove floating search bar for detail page
-    $('.floating-search-container').remove();
-    
-    // Add animation delays
-    $('.detail-animate').each(function(index) {
-        $(this).css('animation-delay', (index * 0.1) + 's');
-    });
-    
-    // Initialize tooltips
-    $('[data-bs-toggle="tooltip"]').tooltip();
-    
-    // Activity card hover effects
-    $('.activity-card').hover(
-        function() {
-            $(this).css('transform', 'translateY(-2px)');
-        },
-        function() {
-            $(this).css('transform', 'translateY(0)');
-        }
-    );
-});
-</script>
 {% endblock %}

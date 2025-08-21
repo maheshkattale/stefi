@@ -10,8 +10,9 @@ from rest_framework.permissions import IsAuthenticated
 @authentication_classes([userJWTAuthentication])
 @permission_classes([IsAuthenticated])
 def trip_list(request):
+    print("hii",)
     """Get all trips for the authenticated user"""
-    trips = TripPlan.objects.filter(user=request.user).order_by('-created_at')
+    trips = TripPlan.objects.filter(user=request.user.id).order_by('-created_at')
     serializer = TripPlanSerializer(trips, many=True)
     return Response({
         'data': {'trips': serializer.data},
@@ -21,12 +22,22 @@ def trip_list(request):
             'status': 'success'
         }
     })
+from django.views.decorators.csrf import csrf_exempt
 
+@csrf_exempt
 @api_view(['POST'])
 @authentication_classes([userJWTAuthentication])
 @permission_classes([IsAuthenticated])
 def create_trip(request):
     """Create a new trip"""
+
+            
+            
+   
+        
+
+
+
     serializer = TripPlanSerializer(data=request.data)
     if serializer.is_valid():
         trip = serializer.save(user=request.user)
@@ -54,8 +65,9 @@ def create_trip(request):
 @permission_classes([IsAuthenticated])
 def trip_detail(request, trip_id):
     """Get trip details with itinerary"""
+    print("ola")
     try:
-        trip = TripPlan.objects.get(id=trip_id, user=request.user)
+        trip = TripPlan.objects.get(id=trip_id, user=str(request.user.id))
     except TripPlan.DoesNotExist:
         return Response({
             'data': {},

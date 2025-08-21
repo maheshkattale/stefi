@@ -43,7 +43,7 @@ class TripPlanSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = TripPlan
-        fields = ['title', 'destination', 'persons', 'travel_method', 'budget', 'start_date', 'end_date', 'notes', 'currency']
+        fields = "__all__"
     
     def validate(self, data):
         start_date = data.get('start_date')

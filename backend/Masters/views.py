@@ -104,4 +104,81 @@ class adddestination(GenericAPIView):
             else:
                 first_key, first_value = next(iter(serializer.errors.items()))
                 return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
+
+class updatedestination(GenericAPIView):
+    # authentication_classes=[userJWTAuthentication]
+    # permission_classes = (permissions.IsAuthenticated,)
+    def post(self,request):
+        data={}
+        request_data = request.data.copy()
+        data['id']=request.data.get('id')
+        data['name']=request.data.get('name')
     
+        data['state']=request.data.get('state')
+        
+        data['destination_type']=request.data.get('destination_type')
+        data['description'] = request.data.get('description')
+        
+        data['latitude']=request.data.get('latitude')
+        data['longitude']=request.data.get('longitude')
+        data['average_temperature']=request.data.get('average_temperature')
+        data['is_popular']=True
+        data['best_time_to_visit'] = request.data.get('best_time_to_visit')
+        data['is_active'] = True
+
+        # data['isActive'] = True
+
+        image= request.FILES.get('image')
+        if image is not None:
+            data['image'] = image
+
+        else:
+            data['image'] = None
+
+
+        update_obj=Destination.objects.filter(id=data['id'],is_active=True,).first()
+        if update_obj is None:
+            return Response({"data":'',"response": {"n": 0, "msg": "Destination not found", "status": "error"}})
+
+        already_exist = Destination.objects.filter(is_active=True, name=data['name']).exclude(id=update_obj.id).first()        
+        if already_exist is not None:        
+            return Response({"data":'',"response": {"n": 0, "msg": "Destination already exist", "status": "error"}})
+        
+        else:
+            serializer = DestinationSerializer(update_obj,data=data,partial=True)
+            if serializer.is_valid():
+                serializer.save()
+
+                return Response({"data":serializer.data,"response": {"n": 1, "msg": "Destination added successfully","status":"success"}})
+            else:
+                first_key, first_value = next(iter(serializer.errors.items()))
+                return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
