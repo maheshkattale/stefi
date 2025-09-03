@@ -43,12 +43,12 @@
     /* Floating Search Bar */
     .floating-search-container {
         position: fixed;
-        top: 150px;
-        left: 50%;
+        top: 30px;
+        left: 35%;
         transform: translateX(-50%);
         z-index: 1050;
-        width: 90%;
-        max-width: 600px;
+        width: 100%;
+        max-width: 55%;
         transition: all 0.3s ease;
     }
 
@@ -243,17 +243,40 @@
     right: 20px;
     z-index: 9999;
 }
+.floating-search-icon{
+    border-radius: 0 50px 50px 0;
+    background: #e6e9f3bf;
+    margin: 0 !important;
+
+
+}
+.floating-search-input{
+        background: #e6e9f3bf;
+        box-shadow: none;
+}
+.floating-search-input::placeholder {
+    color: #363636;
+}
+.floating-search-logo{
+    background: #e6e9f3bf;
+    margin: 0 !important;
+    padding: 7px;
+
+}
 </style>
 {% endblock %}
 
 {% block content %}
 <!-- Floating Search Bar -->
-<div class="floating-search-container">
-    <div class="input-group">
-        <input type="text" class="form-control search-input" placeholder="Search destinations, states, or activities..."
+<div class="floating-search-container container">
+    <div class="input-group" style="background: #e6e9f3bf;border-radius: 50px;">
+        <span class="input-group-text border-0 floating-search-logo" style="border-radius: 50px 0px 0px 50px;">
+            <img src="{% static 'assets/logo/logo-symbol.jpeg'%}" width="55" alt="" style="border-radius: 50%;">
+        </span>
+        <input type="text" class="form-control search-input floating-search-input" placeholder="Search destinations, states, or activities..."
             id="globalSearch">
-        <span class="input-group-text bg-primary text-white border-0" style="border-radius: 0 50px 50px 0;">
-            <i class="fas fa-search"></i>
+        <span class="input-group-text border-0 floating-search-icon" style="border-radius: 0 50px 50px 0;">
+            <i class="fas fa-search fa-xl"></i>
         </span>
     </div>
     <div class="search-results" id="searchResults"></div>
@@ -262,9 +285,10 @@
 <!-- Hero Section -->
 <section class="hero-section">
     <!-- Background Video -->
-    <video autoplay muted loop playsinline class="hero-video">
-        <source src="http://127.0.0.1:8001/static/assets/video/hero-bg.mp4" type="video/mp4">
-        <source src="http://127.0.0.1:8001/static/assets/video/hero-bg.webm" type="video/webm">
+<!-- Replace this in your hero-section -->
+    <video autoplay muted loop playsinline preload="none" class="hero-video">
+        <source src="{% static 'assets/video/hero-bg.mp4' %}" type="video/mp4">
+        <source src="{% static 'assets/video/hero-bg.webm' %}" type="video/webm">
         Your browser does not support the video tag.
     </video>
 
@@ -274,8 +298,8 @@
     <!-- Content -->
     <div class="container position-relative">
         <div class="row align-items-center min-vh-75">
-            <div class="col-lg-8 mx-auto text-center">
-                <h1 class="display-3 fw-bold mb-4">Discover Your Next Adventure</h1>
+            <div class="col-lg-6">
+                <h1 class="display-3 fw-bold mb-4">Explore India</h1>
                 <p class="lead mb-5">
                     Plan perfect trips with detailed itineraries, budget management, and instant invoice generation
                 </p>
@@ -287,6 +311,8 @@
                         <i class="fas fa-compass me-2"></i>Explore Destinations
                     </a>
                 </div>
+            </div>
+            <div class="col-lg-6">
             </div>
         </div>
     </div>
