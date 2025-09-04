@@ -7,54 +7,53 @@
 <style>
     /* Hero Section */
     .hero-section {
-        /* background: linear-gradient(135deg, rgba(59, 113, 254, 0.9), rgba(118, 75, 162, 0.9)), */
-        /* url('{% static "assets/images/hero-bg.jpg" %}') center/cover; */
-        color: white;
-        padding: 6rem 0;
         position: relative;
+        height: 100vh;
+        color: white;
+        overflow: hidden;
+        padding: 6rem 0;
     }
-    .hero-section {
-    position: relative;
-    height: 100vh; /* Full-screen hero */
-    color: white;
-    overflow: hidden;
-}
 
-.hero-video {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Make video cover the section */
-    z-index: -2;
-}
+    .hero-video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: -2;
+    }
 
-.hero-section .overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    /* background: linear-gradient(135deg, rgba(59, 113, 254, 0.7), rgba(118, 75, 162, 0.7)); */
-    z-index: -1;
-}
+    .hero-section .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+    }
 
     /* Floating Search Bar */
     .floating-search-container {
         position: fixed;
         top: 30px;
-        left: 35%;
-        transform: translateX(-50%);
         z-index: 1050;
         width: 100%;
-        max-width: 55%;
         transition: all 0.3s ease;
+        display: flex;
+        align-content: space-between;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: space-evenly;
+
+
+        /* left: 35%; */
+        /* transform: translateX(-50%); */
+        /* max-width: 55%; */
     }
 
     .floating-search-container.scrolled {
         top: 10px;
-        /* box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); */
     }
 
     .search-input {
@@ -63,10 +62,6 @@
         padding: 1rem 2rem;
         font-size: 1.1rem;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    }
-
-    .search-input:focus {
-        box-shadow: 0 4px 25px rgba(59, 113, 254, 0.3);
     }
 
     .search-results {
@@ -174,118 +169,498 @@
         font-weight: 700;
         color: var(--primary-color);
     }
+
     /* Destination Selection Styles */
-.destination-selection {
-    max-height: 70vh;
-    overflow-y: auto;
-}
+    .destination-selection {
+        max-height: 70vh;
+        overflow-y: auto;
+    }
 
-.destination-main-image {
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
+    .destination-main-image {
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
 
-.option-card {
-    transition: all 0.3s ease;
-    cursor: pointer;
-    height: 100%;
-}
+    .option-card {
+        transition: all 0.3s ease;
+        cursor: pointer;
+        height: 100%;
+    }
 
-.option-card:hover {
-    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-}
+    .option-card:hover {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    }
 
-.option-icon {
-    width: 60px;
-    height: 60px;
-    transition: transform 0.3s ease;
-}
+    .option-icon {
+        width: 60px;
+        height: 60px;
+        transition: transform 0.3s ease;
+    }
 
-.option-card:hover .option-icon {
-    transform: scale(1.1);
-}
+    .option-card:hover .option-icon {
+        transform: scale(1.1);
+    }
 
-.stat {
-    padding: 0.5rem;
-}
+    .stat {
+        padding: 0.5rem;
+    }
 
-.stat-number {
-    font-size: 1.5rem;
-    font-weight: bold;
-}
+    .stat-number {
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
 
-.stat-label {
-    color: #6c757d;
-    font-size: 0.8rem;
-}
+    .stat-label {
+        color: #6c757d;
+        font-size: 0.8rem;
+    }
 
-.trip-item {
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
+    .trip-item {
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
 
-.trip-item:hover {
-    border-color: var(--primary-color);
-    background: #f8f9fa;
-}
+    .trip-item:hover {
+        border-color: var(--primary-color);
+        background: #f8f9fa;
+    }
 
-.hover-lift {
-    transition: all 0.3s ease;
-}
+    .hover-lift {
+        transition: all 0.3s ease;
+    }
 
-.hover-lift:hover {
-    transform: translateY(-2px);
-}
+    .hover-lift:hover {
+        transform: translateY(-2px);
+    }
 
-/* Toast positioning */
-.toast-container {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 9999;
-}
-.floating-search-icon{
-    border-radius: 0 50px 50px 0;
-    background: #e6e9f3bf;
-    margin: 0 !important;
+    /* Toast positioning */
+    .toast-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+    }
 
+    .floating-search-icon {
+        border-radius: 0 50px 50px 0;
+        background: #e6e9f3bf;
+        margin: 0 !important;
+    }
 
-}
-.floating-search-input{
+    .floating-search-input {
         background: #e6e9f3bf;
         box-shadow: none;
-}
-.floating-search-input::placeholder {
-    color: #363636;
-}
-.floating-search-logo{
-    background: #e6e9f3bf;
-    margin: 0 !important;
-    padding: 7px;
+    }
 
-}
+    .floating-search-input::placeholder {
+        color: #363636;
+    }
+
+    .floating-search-logo {
+        background: #e6e9f3bf;
+        margin: 0 !important;
+        padding: 7px;
+    }
+
+    /* Carousel */
+    .carousel-container {
+        width: 100%;
+        position: relative;
+        padding: 20px 0;
+        touch-action: pan-y;
+        max-width: 800px;
+    }
+
+    .carousel {
+        display: flex;
+        padding: 30px 10px;
+        cursor: grab;
+        user-select: none;
+        will-change: transform;
+        top: 15%;
+        position: relative;
+        justify-content: center;
+        align-items: center;
+        transition: transform 0.6s ease;
+    }
+
+    #carouselContainer .card {
+        flex: 0 0 280px;
+        margin: 0 15px;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        text-align: left;
+        overflow: hidden;
+        transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+            opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+            box-shadow 0.4s ease;
+        opacity: 0.8;
+        width: 200px;
+        height: 380px;
+        position: absolute;
+    }
+
+    #carouselContainer .card img {
+        width: 100%;
+        height: 280px;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+        padding: 12px;
+        border-radius: 20px;
+    }
+
+    #carouselContainer .card-content {
+        padding: 15px;
+    }
+
+    #carouselContainer .card h3 {
+        margin: 0px;
+        font-size: 15px;
+        color: #2c3e50;
+        padding: 5px;
+    }
+
+    #carouselContainer .card p {
+        margin: 0;
+        font-size: 12px;
+        color: #7f8c8d;
+        line-height: 1.5;
+        padding: 5px;
+    }
+
+    #carouselContainer .card.active {
+        transform: scale(1.2) translateX(0);
+        opacity: 1;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        z-index: 10;
+    }
+
+    #carouselContainer .card.active img {
+        transform: scale(1.05);
+    }
+
+    #carouselContainer .card.dragging {
+        transition: none;
+        cursor: grabbing;
+    }
+
+    /* side cards */
+    #carouselContainer .card.left {
+        transform: translateX(-160px) scale(0.9);
+        opacity: 0.7;
+        z-index: 2;
+    }
+
+    #carouselContainer .card.right {
+        transform: translateX(160px) scale(0.9);
+        opacity: 0.7;
+        z-index: 2;
+    }
+
+    /* hidden cards further away */
+    #carouselContainer .card.hidden {
+        opacity: 0;
+        transform: scale(0.7);
+        pointer-events: none;
+    }
+
+    /* Indicators */
+    #carouselContainer .indicators {
+        display: flex;
+        justify-content: center;
+        margin-top: 25px;
+        gap: 12px;
+    }
+
+    #carouselContainer .indicator {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.5);
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    #carouselContainer .indicator.active {
+        background: white;
+        transform: scale(1.3);
+    }
+
+    /* Pause/Play button */
+    #carouselContainer .control-btn {
+        background: rgba(255, 255, 255, 0.2);
+        border: 2px solid white;
+        color: white;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        margin-top: 20px;
+        cursor: pointer;
+        font-size: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+
+    #carouselContainer .control-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(1.1);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        #carouselContainer .card {
+            flex: 0 0 220px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        #carouselContainer .card {
+            flex: 0 0 200px;
+            margin: 0 10px;
+        }
+    }
+
+    .menu-items {
+        width: 75px;
+        height: 75px;
+        border-radius: 25%;
+        background: #e6e9f3bf;
+        padding: 23px;
+        transition: transform 0.3s ease;
+    }
+
+    .achivements-count-div {
+        background-color: white;
+        border-radius: 50%;
+        height: 150px;
+        width: 150px;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .achivement-path-vector {
+        background: url({% static 'assets/images/achivement-vector-bg.png' %}) no-repeat center center;
+        background-size: contain;
+    }
+
+    .achivement-section {
+        background: linear-gradient(180deg, #36CAFF -55.86%, #207999 100%);
+    }
+
+    .stefi-different-section {
+        background: url(/static/assets/images/mountain.jpg) no-repeat center center;
+        margin: 50px 0;
+        background-size: cover;
+        margin: 56px;
+        border-radius: 26px;
+    }
+
+    .card2s {
+        display: flex;
+        gap: 30px;
+        justify-content: center;
+        perspective: 1000px;
+    }
+
+    .card2 {
+        background: rgba(229, 233, 243, 0.8);
+        border-radius: 15px;
+        padding: 30px 20px;
+        /* width: 250px; */
+        transition: transform 0.5s, box-shadow 0.5s;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        transform-style: preserve-3d;
+        cursor: pointer;
+    }
+
+    .card2:hover {
+        transform: rotateY(15deg) rotateX(10deg) translateZ(20px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .card2-icon {
+        font-size: 2em;
+        margin-bottom: 20px;
+    }
+
+    .card2 h3 {
+        margin-bottom: 15px;
+        font-size: 1.2em;
+        font-weight: bold;
+    }
+
+    .card2 p {
+        font-size: 0.9em;
+        color: #555;
+    }
+
+    /* Optional: Icon styles using Unicode */
+    .icon-calendar::before {
+        content: "\1F4C5";
+    }
+
+    .icon-rupee::before {
+        content: "\20B9";
+    }
+
+    .icon-invoice::before {
+        content: "\1F4C4";
+    }
+</style>
+<style>
+    .carousel1 {
+        width: 100%;
+        /* max-width: 1000px; */
+        overflow: hidden;
+        position: relative;
+        cursor: grab;
+        perspective: 1200px;
+        /* padding: 0 16px; */
+    }
+
+    .carousel1:active {
+        cursor: grabbing;
+    }
+
+    .track {
+        display: flex;
+        transition: transform 0.8s cubic-bezier(.25, .8, .25, 1);
+    }
+
+    .card1 {
+        flex: 0 0 33.333%;
+        /* margin: 0 8px; */
+        border-radius: 14px;
+        background: #111827;
+        color: #fff;
+        overflow: hidden;
+        position: relative;
+        user-select: none;
+        transform: scale(0.95);
+        transition: transform 0.6s ease;
+    }
+
+    .card1 img {
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.6s ease;
+        pointer-events: none;
+    }
+
+    .card1:hover img {
+        transform: scale(1.1);
+    }
+
+    .overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 20px;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent);
+        opacity: 0;
+        transform: translateY(40px);
+        transition: all 0.5s ease;
+    }
+
+    .card1:hover .overlay {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .overlay h3 {
+        margin: 0 0 8px;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .overlay p {
+        margin: 0 0 12px;
+        font-size: 14px;
+        line-height: 1.4;
+        color: #d1d5db;
+    }
+
+    .overlay button {
+        padding: 6px 12px;
+        border: none;
+        border-radius: 6px;
+        background: #3b82f6;
+        color: #fff;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+    .overlay button:hover {
+        background: #2563eb;
+    }
+
+    .card1.active {
+        transform: scale(1) rotateY(0deg);
+        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4);
+    }
+
+    .card1.prev {
+        transform: scale(0.9) rotateY(15deg);
+    }
+
+    .card1.next {
+        transform: scale(0.9) rotateY(-15deg);
+    }
 </style>
 {% endblock %}
 
 {% block content %}
 <!-- Floating Search Bar -->
-<div class="floating-search-container container">
-    <div class="input-group" style="background: #e6e9f3bf;border-radius: 50px;">
+<div class="floating-search-container w-100">
+
+    <div class="d-flex" style="background: #e4e8f2;border-radius: 50px;    width: 70%;">
         <span class="input-group-text border-0 floating-search-logo" style="border-radius: 50px 0px 0px 50px;">
             <img src="{% static 'assets/logo/logo-symbol.jpeg'%}" width="55" alt="" style="border-radius: 50%;">
         </span>
-        <input type="text" class="form-control search-input floating-search-input" placeholder="Search destinations, states, or activities..."
-            id="globalSearch">
+        <input type="text" class="form-control search-input floating-search-input"
+            placeholder="Search destinations, states, or activities..." id="globalSearch">
         <span class="input-group-text border-0 floating-search-icon" style="border-radius: 0 50px 50px 0;">
             <i class="fas fa-search fa-xl"></i>
         </span>
     </div>
+
+    <div>
+        <a href="#" class="" id="" title="Search">
+            <img src="{% static 'assets/icons/explore-india.png' %}" alt="" class="menu-items">
+        </a>
+    </div>
+    <div>
+        <a href="#" class="" id="" title="Search">
+            <img src="{% static 'assets/icons/bag-packing.png' %}" alt="" class="menu-items">
+        </a>
+    </div>
+    <div>
+        <a href="#" class="" id="" title="Search">
+            <img src="{% static 'assets/icons/trip-planner.png' %}" alt="" class="menu-items">
+        </a>
+    </div>
+    <div>
+        <a href="#" class="" id="" title="Search">
+            <img src="{% static 'assets/icons/profile.png' %}" alt="" class="menu-items">
+        </a>
+    </div>
+
     <div class="search-results" id="searchResults"></div>
 </div>
 
 <!-- Hero Section -->
 <section class="hero-section">
     <!-- Background Video -->
-<!-- Replace this in your hero-section -->
+    <!-- Replace this in your hero-section -->
     <video autoplay muted loop playsinline preload="none" class="hero-video">
         <source src="{% static 'assets/video/hero-bg.mp4' %}" type="video/mp4">
         <source src="{% static 'assets/video/hero-bg.webm' %}" type="video/webm">
@@ -313,38 +688,163 @@
                 </div>
             </div>
             <div class="col-lg-6">
+
+                <div class="carousel-container" id="carouselContainer" style="height: 70vh; align-content: center;">
+
+                    <div class="carousel" id="carousel">
+                        <div class="card active">
+                            <img src="{% static 'assets/images/delhi.jpg' %}" alt="Delhi">
+                            <h3>New Delhi, India</h3>
+                            <p>Delhi is the capital of India, known for its history and culture.</p>
+                        </div>
+                        <div class="card">
+                            <img src="{% static 'assets/images/mumbai.jpg' %}" alt="Mumbai">
+                            <h3>Mumbai, India</h3>
+                            <p>Mumbai is the capital of Maharashtra and a major trading port.</p>
+                        </div>
+                        <div class="card">
+                            <img src="{% static 'assets/images/goa.jpg' %}" alt="Goa">
+                            <h3>Goa, India</h3>
+                            <p>Goa is famous for its beaches, nightlife, and Portuguese heritage.</p>
+                        </div>
+                        <div class="card">
+                            <img src="{% static 'assets/images/bangalore.jpg' %}" alt="Bangalore">
+                            <h3>Bangalore, India</h3>
+                            <p>Known as the Silicon Valley of India for its IT industry.</p>
+                        </div>
+                        <div class="card">
+                            <img src="{% static 'assets/images/kolkata.jpg' %}" alt="Kolkata">
+                            <h3>Kolkata, India</h3>
+                            <p>Cultural capital of India with colonial architecture.</p>
+                        </div>
+                    </div>
+
+                    <!-- <div class="indicators" id="indicators"></div> -->
+
+                    <div style="display: flex; justify-content: center;">
+                        <button class="control-btn" id="playPauseBtn">❚❚</button>
+                    </div>
+                </div>
+
+
             </div>
         </div>
     </div>
 </section>
 
-
-<!-- Statistics Section -->
 <section class="py-5 bg-white">
     <div class="container">
-        <div class="row text-center">
-            <div class="col-md-3 col-6 mb-4">
-                <div class="stat-number" id="statDestinations">0</div>
-                <p class="text-muted">Destinations</p>
-            </div>
-            <div class="col-md-3 col-6 mb-4">
-                <div class="stat-number" id="statTrips">0</div>
-                <p class="text-muted">Trips Planned</p>
-            </div>
-            <div class="col-md-3 col-6 mb-4">
-                <div class="stat-number" id="statHappy">0</div>
-                <p class="text-muted">Happy Travelers</p>
-            </div>
-            <div class="col-md-3 col-6 mb-4">
-                <div class="stat-number">24/7</div>
-                <p class="text-muted">Support</p>
+        <h2 class="fw-bold mb-3">Most loved Places by travellers </h2>
+        <div class="carousel1" id="carousel1">
+            <div class="track" id="track">
+                <div class="card1">
+                    <img src="https://picsum.photos/id/1018/600/400" alt="">
+                    <div class="overlay">
+                        <h3>Mountain Escape</h3>
+                        <p>Experience the serenity of the mountains with breathtaking views and fresh air.</p>
+                        <button>Explore</button>
+                    </div>
+                </div>
+                <div class="card1">
+                    <img src="https://picsum.photos/id/1025/600/400" alt="">
+                    <div class="overlay">
+                        <h3>Wildlife Safari</h3>
+                        <p>Get closer to nature and discover exotic wildlife in their natural habitat.</p>
+                        <button>Book Now</button>
+                    </div>
+                </div>
+                <div class="card1">
+                    <img src="https://picsum.photos/id/1043/600/400" alt="">
+                    <div class="overlay">
+                        <h3>City Lights</h3>
+                        <p>Explore the nightlife, skyscrapers, and vibrant culture of the big city.</p>
+                        <button>Discover</button>
+                    </div>
+                </div>
+                <div class="card1">
+                    <img src="https://picsum.photos/id/1039/600/400" alt="">
+                    <div class="overlay">
+                        <h3>Beach Paradise</h3>
+                        <p>Relax on sandy shores, swim in turquoise waters, and enjoy tropical vibes.</p>
+                        <button>Relax</button>
+                    </div>
+                </div>
+                <div class="card1">
+                    <img src="https://picsum.photos/id/1050/600/400" alt="">
+                    <div class="overlay">
+                        <h3>Adventure Trails</h3>
+                        <p>Hike through forests and discover hidden gems along adventurous trails.</p>
+                        <button>Join Tour</button>
+                    </div>
+                </div>
+                <div class="card1">
+                    <img src="https://picsum.photos/id/1005/600/400" alt="">
+                    <div class="overlay">
+                        <h3>Cultural Journey</h3>
+                        <p>Immerse yourself in rich traditions, food, and art from around the world.</p>
+                        <button>Learn More</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </section>
+<!-- Statistics Section -->
+<section class="bg-white achivement-section">
+    <div class="container achivement-path-vector py-5">
+        <div class="row text-center">
+            <div class="col-md-3 col-6 mb-4 d-flex justify-content-center">
+                <div class="achivements-count-div">
+                    <div class="stat-number" id="statDestinations">0</div>
+                    <p class="text-muted">Destinations</p>
+                </div>
 
+            </div>
+            <div class="col-md-3 col-6 mb-4 d-flex justify-content-center">
+                <div class="achivements-count-div">
+                    <div class="stat-number" id="statTrips">0</div>
+                    <p class="text-muted">Trips Planned</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-4 d-flex justify-content-center">
+                <div class="achivements-count-div">
+                    <div class="stat-number" id="statHappy">0</div>
+                    <p class="text-muted">Happy Travelers</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-4 d-flex justify-content-center">
+                <div class="achivements-count-div">
+                    <div class="stat-number">24/7</div>
+                    <p class="text-muted">Support</p>
+                </div>
+            </div>
+        </div>
+</section>
+<section class="stefi-different-section py-5 bg-white">
+
+    <div class="container">
+        <h1 class="text-center fw-bold">What Makes STEFI Different</h1>
+        <div class="card2s py-5">
+            <div class="card2">
+                <i class="fas fa-calendar-alt fa-xl mb-4"></i>
+                <h3>Detailed Itineraries</h3>
+                <p>Create hour-by-hour plans with activities, timings, and locations</p>
+            </div>
+            <div class="card2">
+                <i class="fas fa-calculator fa-xl mb-4"></i>
+                <h3>Budget Management</h3>
+                <p>Track expenses and manage your travel budget effectively</p>
+            </div>
+            <div class="card2">
+                <i class="fas fa-file-invoice fa-xl mb-4"></i>
+                <h3>Instant Invoices</h3>
+                <p>Generate professional invoices for your trips and expenses</p>
+            </div>
+        </div>
+    </div>
+</section>
 <!-- States Carousel Section -->
-<section id="states" class="state-carousel py-5 bg-light">
+<!-- <section id="states" class="state-carousel py-5 bg-light">
     <div class="container">
         <div class="text-center mb-5">
             <h2 class="fw-bold">Explore by State</h2>
@@ -364,10 +864,10 @@
             </a>
         </div>
     </div>
-</section>
+</section> -->
 
 <!-- Popular Destinations Section -->
-<section class="py-5 bg-white">
+<!-- <section class="py-5 bg-white">
     <div class="container">
         <div class="text-center mb-5">
             <h2 class="fw-bold">Popular Destinations</h2>
@@ -381,10 +881,10 @@
             </div>
         </div>
     </div>
-</section>
+</section> -->
 
 <!-- Features Section -->
-<section id="features" class="py-5 bg-light">
+<!-- <section id="features" class="py-5 bg-light">
     <div class="container">
         <div class="text-center mb-5">
             <h2 class="fw-bold">Why Choose Stefi?</h2>
@@ -421,7 +921,7 @@
             </div>
         </div>
     </div>
-</section>
+</section> -->
 <!-- Trip Selection Modal -->
 <div class="modal fade" id="tripSelectionModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -445,14 +945,14 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="destinationSelectionContent">
-                <!-- Content will be loaded here -->
             </div>
         </div>
     </div>
 </div>
 
 <!-- CTA Section -->
-<section class="py-5 bg-primary text-white" style="background-color: rgb(11 162 192) !important;margin: 10px;border-radius: 26px;">
+<!-- <section class="py-5 bg-primary text-white"
+    style="background-color: rgb(11 162 192) !important;margin: 10px;border-radius: 26px;">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-8">
@@ -466,15 +966,15 @@
             </div>
         </div>
     </div>
-</section>
+</section> -->
 {% endblock %}
 
 {% block extra_js %}
 <script>
     function showToast(title, message, type = 'info') {
-    const toast = document.createElement('div');
-    toast.className = `toast align-items-center text-white bg-${type} border-0`;
-    toast.innerHTML = `
+        const toast = document.createElement('div');
+        toast.className = `toast align-items-center text-white bg-${type} border-0`;
+        toast.innerHTML = `
         <div class="d-flex">
             <div class="toast-body">
                 <strong>${title}:</strong> ${message}
@@ -482,27 +982,27 @@
             <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
         </div>
     `;
-    
-    document.body.appendChild(toast);
-    const bsToast = new bootstrap.Toast(toast);
-    bsToast.show();
-    
-    // Remove toast after it's hidden
-    toast.addEventListener('hidden.bs.toast', () => {
-        document.body.removeChild(toast);
-    });
-}
-    function showTripSelectionModal(destinationId, destinationName) {
-    // Simulate loading user trips (replace with actual API call)
-    const userTrips = [
-        { id: 1, name: "Summer Vacation", destination: "Goa", date: "Aug 15-20, 2024" },
-        { id: 2, name: "Business Trip", destination: "Delhi", date: "Sep 1-5, 2024" },
-        { id: 3, name: "Family Holiday", destination: "Manali", date: "Dec 20-28, 2024" }
-    ];
 
-    let tripsHtml = '';
-    if (userTrips.length === 0) {
-        tripsHtml = `
+        document.body.appendChild(toast);
+        const bsToast = new bootstrap.Toast(toast);
+        bsToast.show();
+
+        // Remove toast after it's hidden
+        toast.addEventListener('hidden.bs.toast', () => {
+            document.body.removeChild(toast);
+        });
+    }
+    function showTripSelectionModal(destinationId, destinationName) {
+        // Simulate loading user trips (replace with actual API call)
+        const userTrips = [
+            { id: 1, name: "Summer Vacation", destination: "Goa", date: "Aug 15-20, 2024" },
+            { id: 2, name: "Business Trip", destination: "Delhi", date: "Sep 1-5, 2024" },
+            { id: 3, name: "Family Holiday", destination: "Manali", date: "Dec 20-28, 2024" }
+        ];
+
+        let tripsHtml = '';
+        if (userTrips.length === 0) {
+            tripsHtml = `
             <div class="text-center py-4">
                 <i class="fas fa-suitcase fa-3x text-muted mb-3"></i>
                 <h6>No trips found</h6>
@@ -512,14 +1012,14 @@
                 </button>
             </div>
         `;
-    } else {
-        tripsHtml = `
+        } else {
+            tripsHtml = `
             <h6 class="mb-3">Select a trip to add ${destinationName}:</h6>
             <div class="trip-list">
         `;
-        
-        userTrips.forEach(trip => {
-            tripsHtml += `
+
+            userTrips.forEach(trip => {
+                tripsHtml += `
                 <div class="trip-item card mb-2 hover-lift" onclick="addDestinationToTrip('${destinationId}', '${trip.id}')">
                     <div class="card-body">
                         <h6 class="card-title mb-1">${trip.name}</h6>
@@ -528,84 +1028,84 @@
                     </div>
                 </div>
             `;
-        });
-        
-        tripsHtml += `</div>`;
+            });
+
+            tripsHtml += `</div>`;
+        }
+
+        $('#tripSelectionContent').html(tripsHtml);
+
+        const modal = new bootstrap.Modal(document.getElementById('tripSelectionModal'));
+        modal.show();
     }
 
-    $('#tripSelectionContent').html(tripsHtml);
-    
-    const modal = new bootstrap.Modal(document.getElementById('tripSelectionModal'));
-    modal.show();
-}
+    function addDestinationToTrip(destinationId, tripId) {
+        console.log('Adding destination to trip:', destinationId, tripId);
 
-function addDestinationToTrip(destinationId, tripId) {
-    console.log('Adding destination to trip:', destinationId, tripId);
-    
-    // Close the modal
-    $('#tripSelectionModal').modal('hide');
-    
-    showToast('Success', 'Destination added to your trip', 'success');
-    
-    // Redirect to trip detail page
-    setTimeout(() => {
-        window.location.href = `/trips/${tripId}/`;
-    }, 1000);
-}
+        // Close the modal
+        $('#tripSelectionModal').modal('hide');
+
+        showToast('Success', 'Destination added to your trip', 'success');
+
+        // Redirect to trip detail page
+        setTimeout(() => {
+            window.location.href = `/trips/${tripId}/`;
+        }, 1000);
+    }
     function startNewTrip(destinationId, destinationName) {
-    console.log('Starting new trip to:', destinationName);
-    
-    // Close the modal
-    $('#destinationSelectionModal').modal('hide');
-    
-    // Show success message
-    showToast('Success', `Starting new trip to ${destinationName}`, 'success');
-    
-    // Redirect to trip creation page after a short delay
-    setTimeout(() => {
-        window.location.href = `/trips/create/?destination=${encodeURIComponent(destinationName)}`;
-    }, 1000);
-}
+        console.log('Starting new trip to:', destinationName);
 
-function addToExistingTrip(destinationId, destinationName) {
-    console.log('Adding to existing trip:', destinationName);
-    
-    // Close the modal
-    $('#destinationSelectionModal').modal('hide');
-    
-    // Show trip selection modal
-    showTripSelectionModal(destinationId, destinationName);
-}
+        // Close the modal
+        $('#destinationSelectionModal').modal('hide');
 
-function addToWishlist(destinationId) {
-    console.log('Adding to wishlist:', destinationId);
-    showToast('Added to Wishlist', 'Destination saved to your wishlist', 'success');
-}
+        // Show success message
+        showToast('Success', `Starting new trip to ${destinationName}`, 'success');
 
-function viewDestinationDetails(destinationId) {
-    console.log('Viewing details for:', destinationId);
-    window.location.href = `/destinations/${destinationId}/`;
-}
-
-function shareDestination(destinationId) {
-    console.log('Sharing destination:', destinationId);
-    
-    if (navigator.share) {
-        navigator.share({
-            title: 'Amazing Destination',
-            text: 'Check out this beautiful destination I found!',
-            url: window.location.origin + '/destinations/' + destinationId + '/'
-        });
-    } else {
-        showToast('Share', 'Copy the link to share', 'info');
+        // Redirect to trip creation page after a short delay
+        setTimeout(() => {
+            window.location.href = `/trips/create/?destination=${encodeURIComponent(destinationName)}`;
+        }, 1000);
     }
-}
+
+    function addToExistingTrip(destinationId, destinationName) {
+        console.log('Adding to existing trip:', destinationName);
+
+        // Close the modal
+        $('#destinationSelectionModal').modal('hide');
+
+        // Show trip selection modal
+        showTripSelectionModal(destinationId, destinationName);
+    }
+
+    function addToWishlist(destinationId) {
+        console.log('Adding to wishlist:', destinationId);
+        showToast('Added to Wishlist', 'Destination saved to your wishlist', 'success');
+    }
+
+    function viewDestinationDetails(destinationId) {
+        console.log('Viewing details for:', destinationId);
+        window.location.href = `/destinations/${destinationId}/`;
+    }
+
+    function shareDestination(destinationId) {
+        console.log('Sharing destination:', destinationId);
+
+        if (navigator.share) {
+            navigator.share({
+                title: 'Amazing Destination',
+                text: 'Check out this beautiful destination I found!',
+                url: window.location.origin + '/destinations/' + destinationId + '/'
+            });
+        } else {
+            showToast('Share', 'Copy the link to share', 'info');
+        }
+    }
     function showDestinationSelection(destination) {
-    // Hide search results
-    searchResults.hide();
-    
-    // Create selection content
-    const selectionContent = `
+        // Hide search results
+        searchResults.hide();
+
+        // Create selection content
+        const selectionContent = `
         <div class="destination-selection">
             <!-- Destination Header -->
             <div class="destination-header text-center mb-4">
@@ -691,25 +1191,25 @@ function shareDestination(destinationId) {
         </div>
     `;
 
-    // Load content into modal
-    $('#destinationSelectionContent').html(selectionContent);
-    
-    // Show modal
-    const modal = new bootstrap.Modal(document.getElementById('destinationSelectionModal'));
-    modal.show();
-    
-    // Add hover effects
-    $('.option-card').hover(
-        function() {
-            $(this).css('transform', 'translateY(-3px)');
-            $(this).css('border-color', 'var(--primary-color)');
-        },
-        function() {
-            $(this).css('transform', 'translateY(0)');
-            $(this).css('border-color', '#dee2e6');
-        }
-    );
-}
+        // Load content into modal
+        $('#destinationSelectionContent').html(selectionContent);
+
+        // Show modal
+        const modal = new bootstrap.Modal(document.getElementById('destinationSelectionModal'));
+        modal.show();
+
+        // Add hover effects
+        $('.option-card').hover(
+            function () {
+                $(this).css('transform', 'translateY(-3px)');
+                $(this).css('border-color', 'var(--primary-color)');
+            },
+            function () {
+                $(this).css('transform', 'translateY(0)');
+                $(this).css('border-color', '#dee2e6');
+            }
+        );
+    }
 
     function renderDestinations(destinations) {
         let html = '';
@@ -1004,4 +1504,364 @@ function shareDestination(destinationId) {
         });
     }
 </script>
+
+<script>
+    let currentIndex = 0;
+    let autoScrollInterval;
+    let isPlaying = true;
+    let isDragging = false;
+    let startPosition = 0;
+    let currentTranslate = 0;
+    let prevTranslate = 0;
+    let animationID = 0;
+    let velocity = 0;
+    let lastTime = 0;
+    let lastPosition = 0;
+
+    const carouselContainer = document.getElementById("carouselContainer");
+    const carousel = document.getElementById("carousel");
+    const cards = Array.from(document.querySelectorAll(".card")); // original cards
+    //   const indicatorsContainer = document.getElementById("indicators");
+    const playPauseBtn = document.getElementById("playPauseBtn");
+
+    // Clone first and last cards
+    const firstClone = cards[0].cloneNode(true);
+    const lastClone = cards[cards.length - 1].cloneNode(true);
+    firstClone.id = "first-clone";
+    lastClone.id = "last-clone";
+
+    carousel.appendChild(firstClone);
+    carousel.insertBefore(lastClone, carousel.firstChild);
+
+    let allCards = document.querySelectorAll(".card"); // includes clones
+    let cardWidth = cards[0].offsetWidth + 30;
+
+    // Create indicators
+    //   cards.forEach((_, i) => {
+    // const indicator = document.createElement("div");
+    // indicator.classList.add("indicator");
+    // if (i === 0) indicator.classList.add("active");
+    // indicator.addEventListener("click", () => {
+    //   currentIndex = i;
+    //   updateCarousel();
+    //   resetAutoScroll();
+    // });
+    // indicatorsContainer.appendChild(indicator);
+    //   });
+
+    //   const indicators = document.querySelectorAll(".indicator");
+
+    // Update carousel position
+    function updateCarousel(animate = true) {
+        // Reset all cards (including clones)
+        allCards.forEach((card) => {
+            card.classList.remove("active", "left", "right", "hidden");
+        });
+
+        // Apply positions only on real cards
+        cards.forEach((card, index) => {
+            if (index === currentIndex) {
+                card.classList.add("active");
+            } else if (index === (currentIndex - 1 + cards.length) % cards.length) {
+                card.classList.add("left");
+            } else if (index === (currentIndex + 1) % cards.length) {
+                card.classList.add("right");
+            } else {
+                card.classList.add("hidden");
+            }
+
+            card.style.transition = animate
+                ? "transform 0.6s ease, opacity 0.6s ease"
+                : "none";
+        });
+
+        // Update indicators
+        //   indicators.forEach((indicator, index) => {
+        //     indicator.classList.toggle("active", index === currentIndex);
+        //   });
+    }
+
+    // Handle infinite loop snap
+    function handleTransitionEnd() {
+        if (allCards[currentIndex + 1].id === "first-clone") {
+            carousel.style.transition = "none";
+            currentIndex = 0;
+            updateCarousel(false);
+        }
+        if (allCards[currentIndex + 1].id === "last-clone") {
+            carousel.style.transition = "none";
+            currentIndex = cards.length - 1;
+            updateCarousel(false);
+        }
+    }
+
+    carousel.addEventListener("transitionend", handleTransitionEnd);
+
+    // Drag/swipe
+    const touchStart = (event) => {
+        stopAutoScroll();
+        startPosition = getPositionX(event);
+        isDragging = true;
+        animationID = requestAnimationFrame(animation);
+
+        carousel.classList.add("grabbing");
+        carousel.style.transition = "none";
+        allCards.forEach((card) => card.classList.add("dragging"));
+    };
+
+    const touchMove = (event) => {
+        if (!isDragging) return;
+
+        const currentPosition = getPositionX(event);
+        currentTranslate = prevTranslate + currentPosition - startPosition;
+
+        const currentTime = Date.now();
+        const timeDiff = currentTime - lastTime;
+
+        if (timeDiff > 0) {
+            velocity = (currentPosition - lastPosition) / timeDiff;
+            lastTime = currentTime;
+            lastPosition = currentPosition;
+        }
+
+        // carousel.style.transform = `translateX(${currentTranslate}px)`;
+    };
+
+    const touchEnd = () => {
+        if (!isDragging) return;
+
+        isDragging = false;
+        cancelAnimationFrame(animationID);
+
+        carousel.classList.remove("grabbing");
+        allCards.forEach((card) => card.classList.remove("dragging"));
+
+        const momentum = velocity * 200;
+        let swipeDistance = currentTranslate - prevTranslate;
+        swipeDistance += momentum;
+
+        const cardWidth = cards[0].offsetWidth + 30;
+
+        if (Math.abs(swipeDistance) > cardWidth / 3 || Math.abs(velocity) > 0.5) {
+            if (swipeDistance > 0 || velocity > 0) {
+                currentIndex = (currentIndex - 1 + cards.length) % cards.length;
+            } else {
+                currentIndex = (currentIndex + 1) % cards.length;
+            }
+        }
+
+        updateCarousel();
+        velocity = 0;
+        lastTime = 0;
+        lastPosition = 0;
+
+        if (isPlaying) resetAutoScroll();
+    };
+
+    const getPositionX = (event) => {
+        return event.type.includes("mouse")
+            ? event.pageX
+            : event.touches[0].clientX;
+    };
+
+    const animation = () => {
+        if (isDragging) {
+            requestAnimationFrame(animation);
+        }
+    };
+
+    // Event listeners
+    carousel.addEventListener("mousedown", touchStart);
+    carousel.addEventListener("touchstart", touchStart);
+
+    carousel.addEventListener("mousemove", touchMove);
+    carousel.addEventListener("touchmove", touchMove);
+
+    carousel.addEventListener("mouseup", touchEnd);
+    carousel.addEventListener("mouseleave", touchEnd);
+    carousel.addEventListener("touchend", touchEnd);
+
+    // Auto-scroll
+    function startAutoScroll() {
+        autoScrollInterval = setInterval(() => {
+            currentIndex = (currentIndex + 1) % cards.length;
+            updateCarousel();
+        }, 3000);
+    }
+
+    function stopAutoScroll() {
+        clearInterval(autoScrollInterval);
+    }
+
+    function resetAutoScroll() {
+        stopAutoScroll();
+        if (isPlaying) startAutoScroll();
+    }
+
+    // Play/Pause
+    playPauseBtn.addEventListener("click", () => {
+        isPlaying = !isPlaying;
+        if (isPlaying) {
+            startAutoScroll();
+            playPauseBtn.innerHTML = "❚❚";
+        } else {
+            stopAutoScroll();
+            playPauseBtn.innerHTML = "►";
+        }
+    });
+
+    // Keyboard navigation
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowLeft") {
+            currentIndex = (currentIndex - 1 + cards.length) % cards.length;
+            updateCarousel();
+            resetAutoScroll();
+        } else if (e.key === "ArrowRight") {
+            currentIndex = (currentIndex + 1) % cards.length;
+            updateCarousel();
+            resetAutoScroll();
+        } else if (e.key === " ") {
+            isPlaying = !isPlaying;
+            if (isPlaying) {
+                startAutoScroll();
+                playPauseBtn.innerHTML = "❚❚";
+            } else {
+                stopAutoScroll();
+                playPauseBtn.innerHTML = "►";
+            }
+            e.preventDefault();
+        }
+    });
+
+    // Initial setup
+    function initialPosition() {
+        const containerWidth = carouselContainer.offsetWidth;
+        const centerOffset = (containerWidth - cardWidth) / 2;
+        const startTransform = -((currentIndex + 1) * cardWidth) + centerOffset;
+        // carousel.style.transform = `translateX(${startTransform}px)`;
+        prevTranslate = startTransform;
+    }
+
+    currentIndex = 0; // start at first real card
+    updateCarousel(false);
+    initialPosition();
+    startAutoScroll();
+
+    // Resize handling
+    window.addEventListener("resize", () => {
+        cardWidth = cards[0].offsetWidth + 30;
+        updateCarousel(false);
+    });
+</script>
+
+<script>
+    const carousel1El = document.getElementById("carousel1");
+    const trackEl = document.getElementById("track");
+    let cards1 = document.querySelectorAll(".card1");
+    const cardCount1 = cards1.length;
+    let index1 = 0;
+    let interval1;
+
+    let isDragging1 = false;
+    let startX1 = 0;
+    let currentTranslate1 = 0;
+    let prevTranslate1 = 0;
+    let animationID1;
+
+    // Clone 3 cards for infinite loop
+    for (let i = 0; i < 3; i++) {
+        let clone = cards1[i].cloneNode(true);
+        trackEl.appendChild(clone);
+    }
+
+    function autoScroll1() {
+        index1++;
+        const step = carousel1El.offsetWidth / 3;
+        trackEl.style.transition = "transform 0.8s cubic-bezier(.25,.8,.25,1)";
+        trackEl.style.transform = `translateX(-${step * index1}px)`;
+
+        if (index1 >= cardCount1) {
+            setTimeout(() => {
+                trackEl.style.transition = "none";
+                trackEl.style.transform = "translateX(0)";
+                index1 = 0;
+            }, 850);
+        }
+    }
+
+    function startAutoScroll1() {
+        interval1 = setInterval(autoScroll1, 3000);
+    }
+
+    function stopAutoScroll1() {
+        clearInterval(interval1);
+    }
+
+    // Grab/Drag functionality
+    const getPositionX1 = e =>
+        e.type.includes("mouse") ? e.pageX : e.touches[0].clientX;
+
+    const dragStart1 = e => {
+        stopAutoScroll1();
+        isDragging1 = true;
+        startX1 = getPositionX1(e);
+        animationID1 = requestAnimationFrame(animation1);
+        carousel1El.classList.add("grabbing");
+    };
+
+    const dragMove1 = e => {
+        if (!isDragging1) return;
+        const currentX = getPositionX1(e);
+        currentTranslate1 = prevTranslate1 + currentX - startX1;
+    };
+
+    const dragEnd1 = () => {
+        cancelAnimationFrame(animationID1);
+        isDragging1 = false;
+        const movedBy = currentTranslate1 - prevTranslate1;
+        const step = carousel1El.offsetWidth / 3;
+
+        if (movedBy < -100) index1++;
+        if (movedBy > 100) index1--;
+
+        moveToIndex1();
+        startAutoScroll1();
+        carousel1El.classList.remove("grabbing");
+    };
+
+    function animation1() {
+        setSliderPosition1();
+        if (isDragging1) requestAnimationFrame(animation1);
+    }
+
+    function setSliderPosition1() {
+        trackEl.style.transform = `translateX(${currentTranslate1}px)`;
+    }
+
+    function moveToIndex1() {
+        const step = carousel1El.offsetWidth / 3;
+        currentTranslate1 = -index1 * step;
+        prevTranslate1 = currentTranslate1;
+        trackEl.style.transition = "transform 0.5s ease-out";
+        trackEl.style.transform = `translateX(${currentTranslate1}px)`;
+    }
+
+    // Events
+    carousel1El.addEventListener("mousedown", dragStart1);
+    carousel1El.addEventListener("mousemove", dragMove1);
+    carousel1El.addEventListener("mouseup", dragEnd1);
+    carousel1El.addEventListener("mouseleave", () => isDragging1 && dragEnd1());
+
+    carousel1El.addEventListener("touchstart", dragStart1);
+    carousel1El.addEventListener("touchmove", dragMove1);
+    carousel1El.addEventListener("touchend", dragEnd1);
+
+    // Init
+    startAutoScroll1();
+</script>
+
+
+
+
+
 {% endblock %}

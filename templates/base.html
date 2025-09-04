@@ -1,28 +1,31 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Stefi - Travel Planning{% endblock %}</title>
-    
+
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
     <!-- Custom CSS -->
     <style>
         @media (min-width: 992px) {
-    .navbar-expand-lg .navbar-nav {
-        flex-direction: row;
-        gap: 20px;
-    }
-}
+            .navbar-expand-lg .navbar-nav {
+                flex-direction: row;
+                gap: 20px;
+            }
+        }
+
         :root {
             --primary-color: #3B71FE;
             --secondary-color: #6c757d;
@@ -33,7 +36,7 @@
             --light-color: #f8f9fa;
             --dark-color: #212529;
         }
-        
+
         body {
             font-family: 'Poppins', sans-serif;
             background-color: #f8fafc;
@@ -41,57 +44,59 @@
             display: flex;
             flex-direction: column;
         }
-        
+
         .navbar-brand {
             font-weight: 700;
             color: var(--primary-color) !important;
         }
-        
+
         .navbar-nav .nav-link {
             font-weight: 500;
             padding: 0.5rem 1rem;
             transition: color 0.3s ease;
         }
-        
+
         .navbar-nav .nav-link:hover {
             color: var(--primary-color) !important;
         }
-        
+
         .main-content {
             flex: 1;
             /* padding-top: 2rem; */
             /* padding-bottom: 2rem; */
         }
-        
+
         .footer {
-            background: linear-gradient(135deg, #11ccf1, #057b93);
+            /* background: linear-gradient(135deg, #11ccf1, #057b93); */
+            background: url("{% static 'assets/images/footer-bg.jpg' %}") no-repeat center center;
+            background-size: cover;
             color: white;
             padding: 2rem 0;
             margin-top: auto;
         }
-        
+
         .footer a {
-            color: rgba(255, 255, 255, 0.8);
+            color:rgba(51, 51, 51, 1) ;
             text-decoration: none;
             transition: color 0.3s ease;
         }
-        
+
         .footer a:hover {
             color: white;
         }
-        
+
         .card {
             border: none;
             border-radius: 15px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        
+
         .card:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
-        
+
         .btn-primary {
             background: linear-gradient(135deg, #11ccf1, #057b93);
             border: none;
@@ -100,37 +105,37 @@
             font-weight: 500;
             transition: all 0.3s ease;
         }
-        
+
         .btn-primary:hover {
             transform: translateY(-1px);
             box-shadow: 0 4px 15px rgba(59, 113, 254, 0.4);
         }
-        
+
         .hero-section {
             /* background: linear-gradient(135deg, #10c6ea 0%, #068099 100%);            color: white; */
             padding: 4rem 0;
         }
-        
+
         .min-vh-75 {
             min-height: 75vh;
         }
-        
+
         .alert {
             border: none;
             border-radius: 10px;
             font-weight: 500;
         }
-        
+
         /* Timeline styling */
         .timeline {
             position: relative;
             padding-left: 50px;
         }
-        
+
         .timeline-day {
             margin-bottom: 2rem;
         }
-        
+
         .timeline-date {
             border-left: 3px solid var(--primary-color);
             padding-left: 15px;
@@ -138,12 +143,12 @@
             margin-bottom: 1rem;
             font-weight: 600;
         }
-        
+
         .timeline-item {
             position: relative;
             margin-bottom: 1.5rem;
         }
-        
+
         .timeline-marker {
             position: absolute;
             left: -50px;
@@ -155,14 +160,14 @@
             justify-content: center;
             color: white;
         }
-        
+
         .timeline-content {
             background: #f8f9fa;
             padding: 1.5rem;
             border-radius: 12px;
             border-left: 4px solid #dee2e6;
         }
-        
+
         /* Loading spinner */
         .loading-spinner {
             display: none;
@@ -173,37 +178,70 @@
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
-        
+
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
-        
+
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .navbar-nav {
                 text-align: center;
             }
-            
+
             .hero-section {
                 text-align: center;
                 padding: 2rem 0;
             }
-            
+
             .timeline {
                 padding-left: 30px;
             }
-            
+
             .timeline-marker {
                 left: -30px;
                 width: 30px;
                 height: 30px;
             }
         }
+
+        .form-control:focus {
+            color: #212529;
+            background-color: inherit;
+            border-color: transparent;
+            outline: 0;
+            box-shadow: none
+        }
+
+        .footer-content {
+            background: rgba(229, 233, 243, 0.8);
+            padding: 20px;
+            border-radius: 12px;
+            color: rgba(51, 51, 51, 1);
+
+        }
+
+        .footer-heading {
+            padding: 30px 0;
+            border-bottom: 1px solid;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+        footer ul li {
+            margin-bottom: 10px;
+            
+        }
     </style>
-    
+
     {% block extra_css %}{% endblock %}
 </head>
+
 <body>
     <!-- Navigation -->
     <!-- <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
@@ -315,15 +353,16 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <div class="row">
+            <div class="row footer-content">
                 <div class="col-lg-4 mb-4">
-                    <h5 class="mb-3">
-                        <img src="{% static 'assets/logo/logo-symbol.jpeg'%}" width="100" alt="" style="border-radius: 50%; background: white; padding: 9px;">
+                    <h5 class="mb-3 text-center">
+                        <img src="{% static 'assets/logo/transparent-logo.png'%}" width="" alt="" style="width: 170px;">
                     </h5>
-                    <p>Plan your perfect trips with ease. Create itineraries, manage budgets, and generate invoices all in one place.</p>
+                    <p>Plan your perfect trips with ease. Create itineraries, manage budgets, and generate invoices all
+                        in one place.</p>
                 </div>
-                <div class="col-lg-2 col-md-4 mb-4">
-                    <h6>Quick Links</h6>
+                <div class="col-lg-2 col-md-4 mb-4 px-0">
+                    <h6 class="footer-heading">Quick Links</h6>
                     <ul class="list-unstyled">
                         <li><a href="{% url 'home:landing_page' %}">Home</a></li>
                         <li><a href="#features">Features</a></li>
@@ -331,8 +370,8 @@
                         <li><a href="#">Contact</a></li>
                     </ul>
                 </div>
-                <div class="col-lg-2 col-md-4 mb-4">
-                    <h6>Features</h6>
+                <div class="col-lg-2 col-md-4 mb-4 px-0">
+                    <h6 class="footer-heading">Features</h6>
                     <ul class="list-unstyled">
                         <li><a href="#">Trip Planning</a></li>
                         <li><a href="#">Itinerary</a></li>
@@ -340,8 +379,8 @@
                         <li><a href="#">Invoice Generation</a></li>
                     </ul>
                 </div>
-                <div class="col-lg-4 col-md-4 mb-4">
-                    <h6>Connect With Us</h6>
+                <div class="col-lg-4 col-md-4 mb-4 px-0">
+                    <h6 class="footer-heading">Connect With Us</h6>
                     <div class="d-flex gap-3 mt-3">
                         <a href="#" class="text-white"><i class="fab fa-facebook fa-2x"></i></a>
                         <a href="#" class="text-white"><i class="fab fa-twitter fa-2x"></i></a>
@@ -359,10 +398,10 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    
+
     <!-- jQuery (optional) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    
+
     <!-- Custom JS -->
     <script>
         // CSRF token setup for AJAX requests
@@ -380,18 +419,18 @@
             }
             return cookieValue;
         }
-        
+
         const csrftoken = getCookie('csrftoken');
-        
+
         // AJAX setup
         $.ajaxSetup({
-            beforeSend: function(xhr, settings) {
+            beforeSend: function (xhr, settings) {
                 if (!this.crossDomain) {
                     xhr.setRequestHeader("X-CSRFToken", csrftoken);
                 }
             }
         });
-        
+
         // Loading spinner functionality
         function showLoading(button) {
             const spinner = button.find('.loading-spinner') || $('<div class="loading-spinner ms-2"></div>');
@@ -401,78 +440,79 @@
             }
             spinner.show();
         }
-        
+
         function hideLoading(button) {
             button.prop('disabled', false);
             button.find('.loading-spinner').hide();
         }
-        
+
         // Form submission handling
-        $(document).ready(function() {
-            $('form').on('submit', function() {
+        $(document).ready(function () {
+            $('form').on('submit', function () {
                 const submitBtn = $(this).find('button[type="submit"]');
                 if (submitBtn.length) {
                     showLoading(submitBtn);
                 }
             });
-            
+
             // Auto-hide alerts after 5 seconds
-            setTimeout(function() {
+            setTimeout(function () {
                 $('.alert').alert('close');
             }, 5000);
         });
     </script>
     <script>
         // Example AJAX call that should work
-function loadTripDetails(tripId) {
-    $.ajax({
-        url: `/api/trips/detail/${tripId}/`,
-        type: 'GET',
-        dataType: 'json',
-        xhrFields: {
-            withCredentials: true  // This is important!
-        },
-        headers: {
-            'X-CSRFToken': getCookie('csrftoken'),  // Include CSRF token
-            'Authorization': `Bearer ${getAuthToken()}`  // Include auth token if using JWT
-        },
-        success: function(response) {
-            if (response.success) {
-                renderTripDetails(response.trip, response.itinerary);
-            } else {
-                console.error('Failed to load trip details:', response.message);
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error('API call failed:', error);
-            // Fallback to regular page load
-            window.location.href = `/trips/${tripId}/`;
+        function loadTripDetails(tripId) {
+            $.ajax({
+                url: `/api/trips/detail/${tripId}/`,
+                type: 'GET',
+                dataType: 'json',
+                xhrFields: {
+                    withCredentials: true  // This is important!
+                },
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),  // Include CSRF token
+                    'Authorization': `Bearer ${getAuthToken()}`  // Include auth token if using JWT
+                },
+                success: function (response) {
+                    if (response.success) {
+                        renderTripDetails(response.trip, response.itinerary);
+                    } else {
+                        console.error('Failed to load trip details:', response.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('API call failed:', error);
+                    // Fallback to regular page load
+                    window.location.href = `/trips/${tripId}/`;
+                }
+            });
         }
-    });
-}
 
-// Helper function to get CSRF token
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
+        // Helper function to get CSRF token
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
             }
+            return cookieValue;
         }
-    }
-    return cookieValue;
-}
 
-// Helper function to get auth token
-function getAuthToken() {
-    // Get from localStorage, cookies, or wherever you store the token
-    return localStorage.getItem('authToken') || '';
-}
+        // Helper function to get auth token
+        function getAuthToken() {
+            // Get from localStorage, cookies, or wherever you store the token
+            return localStorage.getItem('authToken') || '';
+        }
     </script>
     {% block extra_js %}{% endblock %}
 </body>
+
 </html>
