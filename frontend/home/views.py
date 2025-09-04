@@ -45,7 +45,7 @@ def landing_page(request):
         'destination_types': destination_types,
     }
     
-    return render(request, 'home/landing.html', context)
+    return render(request, 'Home/landing.html', context)
 
 from django.http import JsonResponse
 
@@ -370,7 +370,7 @@ def view_invoice(request, trip_id):
     
     # In a real implementation, you would fetch invoice data from API
     # For now, we'll just render the template with trip_id
-    return render(request, 'home/trips/invoice.html', {'trip_id': trip_id})
+    return render(request, 'Home/trips/invoice.html', {'trip_id': trip_id})
 
 
 
@@ -483,11 +483,11 @@ def customer_registration(request):
             # Basic validation
             if password != confirm_password:
                 messages.error(request, 'Passwords do not match.')
-                return render(request, 'home/customer_registration.html')
+                return render(request, 'Home/customer_registration.html')
             
             if User.objects.filter(email=email).exists():
                 messages.error(request, 'Email already exists.')
-                return render(request, 'home/customer_registration.html')
+                return render(request, 'Home/customer_registration.html')
             
             # Get or create customer role (assuming role ID 3 is for customers)
 
@@ -508,7 +508,7 @@ def customer_registration(request):
                 first_key, first_value = next(iter(user_serializer.errors.items()))
                 messages.error(request, f"Invalid data: {first_key} - {first_value[0]}")
 
-                return render(request, 'home/customer_registration.html')
+                return render(request, 'Home/customer_registration.html')
             # Save user
             user_serializer.save()
             
