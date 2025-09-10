@@ -1,0 +1,683 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Plan New Trip - Stefi Travel{% endblock %}
+
+{% block extra_css %}
+<style>
+    .big-btn{
+    border: none;
+    border-radius: 12px;
+    padding: 1rem 2rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(59, 113, 254, 0.3);
+    }
+    .trip-creation-page {
+        background: #f8fafc;
+        min-height: 100vh;
+        padding: 2rem 0;
+    }
+    
+    .creation-header {
+        background: linear-gradient(135deg, #11ccf1, #057b93);
+        color: white;
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+    }
+    
+    .creation-steps {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 2rem;
+        position: relative;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .creation-steps::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: #e9ecef;
+        z-index: 1;
+    }
+    
+    .step {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: white;
+        border: 2px solid #e9ecef;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        position: relative;
+        z-index: 2;
+        transition: all 0.3s ease;
+    }
+    
+    .step.active {
+        background: var(--primary-color);
+        border-color: var(--primary-color);
+        color: white;
+        transform: scale(1.1);
+    }
+    
+    .step.completed {
+        background: #28a745;
+        border-color: #28a745;
+        color: white;
+    }
+    
+    .step-label {
+        position: absolute;
+        top: -30px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #6c757d;
+        white-space: nowrap;
+    }
+    
+    .step.active .step-label {
+        color: var(--primary-color);
+    }
+    
+    .creation-card {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        margin-bottom: 2rem;
+        border: none;
+    }
+    
+    .form-section {
+        margin-bottom: 2rem;
+    }
+    
+    .form-section-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #f1f3f4;
+    }
+    
+    .form-label {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+    }
+    
+    .form-label i {
+        margin-right: 0.75rem;
+        color: var(--primary-color);
+        width: 20px;
+    }
+    
+    .form-control, .form-select {
+        border: 2px solid #e9ecef;
+        border-radius: 12px;
+        padding: 0.875rem 1.25rem;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+    
+    .form-control:focus, .form-select:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(59, 113, 254, 0.15);
+        transform: translateY(-1px);
+    }
+    
+    .form-text {
+        font-size: 0.875rem;
+        color: #6c757d;
+        margin-top: 0.25rem;
+    }
+    
+    .btn-create {
+        background: linear-gradient(135deg, #11ccf1, #057b93);
+        border: none;
+        border-radius: 12px;
+        padding: 1rem 2rem;
+        font-weight: 600;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(59, 113, 254, 0.3);
+    }
+    
+    .btn-create:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(59, 113, 254, 0.4);
+    }
+    
+    .destination-preview {
+        
+        background: linear-gradient(135deg, #10c6ea 0%, #068099 100%);
+        color: white;
+        padding: 1.5rem;
+        border-radius: 15px;
+        margin-bottom: 1.5rem;
+    }
+    
+    .budget-preview {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: 10px;
+        margin-top: 1rem;
+    }
+    
+    .travel-method-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .travel-method-card {
+        border: 2px solid #e9ecef;
+        border-radius: 12px;
+        padding: 1rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .travel-method-card:hover {
+        border-color: var(--primary-color);
+        transform: translateY(-2px);
+    }
+    
+    .travel-method-card.selected {
+        border-color: var(--primary-color);
+        background: rgba(59, 113, 254, 0.1);
+    }
+    
+    .travel-method-icon {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+        color: var(--primary-color);
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .creation-steps {
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+        }
+        
+        .creation-steps::before {
+            display: none;
+        }
+        
+        .travel-method-cards {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .creation-card {
+            padding: 1.5rem;
+        }
+    }
+    
+    /* Animation */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .creation-animate {
+        animation: fadeInUp 0.6s ease-out;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="trip-creation-page">
+    <!-- Header -->
+    <div class="creation-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="display-5 fw-bold mb-2">Plan Your Trip</h1>
+                    <p class="lead mb-0">Create your perfect travel itinerary</p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <a href="{% url 'home:trip_list' %}" class="btn btn-light">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Trips
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Progress Steps -->
+        <div class="creation-steps">
+            <div class="step active">
+                <span>1</span>
+                <span class="step-label">Basic Info</span>
+            </div>
+            <div class="step">
+                <span>2</span>
+                <span class="step-label">Itinerary</span>
+            </div>
+            <div class="step">
+                <span>3</span>
+                <span class="step-label">Budget</span>
+            </div>
+            <div class="step">
+                <span>4</span>
+                <span class="step-label">Review</span>
+            </div>
+        </div>
+
+        <!-- Creation Form -->
+        <div class="creation-card creation-animate">
+            <form method="post" id="tripCreationForm">
+                {% csrf_token %}
+                
+                <!-- Destination Section -->
+                <div class="form-section">
+                    <h5 class="form-section-title">
+                        <i class="fas fa-map-marker-alt"></i>Destination Details
+                    </h5>
+                    <div class="destination-preview">
+                        <h6 class="mb-1">Selected Destination</h6>
+                        <h4 class="mb-2" id="selectedDestination">
+                            {% if request.GET.destination %}
+                                {{ request.GET.destination }}
+                            {% else %}
+                                Choose a destination
+                            {% endif %}
+                        </h4>
+                        <button type="button" class="btn btn-outline-light btn-sm" onclick="searchDestinations()">
+                            <i class="fas fa-search me-1"></i>Change Destination
+                        </button>
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-8">
+                            <div class="mb-3">
+                                <label for="title" class="form-label">
+                                    <i class="fas fa-pencil-alt"></i>Trip Title
+                                </label>
+                                <input type="text" class="form-control" id="title" name="title" 
+                                       placeholder="e.g., Summer Vacation, Business Trip, Family Holiday" required
+                                       value="Trip to {% if request.GET.destination %}{{ request.GET.destination }}{% endif %}">
+                                <div class="form-text">Give your trip a memorable name</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="persons" class="form-label">
+                                    <i class="fas fa-users"></i>Travelers
+                                </label>
+                                <input type="number" class="form-control" id="persons" name="persons" 
+                                       min="1" max="20" value="1" required>
+                                <div class="form-text">Number of people</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dates Section -->
+                <div class="form-section">
+                    <h5 class="form-section-title">
+                        <i class="fas fa-calendar-alt"></i>Trip Dates
+                    </h5>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="start_date" class="form-label">
+                                    <i class="fas fa-plane-departure"></i>Start Date
+                                </label>
+                                <input type="date" class="form-control" id="start_date" name="start_date" required
+                                       min="{{ today|date:'Y-m-d' }}">
+                                <div class="form-text">When does your trip begin?</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="end_date" class="form-label">
+                                    <i class="fas fa-plane-arrival"></i>End Date
+                                </label>
+                                <input type="date" class="form-control" id="end_date" name="end_date" required>
+                                <div class="form-text">When does your trip end?</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="duration-preview bg-light p-3 rounded-2">
+                        <strong>Trip Duration:</strong> <span id="tripDuration">0 days</span>
+                    </div>
+                </div>
+
+                <!-- Travel Method Section -->
+                <div class="form-section">
+                    <h5 class="form-section-title">
+                        <i class="fas fa-route"></i>Travel Method
+                    </h5>
+                    
+                    <div class="travel-method-cards">
+                        <div class="travel-method-card" data-method="air" onclick="selectTravelMethod('air')">
+                            <div class="travel-method-icon">
+                                <i class="fas fa-plane"></i>
+                            </div>
+                            <div>Air</div>
+                        </div>
+                        <div class="travel-method-card" data-method="road" onclick="selectTravelMethod('road')">
+                            <div class="travel-method-icon">
+                                <i class="fas fa-car"></i>
+                            </div>
+                            <div>Road</div>
+                        </div>
+                        <div class="travel-method-card" data-method="train" onclick="selectTravelMethod('train')">
+                            <div class="travel-method-icon">
+                                <i class="fas fa-train"></i>
+                            </div>
+                            <div>Train</div>
+                        </div>
+                        <div class="travel-method-card" data-method="sea" onclick="selectTravelMethod('sea')">
+                            <div class="travel-method-icon">
+                                <i class="fas fa-ship"></i>
+                            </div>
+                            <div>Sea</div>
+                        </div>
+                    </div>
+                    
+                    <input type="hidden" id="travel_method" name="travel_method" value="road" required>
+                </div>
+
+                <!-- Budget Section -->
+                <div class="form-section">
+                    <h5 class="form-section-title">
+                        <i class="fas fa-wallet"></i>Budget Planning
+                    </h5>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="budget" class="form-label">
+                                    <i class="fas fa-rupee-sign"></i>Total Budget
+                                </label>
+                                <input type="number" class="form-control" id="budget" name="budget" 
+                                       min="0" step="100" placeholder="Enter your total budget" required>
+                                <div class="form-text">Your overall trip budget</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="currency" class="form-label">
+                                    <i class="fas fa-money-bill-wave"></i>Currency
+                                </label>
+                                <select class="form-select" id="currency" name="currency">
+                                    <option value="INR" selected>Indian Rupee (₹)</option>
+                                    <option value="USD">US Dollar ($)</option>
+                                    <option value="EUR">Euro (€)</option>
+                                    <option value="GBP">British Pound (£)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="budget-preview">
+                        <div class="row text-center">
+                            <div class="col-4">
+                                <div class="text-primary fw-bold">₹0</div>
+                                <small class="text-muted">Per day</small>
+                            </div>
+                            <div class="col-4">
+                                <div class="text-success fw-bold">₹0</div>
+                                <small class="text-muted">Per person</small>
+                            </div>
+                            <div class="col-4">
+                                <div class="text-info fw-bold">₹0</div>
+                                <small class="text-muted">Total</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notes Section -->
+                <div class="form-section">
+                    <h5 class="form-section-title">
+                        <i class="fas fa-sticky-note"></i>Additional Notes
+                    </h5>
+                    
+                    <div class="mb-3">
+                        <label for="notes" class="form-label">
+                            <i class="fas fa-edit"></i>Trip Notes
+                        </label>
+                        <textarea class="form-control" id="notes" name="notes" rows="4" 
+                                  placeholder="Any special requirements, preferences, or notes for your trip..."></textarea>
+                        <div class="form-text">Optional: Add any special instructions or preferences</div>
+                    </div>
+                </div>
+                <input type="text" name="destination" id="destination" value="{% if request.GET.destination %}{{ request.GET.destination }}{% endif %}" hidden>
+
+                <!-- Form Actions -->
+                <div class="d-flex gap-3 justify-content-between pt-3 border-top">
+                    <a href="{% url 'home:trip_list' %}" class="btn btn-outline-secondary big-btn">
+                        <i class="fas fa-times me-2"></i>Cancel
+                    </a>
+                    <button type="submit" class="btn btn-create">
+                        <i class="fas fa-plus me-2"></i>Create Trip
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// ... existing code ...
+
+$(document).ready(function() {
+    // Remove floating search bar for creation page
+    $('.floating-search-container').remove();
+    
+    // Pre-fill form with initial data
+    const initialData = {{ initial_data|safe }};
+    if (initialData) {
+        if (initialData.title) {
+            $('#title').val(initialData.title);
+        }
+        if (initialData.destination) {
+            $('#destination').val(initialData.destination);
+        }
+    }
+    
+    // Set today's date as minimum for start date
+    const today = new Date().toISOString().split('T')[0];
+    $('#start_date').attr('min', today);
+    $('#end_date').attr('min', today);
+    
+    // Calculate trip duration
+    function calculateDuration() {
+        const startDate = new Date($('#start_date').val());
+        const endDate = new Date($('#end_date').val());
+        
+        if ($('#start_date').val() && $('#end_date').val() && startDate <= endDate) {
+            const diffTime = Math.abs(endDate - startDate);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+            $('#tripDuration').text(diffDays + ' days');
+        } else {
+            $('#tripDuration').text('0 days');
+        }
+    }
+    
+    $('#start_date, #end_date').on('change', calculateDuration);
+    
+    // Set end date minimum based on start date
+    $('#start_date').on('change', function() {
+        $('#end_date').attr('min', $(this).val());
+        calculateDuration();
+    });
+    
+    // Auto-fill end date if empty
+    $('#start_date').on('change', function() {
+        if (!$('#end_date').val()) {
+            const startDate = new Date($(this).val());
+            startDate.setDate(startDate.getDate() + 3); // Default 3 days trip
+            $('#end_date').val(startDate.toISOString().split('T')[0]);
+            calculateDuration();
+        }
+    });
+    
+    // Calculate budget breakdown
+    $('#budget, #persons').on('input', function() {
+        const budget = parseFloat($('#budget').val()) || 0;
+        const persons = parseInt($('#persons').val()) || 1;
+        const days = parseInt($('#tripDuration').text()) || 1;
+        
+        if (budget > 0 && days > 0) {
+            const perDay = (budget / days).toFixed(0);
+            const perPerson = (budget / persons).toFixed(0);
+            
+            $('.budget-preview .text-primary').text('₹' + perDay);
+            $('.budget-preview .text-success').text('₹' + perPerson);
+            $('.budget-preview .text-info').text('₹' + budget.toFixed(0));
+        }
+    });
+    
+    // Form submission with AJAX
+    $('#tripCreationForm').on('submit', function(e) {
+        e.preventDefault();
+        
+        // Basic validation
+        let isValid = true;
+        $('.form-control:required').each(function() {
+            if (!$(this).val().trim()) {
+                $(this).addClass('is-invalid');
+                isValid = false;
+            } else {
+                $(this).removeClass('is-invalid');
+            }
+        });
+        
+        // Date validation
+        const startDate = new Date($('#start_date').val());
+        const endDate = new Date($('#end_date').val());
+        
+        if (startDate && endDate && startDate > endDate) {
+            $('#end_date').addClass('is-invalid');
+            isValid = false;
+        }
+        
+        if (!isValid) {
+            showToast('Error', 'Please fill all required fields correctly', 'error');
+            return;
+        }
+        
+        // Show loading state
+        const submitBtn = $(this).find('button[type="submit"]');
+        const originalText = submitBtn.html();
+        submitBtn.html('<i class="fas fa-spinner fa-spin me-2"></i>Creating Trip...');
+        submitBtn.prop('disabled', true);
+        
+        // Prepare form data
+        const formData = {
+            'title': $('#title').val(),
+            'destination': $('#destination').val(),
+            'persons': $('#persons').val(),
+            'travel_method': $('#travel_method').val(),
+            'budget': $('#budget').val(),
+            'start_date': $('#start_date').val(),
+            'end_date': $('#end_date').val(),
+            'notes': $('#notes').val(),
+            'currency': $('#currency').val()
+        };
+        
+        // Send AJAX request
+        $.ajax({
+            url: '{% url "home:create_trip" %}',
+            type: 'POST',
+            data: formData,
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            success: function(response) {
+                debugger
+                console.log("response",)
+                if (response.success) {
+                    showToast('Success', 'Trip created successfully!', 'success');
+                    // Redirect to trip detail page
+                    setTimeout(() => {
+                        window.location.href = response.redirect_url;
+                    }, 1000);
+                } else {
+                    showToast('Error', response.message, 'error');
+                    submitBtn.html(originalText);
+                    submitBtn.prop('disabled', false);
+                }
+            },
+            error: function(xhr) {
+                let errorMessage = 'Failed to create trip. Please try again.';
+                if (xhr.responseJSON && xhr.responseJSON.errors) {
+                    errorMessage = Object.values(xhr.responseJSON.errors).flat().join(', ');
+                }
+                showToast('Error', errorMessage, 'error');
+                submitBtn.html(originalText);
+                submitBtn.prop('disabled', false);
+            }
+        });
+    });
+});
+
+function selectTravelMethod(method) {
+    $('.travel-method-card').removeClass('selected');
+    $(`.travel-method-card[data-method="${method}"]`).addClass('selected');
+    $('#travel_method').val(method);
+}
+
+function searchDestinations() {
+    // Implement destination search functionality
+    console.log('Opening destination search...');
+}
+
+function showToast(title, message, type = 'info') {
+    // Create toast element
+    const toast = document.createElement('div');
+    toast.className = `toast align-items-center text-white bg-${type} border-0`;
+    toast.innerHTML = `
+        <div class="d-flex">
+            <div class="toast-body">
+                <strong>${title}:</strong> ${message}
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+    `;
+    
+    // Add to page
+    document.body.appendChild(toast);
+    const bsToast = new bootstrap.Toast(toast);
+    bsToast.show();
+    
+    // Remove after hidden
+    toast.addEventListener('hidden.bs.toast', () => {
+        document.body.removeChild(toast);
+    });
+}</script>
+{% endblock %}
