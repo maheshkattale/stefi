@@ -4,490 +4,429 @@
 {% block title %}Plan New Trip - Stefi Travel{% endblock %}
 
 {% block extra_css %}
-<style>
-    .big-btn{
-    border: none;
-    border-radius: 12px;
-    padding: 1rem 2rem;
-    font-weight: 600;
-    font-size: 1.1rem;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(59, 113, 254, 0.3);
-    }
-    .trip-creation-page {
-        background: #f8fafc;
-        min-height: 100vh;
-        padding: 2rem 0;
-    }
-    
-    .creation-header {
-        background: linear-gradient(135deg, #11ccf1, #057b93);
-        color: white;
-        padding: 2rem 0;
-        margin-bottom: 2rem;
-    }
-    
-    .creation-steps {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 2rem;
-        position: relative;
-        max-width: 600px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-    
-    .creation-steps::before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 0;
-        right: 0;
-        height: 2px;
-        background: #e9ecef;
-        z-index: 1;
-    }
-    
-    .step {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background: white;
-        border: 2px solid #e9ecef;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 600;
-        position: relative;
-        z-index: 2;
-        transition: all 0.3s ease;
-    }
-    
-    .step.active {
-        background: var(--primary-color);
-        border-color: var(--primary-color);
-        color: white;
-        transform: scale(1.1);
-    }
-    
-    .step.completed {
-        background: #28a745;
-        border-color: #28a745;
-        color: white;
-    }
-    
-    .step-label {
-        position: absolute;
-        top: -30px;
-        left: 50%;
-        transform: translateX(-50%);
-        font-size: 0.8rem;
-        font-weight: 600;
-        color: #6c757d;
-        white-space: nowrap;
-    }
-    
-    .step.active .step-label {
-        color: var(--primary-color);
-    }
-    
-    .creation-card {
-        background: white;
-        border-radius: 20px;
-        padding: 2rem;
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-        margin-bottom: 2rem;
-        border: none;
-    }
-    
-    .form-section {
-        margin-bottom: 2rem;
-    }
-    
-    .form-section-title {
-        font-size: 1.2rem;
-        font-weight: 600;
-        color: #2c3e50;
-        margin-bottom: 1.5rem;
-        padding-bottom: 0.5rem;
-        border-bottom: 2px solid #f1f3f4;
-    }
-    
-    .form-label {
-        font-weight: 600;
-        color: #2c3e50;
-        margin-bottom: 0.5rem;
-        display: flex;
-        align-items: center;
-    }
-    
-    .form-label i {
-        margin-right: 0.75rem;
-        color: var(--primary-color);
-        width: 20px;
-    }
-    
-    .form-control, .form-select {
-        border: 2px solid #e9ecef;
-        border-radius: 12px;
-        padding: 0.875rem 1.25rem;
-        font-size: 1rem;
-        transition: all 0.3s ease;
-    }
-    
-    .form-control:focus, .form-select:focus {
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 0.2rem rgba(59, 113, 254, 0.15);
-        transform: translateY(-1px);
-    }
-    
-    .form-text {
-        font-size: 0.875rem;
-        color: #6c757d;
-        margin-top: 0.25rem;
-    }
-    
-    .btn-create {
-        background: linear-gradient(135deg, #11ccf1, #057b93);
-        border: none;
-        border-radius: 12px;
-        padding: 1rem 2rem;
-        font-weight: 600;
-        font-size: 1.1rem;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(59, 113, 254, 0.3);
-    }
-    
-    .btn-create:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(59, 113, 254, 0.4);
-    }
-    
-    .destination-preview {
-        
-        background: linear-gradient(135deg, #10c6ea 0%, #068099 100%);
-        color: white;
-        padding: 1.5rem;
-        border-radius: 15px;
-        margin-bottom: 1.5rem;
-    }
-    
-    .budget-preview {
-        background: #f8f9fa;
-        padding: 1rem;
-        border-radius: 10px;
-        margin-top: 1rem;
-    }
-    
-    .travel-method-cards {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        gap: 1rem;
-        margin-bottom: 1rem;
-    }
-    
-    .travel-method-card {
-        border: 2px solid #e9ecef;
-        border-radius: 12px;
-        padding: 1rem;
-        text-align: center;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-    
-    .travel-method-card:hover {
-        border-color: var(--primary-color);
-        transform: translateY(-2px);
-    }
-    
-    .travel-method-card.selected {
-        border-color: var(--primary-color);
-        background: rgba(59, 113, 254, 0.1);
-    }
-    
-    .travel-method-icon {
-        font-size: 2rem;
-        margin-bottom: 0.5rem;
-        color: var(--primary-color);
-    }
-    
-    /* Responsive Design */
-    @media (max-width: 768px) {
-        .creation-steps {
-            flex-wrap: wrap;
-            gap: 1rem;
-            justify-content: center;
+    <style>
+        :root {
+            --primary-color: #057b93;
+            --secondary-color: #11ccf1;
+            --accent-color: #ff6b6b;
+            --light-bg: #f8fafc;
+            --dark-text: #2c3e50;
         }
         
-        .creation-steps::before {
-            display: none;
+        body {
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
-        .travel-method-cards {
-            grid-template-columns: repeat(2, 1fr);
+        .navbar {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
         }
         
-        .creation-card {
-            padding: 1.5rem;
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
         }
-    }
-    
-    /* Animation */
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
+        
+        .planning-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            padding: 25px;
+            margin-bottom: 25px;
+            transition: transform 0.3s ease;
         }
-        to {
-            opacity: 1;
-            transform: translateY(0);
+        
+        .planning-card:hover {
+            transform: translateY(-5px);
         }
-    }
-    
-    .creation-animate {
-        animation: fadeInUp 0.6s ease-out;
-    }
-</style>
+        
+        .section-title {
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .budget-card {
+            background: linear-gradient(135deg, #10c6ea 0%, #068099 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .day-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .transport-card {
+            text-align: center;
+            padding: 15px;
+            border-radius: 12px;
+            background: white;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+        
+        .transport-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .ai-suggestion {
+            background: #f1f9ff;
+            border-left: 4px solid var(--secondary-color);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+        
+        .packing-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        .packing-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .packing-list li:before {
+            content: "•";
+            color: var(--secondary-color);
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
+        
+        .cost-breakdown {
+            width: 100%;
+            margin-top: 15px;
+        }
+        
+        .cost-breakdown tr {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .cost-breakdown tr:last-child {
+            border-bottom: none;
+            font-weight: bold;
+        }
+        
+        .big-btn {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            border: none;
+            border-radius: 12px;
+            padding: 12px 25px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(59, 113, 254, 0.3);
+            color: white;
+        }
+        
+        .big-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 113, 254, 0.4);
+        }
+        
+        .form-control, .form-select {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 12px 15px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 0.2rem rgba(17, 204, 241, 0.15);
+        }
+        
+        .date-badge {
+            /* background: var(--secondary-color); */
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 768px) {
+            .transport-card {
+                margin-bottom: 15px;
+            }
+        }
+    </style>
 {% endblock %}
 
 {% block content %}
-<div class="trip-creation-page">
-    <!-- Header -->
-    <div class="creation-header">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-8">
-                    <h1 class="display-5 fw-bold mb-2">Plan Your Trip</h1>
-                    <p class="lead mb-0">Create your perfect travel itinerary</p>
+    <div class="container dashboard-container pt-5 mt-5">
+        <div class="row mt-5">
+            <!-- Left Column -->
+            <div class="col-lg-8">
+                <!-- Header -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">AI Trip Planner</li>
+                            </ol>
+                        </nav>
+                        <h2 class="mb-0">AI Trip Planner</h2>
+                    </div>
+                    <button class="big-btn"><i class="fas fa-download me-2"></i> Export Plan</button>
                 </div>
-                <div class="col-md-4 text-md-end">
-                    <a href="{% url 'home:trip_list' %}" class="btn btn-light">
-                        <i class="fas fa-arrow-left me-2"></i>Back to Trips
-                    </a>
+
+                <!-- Trip Planning Card -->
+                <div class="planning-card">
+                    <h4 class="section-title">Plan Your Trip</h4>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Plan Name / City</label>
+                            <input type="text" class="form-control" placeholder="E.g., Pune">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Destination</label>
+                            <input type="text" class="form-control" value="Agra">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Budget</label>
+                            <input type="text" class="form-control" value="3,950">
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">Start Date</label>
+                            <input type="date" class="form-control" value="2025-09-06">
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">End Date</label>
+                            <input type="date" class="form-control" value="2025-09-10">
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">Travel Days</label>
+                            <input type="text" class="form-control" value="Friday" disabled>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">Peoples</label>
+                            <input type="text" class="form-control" value="2">
+
+                        </div>
+                    </div>
+                    <div class="text-center mt-3">
+                        <button class="big-btn"><i class="fas fa-magic me-2"></i> Generate AI Plan</button>
+                    </div>
+                </div>
+
+                <!-- AI Suggestions -->
+                <div class="planning-card">
+                    <h4 class="section-title">AI Suggestions</h4>
+                    <div class="ai-suggestion">
+                        <i class="fas fa-lightbulb text-warning me-2"></i> Compare cost vs time: train 14.5h, flight 3.3h (including buffer), bus 17.8h.
+                    </div>
+                    <div class="ai-suggestion">
+                        <i class="fas fa-lightbulb text-warning me-2"></i> Hidden gem near Agra: sunrise viewpoints & local markets.
+                    </div>
+                    <div class="ai-suggestion">
+                        <i class="fas fa-lightbulb text-warning me-2"></i> Save more: pre-book stays and use public transport for short hops.
+                    </div>
+                    <div class="ai-suggestion">
+                        <i class="fas fa-lightbulb text-warning me-2"></i> Food tip: try a local thali to keep costs predictable.
+                    </div>
+                </div>
+
+                <!-- Itinerary -->
+                <div class="planning-card">
+                    <h4 class="section-title">Your Itinerary</h4>
+                    
+                    <!-- Day 1 -->
+                    <div class="day-card">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="mb-0">Day 1: Arrival in Agra</h5>
+                            <span class="date-badge big-btn">06 Sept 2025</span>
+                        </div>
+                        <p class="text-muted">Arrive and check into your hotel. Evening visit to Mehtab Bagh for Taj Mahal view.</p>
+                        <table class="table">
+                            <tr>
+                                <th>Category</th>
+                                <th>Details</th>
+                                <th class="text-end">Cost</th>
+                            </tr>
+                            <tr>
+                                <td>Stay</td>
+                                <td>Luxury Hotel</td>
+                                <td class="text-end">$1,400</td>
+                            </tr>
+                            <tr>
+                                <td>Food</td>
+                                <td>Dinner at hotel</td>
+                                <td class="text-end">$120</td>
+                            </tr>
+                            <tr>
+                                <td>Local Travel</td>
+                                <td>Airport to hotel transfer</td>
+                                <td class="text-end">$60</td>
+                            </tr>
+                            <tr class="fw-bold">
+                                <td colspan="2">Day Total</td>
+                                <td class="text-end">$1,580</td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <!-- Day 2 -->
+                    <div class="day-card">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="mb-0">Day 2: Taj Mahal & Agra Fort</h5>
+                            <span class="date-badge big-btn">07 Sept 2025</span>
+                        </div>
+                        <p class="text-muted">Sunrise visit to Taj Mahal, followed by Agra Fort exploration.</p>
+                        <table class="table">
+                            <tr>
+                                <th>Category</th>
+                                <th>Details</th>
+                                <th class="text-end">Cost</th>
+                            </tr>
+                            <tr>
+                                <td>Stay</td>
+                                <td>Luxury Hotel</td>
+                                <td class="text-end">$1,400</td>
+                            </tr>
+                            <tr>
+                                <td>Food</td>
+                                <td>All meals</td>
+                                <td class="text-end">$850</td>
+                            </tr>
+                            <tr>
+                                <td>Local Travel</td>
+                                <td>Car with driver</td>
+                                <td class="text-end">$420</td>
+                            </tr>
+                            <tr>
+                                <td>Activities</td>
+                                <td>Entrance fees & guide</td>
+                                <td class="text-end">$700</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="text-muted">Notes: Intercity travel (one-way) suggestion: Train ~ ₹1,728 pp</td>
+                                <td></td>
+                            </tr>
+                            <tr class="fw-bold">
+                                <td colspan="2">Day Total</td>
+                                <td class="text-end">$3,370</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="col-lg-4">
+                <!-- Budget Summary -->
+                <div class="budget-card">
+                    <h4 class="text-white">Budget Summary</h4>
+                    <table class="cost-breakdown">
+                        <tr>
+                            <td>Travel</td>
+                            <td class="text-end">$1,000</td>
+                        </tr>
+                        <tr>
+                            <td>Stay</td>
+                            <td class="text-end">$1,400</td>
+                        </tr>
+                        <tr>
+                            <td>Food</td>
+                            <td class="text-end">$850</td>
+                        </tr>
+                        <tr>
+                            <td>Activities</td>
+                            <td class="text-end">$700</td>
+                        </tr>
+                        <tr>
+                            <td>Grand Total</td>
+                            <td class="text-end">$3,950</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- Transport Options -->
+                <div class="planning-card">
+                    <h4 class="section-title">Transport Options</h4>
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <div class="transport-card">
+                                <i class="fas fa-plane fa-2x text-primary mb-2"></i>
+                                <h5>Flight</h5>
+                                <div class="mb-2">
+                                    <div class="fw-bold">$420</div>
+                                    <small>Price (one way)</small>
+                                </div>
+                                <div>
+                                    <div class="fw-bold">3 hrs</div>
+                                    <small>Duration</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <div class="transport-card">
+                                <i class="fas fa-train fa-2x text-success mb-2"></i>
+                                <h5>Train</h5>
+                                <div class="mb-2">
+                                    <div class="fw-bold">$200</div>
+                                    <small>Price (one way)</small>
+                                </div>
+                                <div>
+                                    <div class="fw-bold">10 hrs 34 mins</div>
+                                    <small>Duration</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="transport-card">
+                                <i class="fas fa-bus fa-2x text-info mb-2"></i>
+                                <h5>Bus</h5>
+                                <div class="mb-2">
+                                    <div class="fw-bold">$120</div>
+                                    <small>Price (one way)</small>
+                                </div>
+                                <div>
+                                    <div class="fw-bold">24 hrs 20 mins</div>
+                                    <small>Duration</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Packing List -->
+                <div class="planning-card">
+                    <h4 class="section-title">Packing List</h4>
+                    <ul class="packing-list">
+                        <li>ID card & copies</li>
+                        <li>Reusable water bottle</li>
+                        <li>Power bank</li>
+                        <li>Rain cover</li>
+                        <li>Basic meds</li>
+                        <li>Sunscreen</li>
+                        <li>Cap & sunglasses</li>
+                        <li>Power bar</li>
+                        <li>Travel adapter</li>
+                        <li>Comfortable shoes</li>
+                        <li>Light jacket</li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="container">
-        <!-- Progress Steps -->
-        <div class="creation-steps">
-            <div class="step active">
-                <span>1</span>
-                <span class="step-label">Basic Info</span>
-            </div>
-            <div class="step">
-                <span>2</span>
-                <span class="step-label">Itinerary</span>
-            </div>
-            <div class="step">
-                <span>3</span>
-                <span class="step-label">Budget</span>
-            </div>
-            <div class="step">
-                <span>4</span>
-                <span class="step-label">Review</span>
-            </div>
-        </div>
-
-        <!-- Creation Form -->
-        <div class="creation-card creation-animate">
-            <form method="post" id="tripCreationForm">
-                {% csrf_token %}
-                
-                <!-- Destination Section -->
-                <div class="form-section">
-                    <h5 class="form-section-title">
-                        <i class="fas fa-map-marker-alt"></i>Destination Details
-                    </h5>
-                    <div class="destination-preview">
-                        <h6 class="mb-1">Selected Destination</h6>
-                        <h4 class="mb-2" id="selectedDestination">
-                            {% if request.GET.destination %}
-                                {{ request.GET.destination }}
-                            {% else %}
-                                Choose a destination
-                            {% endif %}
-                        </h4>
-                        <button type="button" class="btn btn-outline-light btn-sm" onclick="searchDestinations()">
-                            <i class="fas fa-search me-1"></i>Change Destination
-                        </button>
-                    </div>
-                    <div class="row">
-
-                        <div class="col-md-8">
-                            <div class="mb-3">
-                                <label for="title" class="form-label">
-                                    <i class="fas fa-pencil-alt"></i>Trip Title
-                                </label>
-                                <input type="text" class="form-control" id="title" name="title" 
-                                       placeholder="e.g., Summer Vacation, Business Trip, Family Holiday" required
-                                       value="Trip to {% if request.GET.destination %}{{ request.GET.destination }}{% endif %}">
-                                <div class="form-text">Give your trip a memorable name</div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <label for="persons" class="form-label">
-                                    <i class="fas fa-users"></i>Travelers
-                                </label>
-                                <input type="number" class="form-control" id="persons" name="persons" 
-                                       min="1" max="20" value="1" required>
-                                <div class="form-text">Number of people</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Dates Section -->
-                <div class="form-section">
-                    <h5 class="form-section-title">
-                        <i class="fas fa-calendar-alt"></i>Trip Dates
-                    </h5>
-                    
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="start_date" class="form-label">
-                                    <i class="fas fa-plane-departure"></i>Start Date
-                                </label>
-                                <input type="date" class="form-control" id="start_date" name="start_date" required
-                                       min="{{ today|date:'Y-m-d' }}">
-                                <div class="form-text">When does your trip begin?</div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="end_date" class="form-label">
-                                    <i class="fas fa-plane-arrival"></i>End Date
-                                </label>
-                                <input type="date" class="form-control" id="end_date" name="end_date" required>
-                                <div class="form-text">When does your trip end?</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="duration-preview bg-light p-3 rounded-2">
-                        <strong>Trip Duration:</strong> <span id="tripDuration">0 days</span>
-                    </div>
-                </div>
-
-                <!-- Travel Method Section -->
-                <div class="form-section">
-                    <h5 class="form-section-title">
-                        <i class="fas fa-route"></i>Travel Method
-                    </h5>
-                    
-                    <div class="travel-method-cards">
-                        <div class="travel-method-card" data-method="air" onclick="selectTravelMethod('air')">
-                            <div class="travel-method-icon">
-                                <i class="fas fa-plane"></i>
-                            </div>
-                            <div>Air</div>
-                        </div>
-                        <div class="travel-method-card" data-method="road" onclick="selectTravelMethod('road')">
-                            <div class="travel-method-icon">
-                                <i class="fas fa-car"></i>
-                            </div>
-                            <div>Road</div>
-                        </div>
-                        <div class="travel-method-card" data-method="train" onclick="selectTravelMethod('train')">
-                            <div class="travel-method-icon">
-                                <i class="fas fa-train"></i>
-                            </div>
-                            <div>Train</div>
-                        </div>
-                        <div class="travel-method-card" data-method="sea" onclick="selectTravelMethod('sea')">
-                            <div class="travel-method-icon">
-                                <i class="fas fa-ship"></i>
-                            </div>
-                            <div>Sea</div>
-                        </div>
-                    </div>
-                    
-                    <input type="hidden" id="travel_method" name="travel_method" value="road" required>
-                </div>
-
-                <!-- Budget Section -->
-                <div class="form-section">
-                    <h5 class="form-section-title">
-                        <i class="fas fa-wallet"></i>Budget Planning
-                    </h5>
-                    
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="budget" class="form-label">
-                                    <i class="fas fa-rupee-sign"></i>Total Budget
-                                </label>
-                                <input type="number" class="form-control" id="budget" name="budget" 
-                                       min="0" step="100" placeholder="Enter your total budget" required>
-                                <div class="form-text">Your overall trip budget</div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="currency" class="form-label">
-                                    <i class="fas fa-money-bill-wave"></i>Currency
-                                </label>
-                                <select class="form-select" id="currency" name="currency">
-                                    <option value="INR" selected>Indian Rupee (₹)</option>
-                                    <option value="USD">US Dollar ($)</option>
-                                    <option value="EUR">Euro (€)</option>
-                                    <option value="GBP">British Pound (£)</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="budget-preview">
-                        <div class="row text-center">
-                            <div class="col-4">
-                                <div class="text-primary fw-bold">₹0</div>
-                                <small class="text-muted">Per day</small>
-                            </div>
-                            <div class="col-4">
-                                <div class="text-success fw-bold">₹0</div>
-                                <small class="text-muted">Per person</small>
-                            </div>
-                            <div class="col-4">
-                                <div class="text-info fw-bold">₹0</div>
-                                <small class="text-muted">Total</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Notes Section -->
-                <div class="form-section">
-                    <h5 class="form-section-title">
-                        <i class="fas fa-sticky-note"></i>Additional Notes
-                    </h5>
-                    
-                    <div class="mb-3">
-                        <label for="notes" class="form-label">
-                            <i class="fas fa-edit"></i>Trip Notes
-                        </label>
-                        <textarea class="form-control" id="notes" name="notes" rows="4" 
-                                  placeholder="Any special requirements, preferences, or notes for your trip..."></textarea>
-                        <div class="form-text">Optional: Add any special instructions or preferences</div>
-                    </div>
-                </div>
-                <input type="text" name="destination" id="destination" value="{% if request.GET.destination %}{{ request.GET.destination }}{% endif %}" hidden>
-
-                <!-- Form Actions -->
-                <div class="d-flex gap-3 justify-content-between pt-3 border-top">
-                    <a href="{% url 'home:trip_list' %}" class="btn btn-outline-secondary big-btn">
-                        <i class="fas fa-times me-2"></i>Cancel
-                    </a>
-                    <button type="submit" class="btn btn-create">
-                        <i class="fas fa-plus me-2"></i>Create Trip
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 {% endblock %}
 
 {% block extra_js %}
