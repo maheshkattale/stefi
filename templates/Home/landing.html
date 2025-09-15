@@ -33,60 +33,6 @@
         z-index: -1;
     }
 
-    /* Floating Search Bar */
-    .floating-search-container {
-        position: fixed;
-        top: 20px;
-        z-index: 1050;
-        width: 100%;
-        transition: all 0.3s ease;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 0 15px;
-        flex-wrap: wrap;
-        gap: 10px;
-    }
-
-    .floating-search-container.scrolled {
-        top: 10px;
-    }
-
-    .search-input {
-        border: none;
-        border-radius: 50px;
-        padding: 1rem 2rem;
-        font-size: 1.1rem;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    }
-
-    .search-results {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background: white;
-        border-radius: 15px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-        max-height: 300px;
-        overflow-y: auto;
-        display: none;
-    }
-
-    .search-result-item {
-        padding: 1rem;
-        border-bottom: 1px solid #eee;
-        cursor: pointer;
-        transition: background-color 0.2s ease;
-    }
-
-    .search-result-item:hover {
-        background-color: #f8f9fa;
-    }
-
-    .search-result-item:last-child {
-        border-bottom: none;
-    }
 
     /* State Carousel */
     .state-carousel {
@@ -147,24 +93,9 @@
         color: white;
     }
 
-    /* Features Section */
-    .feature-icon {
-        width: 80px;
-        height: 80px;
-        background: linear-gradient(135deg, #11ccf1, #057b93);
-        border-radius: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 1.5rem;
-    }
 
-    /* Statistics */
-    .stat-number {
-        font-size: 2.5rem;
-        font-weight: 700;
-        color: var(--primary-color);
-    }
+
+
 
     /* Destination Selection Styles */
     .destination-selection {
@@ -236,26 +167,7 @@
         z-index: 9999;
     }
 
-    .floating-search-icon {
-        border-radius: 0 50px 50px 0;
-        background: #e6e9f3bf;
-        margin: 0 !important;
-    }
 
-    .floating-search-input {
-        background: #e6e9f3bf;
-        box-shadow: none;
-    }
-
-    .floating-search-input::placeholder {
-        color: #363636;
-    }
-
-    .floating-search-logo {
-        background: #e6e9f3bf;
-        margin: 0 !important;
-        padding: 7px;
-    }
 
     /* Carousel */
     .carousel-container {
@@ -413,6 +325,20 @@
         padding: 23px;
         transition: transform 0.3s ease;
     }
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        #carouselContainer .card {
+            flex: 0 0 220px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        #carouselContainer .card {
+            flex: 0 0 200px;
+            margin: 0 10px;
+        }
+    }
+
 
     .achivements-count-div {
         background-color: white;
@@ -872,44 +798,7 @@
 
 {% block content %}
 <!-- Floating Search Bar -->
-<div class="floating-search-container w-100">
 
-    <div class="d-flex" style="background: #e4e8f2;border-radius: 50px;width: 60%;">
-        <span class="input-group-text border-0 floating-search-logo" style="border-radius: 50px 0px 0px 50px;">
-            <img src="{% static 'assets/logo/logo-symbol.jpeg'%}" width="55" alt="" style="border-radius: 50%;" class="img-fluid">
-        </span>
-        <input type="text" class="form-control search-input floating-search-input"
-            placeholder="Search destinations, states, or activities..." id="globalSearch">
-        <span class="input-group-text border-0 floating-search-icon" style="border-radius: 0 50px 50px 0;">
-            <i class="fas fa-search fa-xl"></i>
-        </span>
-    </div>
-
-    <div class="menu-items-container d-flex">
-        <div class="px-2">
-            <a href="#" class="" id="" title="Search">
-                <img src="{% static 'assets/icons/explore-india.png' %}" alt="" class="menu-items img-fluid">
-            </a>
-        </div>
-        <div class="px-2">
-            <a href="#" class="" id="" title="Search">
-                <img src="{% static 'assets/icons/bag-packing.png' %}" alt="" class="menu-items img-fluid">
-            </a>
-        </div>
-        <div class="px-2">
-            <a href="#" class="" id="" title="Search">
-                <img src="{% static 'assets/icons/trip-planner.png' %}" alt="" class="menu-items img-fluid">
-            </a>
-        </div>
-        <div class="px-2">
-            <a href="#" class="" id="" title="Search">
-                <img src="{% static 'assets/icons/profile.png' %}" alt="" class="menu-items img-fluid">
-            </a>
-        </div>
-    </div>
-
-    <div class="search-results" id="searchResults"></div>
-</div>
 
 <!-- Hero Section -->
 <section class="hero-section">

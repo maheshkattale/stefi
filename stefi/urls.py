@@ -32,5 +32,7 @@ urlpatterns = [
 
     # frontend
     path('',include(('home.urls', 'home'),namespace='home')),
+    path('trip_planner/', include(('trip_planner.urls', 'trip_planner'),namespace='trip_planner')),
+
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -63,12 +63,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    #Backend
     'User',
     'Masters',
     'trips',
-
     'home_api',
+
+    #Frontend
     'home',
+    'trip_planner',
 
 
 ]

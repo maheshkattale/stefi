@@ -1,0 +1,622 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Plan New Trip - Stefi Travel{% endblock %}
+
+{% block extra_css %}
+    <style>
+        :root {
+            --primary-color: #057b93;
+            --secondary-color: #11ccf1;
+            --accent-color: #ff6b6b;
+            --light-bg: #f8fafc;
+            --dark-text: #2c3e50;
+        }
+        
+        body {
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+        }
+        
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .planning-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            padding: 25px;
+            margin-bottom: 25px;
+            transition: transform 0.3s ease;
+        }
+        
+        .planning-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .section-title {
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .budget-card {
+            background: linear-gradient(135deg, #10c6ea 0%, #068099 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .day-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .transport-card {
+            text-align: center;
+            padding: 15px;
+            border-radius: 12px;
+            background: white;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+        
+        .transport-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .ai-suggestion {
+            background: #f1f9ff;
+            border-left: 4px solid var(--secondary-color);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+        
+        .packing-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        .packing-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .packing-list li:before {
+            content: "•";
+            color: var(--secondary-color);
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
+        
+        .cost-breakdown {
+            width: 100%;
+            margin-top: 15px;
+        }
+        
+        .cost-breakdown tr {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .cost-breakdown tr:last-child {
+            border-bottom: none;
+            font-weight: bold;
+        }
+        
+        .big-btn {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            border: none;
+            border-radius: 12px;
+            padding: 12px 25px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(59, 113, 254, 0.3);
+            color: white;
+        }
+        
+        .big-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 113, 254, 0.4);
+        }
+        
+        .form-control, .form-select {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 12px 15px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 0.2rem rgba(17, 204, 241, 0.15);
+        }
+        
+        .date-badge {
+            /* background: var(--secondary-color); */
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 768px) {
+            .transport-card {
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container dashboard-container pt-5 mt-5">
+        <div class="row mt-5">
+            <!-- Left Column -->
+            <div class="col-lg-8">
+                <!-- Header -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">AI Trip Planner</li>
+                            </ol>
+                        </nav>
+                        <h2 class="mb-0">AI Trip Planner</h2>
+                    </div>
+                    <button class="big-btn"><i class="fas fa-download me-2"></i> Export Plan</button>
+                </div>
+
+                <!-- Trip Planning Card -->
+                <div class="planning-card">
+                    <h4 class="section-title">Plan Your Trip</h4>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Plan Name / City</label>
+                            <input type="text" class="form-control" placeholder="E.g., Pune">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Destination</label>
+                            <input type="text" class="form-control" value="Agra">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Budget</label>
+                            <input type="text" class="form-control" value="3,950">
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">Start Date</label>
+                            <input type="date" class="form-control" value="2025-09-06">
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">End Date</label>
+                            <input type="date" class="form-control" value="2025-09-10">
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">Travel Days</label>
+                            <input type="text" class="form-control" value="Friday" disabled>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">Peoples</label>
+                            <input type="text" class="form-control" value="2">
+
+                        </div>
+                    </div>
+                    <div class="text-center mt-3">
+                        <button class="big-btn"><i class="fas fa-magic me-2"></i> Generate AI Plan</button>
+                    </div>
+                </div>
+
+                <!-- AI Suggestions -->
+                <div class="planning-card">
+                    <h4 class="section-title">AI Suggestions</h4>
+                    <div class="ai-suggestion">
+                        <i class="fas fa-lightbulb text-warning me-2"></i> Compare cost vs time: train 14.5h, flight 3.3h (including buffer), bus 17.8h.
+                    </div>
+                    <div class="ai-suggestion">
+                        <i class="fas fa-lightbulb text-warning me-2"></i> Hidden gem near Agra: sunrise viewpoints & local markets.
+                    </div>
+                    <div class="ai-suggestion">
+                        <i class="fas fa-lightbulb text-warning me-2"></i> Save more: pre-book stays and use public transport for short hops.
+                    </div>
+                    <div class="ai-suggestion">
+                        <i class="fas fa-lightbulb text-warning me-2"></i> Food tip: try a local thali to keep costs predictable.
+                    </div>
+                </div>
+
+                <!-- Itinerary -->
+                <div class="planning-card">
+                    <h4 class="section-title">Your Itinerary</h4>
+                    
+                    <!-- Day 1 -->
+                    <div class="day-card">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="mb-0">Day 1: Arrival in Agra</h5>
+                            <span class="date-badge big-btn">06 Sept 2025</span>
+                        </div>
+                        <p class="text-muted">Arrive and check into your hotel. Evening visit to Mehtab Bagh for Taj Mahal view.</p>
+                        <table class="table">
+                            <tr>
+                                <th>Category</th>
+                                <th>Details</th>
+                                <th class="text-end">Cost</th>
+                            </tr>
+                            <tr>
+                                <td>Stay</td>
+                                <td>Luxury Hotel</td>
+                                <td class="text-end">₹1,400</td>
+                            </tr>
+                            <tr>
+                                <td>Food</td>
+                                <td>Dinner at hotel</td>
+                                <td class="text-end">₹120</td>
+                            </tr>
+                            <tr>
+                                <td>Local Travel</td>
+                                <td>Airport to hotel transfer</td>
+                                <td class="text-end">₹60</td>
+                            </tr>
+                            <tr class="fw-bold">
+                                <td colspan="2">Day Total</td>
+                                <td class="text-end">₹1,580</td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <!-- Day 2 -->
+                    <div class="day-card">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="mb-0">Day 2: Taj Mahal & Agra Fort</h5>
+                            <span class="date-badge big-btn">07 Sept 2025</span>
+                        </div>
+                        <p class="text-muted">Sunrise visit to Taj Mahal, followed by Agra Fort exploration.</p>
+                        <table class="table">
+                            <tr>
+                                <th>Category</th>
+                                <th>Details</th>
+                                <th class="text-end">Cost</th>
+                            </tr>
+                            <tr>
+                                <td>Stay</td>
+                                <td>Luxury Hotel</td>
+                                <td class="text-end">₹1,400</td>
+                            </tr>
+                            <tr>
+                                <td>Food</td>
+                                <td>All meals</td>
+                                <td class="text-end">₹850</td>
+                            </tr>
+                            <tr>
+                                <td>Local Travel</td>
+                                <td>Car with driver</td>
+                                <td class="text-end">₹420</td>
+                            </tr>
+                            <tr>
+                                <td>Activities</td>
+                                <td>Entrance fees & guide</td>
+                                <td class="text-end">₹700</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="text-muted">Notes: Intercity travel (one-way) suggestion: Train ~ ₹1,728 pp</td>
+                                <td></td>
+                            </tr>
+                            <tr class="fw-bold">
+                                <td colspan="2">Day Total</td>
+                                <td class="text-end">₹3,370</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="col-lg-4">
+                <!-- Budget Summary -->
+                <div class="budget-card">
+                    <h4 class="text-white">Budget Summary</h4>
+                    <table class="cost-breakdown">
+                        <tr>
+                            <td>Travel</td>
+                            <td class="text-end">₹1,000</td>
+                        </tr>
+                        <tr>
+                            <td>Stay</td>
+                            <td class="text-end">₹1,400</td>
+                        </tr>
+                        <tr>
+                            <td>Food</td>
+                            <td class="text-end">₹850</td>
+                        </tr>
+                        <tr>
+                            <td>Activities</td>
+                            <td class="text-end">₹700</td>
+                        </tr>
+                        <tr>
+                            <td>Grand Total</td>
+                            <td class="text-end">₹3,950</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- Transport Options -->
+                <div class="planning-card">
+                    <h4 class="section-title">Transport Options</h4>
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <div class="transport-card">
+                                <i class="fas fa-plane fa-2x text-primary mb-2"></i>
+                                <h5>Flight</h5>
+                                <div class="mb-2">
+                                    <div class="fw-bold">₹420</div>
+                                    <small>Price (one way)</small>
+                                </div>
+                                <div>
+                                    <div class="fw-bold">3 hrs</div>
+                                    <small>Duration</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <div class="transport-card">
+                                <i class="fas fa-train fa-2x text-success mb-2"></i>
+                                <h5>Train</h5>
+                                <div class="mb-2">
+                                    <div class="fw-bold">₹200</div>
+                                    <small>Price (one way)</small>
+                                </div>
+                                <div>
+                                    <div class="fw-bold">10 hrs 34 mins</div>
+                                    <small>Duration</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="transport-card">
+                                <i class="fas fa-bus fa-2x text-info mb-2"></i>
+                                <h5>Bus</h5>
+                                <div class="mb-2">
+                                    <div class="fw-bold">₹120</div>
+                                    <small>Price (one way)</small>
+                                </div>
+                                <div>
+                                    <div class="fw-bold">24 hrs 20 mins</div>
+                                    <small>Duration</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Packing List -->
+                <div class="planning-card">
+                    <h4 class="section-title">Packing List</h4>
+                    <ul class="packing-list">
+                        <li>ID card & copies</li>
+                        <li>Reusable water bottle</li>
+                        <li>Power bank</li>
+                        <li>Rain cover</li>
+                        <li>Basic meds</li>
+                        <li>Sunscreen</li>
+                        <li>Cap & sunglasses</li>
+                        <li>Power bar</li>
+                        <li>Travel adapter</li>
+                        <li>Comfortable shoes</li>
+                        <li>Light jacket</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// ... existing code ...
+
+$(document).ready(function() {
+    // Remove floating search bar for creation page
+    $('.floating-search-container').remove();
+    
+    // Pre-fill form with initial data
+    const initialData = {{ initial_data|safe }};
+    if (initialData) {
+        if (initialData.title) {
+            $('#title').val(initialData.title);
+        }
+        if (initialData.destination) {
+            $('#destination').val(initialData.destination);
+        }
+    }
+    
+    // Set today's date as minimum for start date
+    const today = new Date().toISOString().split('T')[0];
+    $('#start_date').attr('min', today);
+    $('#end_date').attr('min', today);
+    
+    // Calculate trip duration
+    function calculateDuration() {
+        const startDate = new Date($('#start_date').val());
+        const endDate = new Date($('#end_date').val());
+        
+        if ($('#start_date').val() && $('#end_date').val() && startDate <= endDate) {
+            const diffTime = Math.abs(endDate - startDate);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+            $('#tripDuration').text(diffDays + ' days');
+        } else {
+            $('#tripDuration').text('0 days');
+        }
+    }
+    
+    $('#start_date, #end_date').on('change', calculateDuration);
+    
+    // Set end date minimum based on start date
+    $('#start_date').on('change', function() {
+        $('#end_date').attr('min', $(this).val());
+        calculateDuration();
+    });
+    
+    // Auto-fill end date if empty
+    $('#start_date').on('change', function() {
+        if (!$('#end_date').val()) {
+            const startDate = new Date($(this).val());
+            startDate.setDate(startDate.getDate() + 3); // Default 3 days trip
+            $('#end_date').val(startDate.toISOString().split('T')[0]);
+            calculateDuration();
+        }
+    });
+    
+    // Calculate budget breakdown
+    $('#budget, #persons').on('input', function() {
+        const budget = parseFloat($('#budget').val()) || 0;
+        const persons = parseInt($('#persons').val()) || 1;
+        const days = parseInt($('#tripDuration').text()) || 1;
+        
+        if (budget > 0 && days > 0) {
+            const perDay = (budget / days).toFixed(0);
+            const perPerson = (budget / persons).toFixed(0);
+            
+            $('.budget-preview .text-primary').text('₹' + perDay);
+            $('.budget-preview .text-success').text('₹' + perPerson);
+            $('.budget-preview .text-info').text('₹' + budget.toFixed(0));
+        }
+    });
+    
+    // Form submission with AJAX
+    $('#tripCreationForm').on('submit', function(e) {
+        e.preventDefault();
+        
+        // Basic validation
+        let isValid = true;
+        $('.form-control:required').each(function() {
+            if (!$(this).val().trim()) {
+                $(this).addClass('is-invalid');
+                isValid = false;
+            } else {
+                $(this).removeClass('is-invalid');
+            }
+        });
+        
+        // Date validation
+        const startDate = new Date($('#start_date').val());
+        const endDate = new Date($('#end_date').val());
+        
+        if (startDate && endDate && startDate > endDate) {
+            $('#end_date').addClass('is-invalid');
+            isValid = false;
+        }
+        
+        if (!isValid) {
+            showToast('Error', 'Please fill all required fields correctly', 'error');
+            return;
+        }
+        
+        // Show loading state
+        const submitBtn = $(this).find('button[type="submit"]');
+        const originalText = submitBtn.html();
+        submitBtn.html('<i class="fas fa-spinner fa-spin me-2"></i>Creating Trip...');
+        submitBtn.prop('disabled', true);
+        
+        // Prepare form data
+        const formData = {
+            'title': $('#title').val(),
+            'destination': $('#destination').val(),
+            'persons': $('#persons').val(),
+            'travel_method': $('#travel_method').val(),
+            'budget': $('#budget').val(),
+            'start_date': $('#start_date').val(),
+            'end_date': $('#end_date').val(),
+            'notes': $('#notes').val(),
+            'currency': $('#currency').val()
+        };
+        
+        // Send AJAX request
+        $.ajax({
+            url: '{% url "home:create_trip" %}',
+            type: 'POST',
+            data: formData,
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            success: function(response) {
+                debugger
+                console.log("response",)
+                if (response.success) {
+                    showToast('Success', 'Trip created successfully!', 'success');
+                    // Redirect to trip detail page
+                    setTimeout(() => {
+                        window.location.href = response.redirect_url;
+                    }, 1000);
+                } else {
+                    showToast('Error', response.message, 'error');
+                    submitBtn.html(originalText);
+                    submitBtn.prop('disabled', false);
+                }
+            },
+            error: function(xhr) {
+                let errorMessage = 'Failed to create trip. Please try again.';
+                if (xhr.responseJSON && xhr.responseJSON.errors) {
+                    errorMessage = Object.values(xhr.responseJSON.errors).flat().join(', ');
+                }
+                showToast('Error', errorMessage, 'error');
+                submitBtn.html(originalText);
+                submitBtn.prop('disabled', false);
+            }
+        });
+    });
+});
+
+function selectTravelMethod(method) {
+    $('.travel-method-card').removeClass('selected');
+    $(`.travel-method-card[data-method="${method}"]`).addClass('selected');
+    $('#travel_method').val(method);
+}
+
+function searchDestinations() {
+    // Implement destination search functionality
+    console.log('Opening destination search...');
+}
+
+function showToast(title, message, type = 'info') {
+    // Create toast element
+    const toast = document.createElement('div');
+    toast.className = `toast align-items-center text-white bg-${type} border-0`;
+    toast.innerHTML = `
+        <div class="d-flex">
+            <div class="toast-body">
+                <strong>${title}:</strong> ${message}
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+    `;
+    
+    // Add to page
+    document.body.appendChild(toast);
+    const bsToast = new bootstrap.Toast(toast);
+    bsToast.show();
+    
+    // Remove after hidden
+    toast.addEventListener('hidden.bs.toast', () => {
+        document.body.removeChild(toast);
+    });
+}</script>
+{% endblock %}
