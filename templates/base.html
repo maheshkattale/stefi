@@ -76,7 +76,7 @@
         }
 
         .footer a {
-            color:rgba(51, 51, 51, 1) ;
+            color: rgba(51, 51, 51, 1);
             text-decoration: none;
             transition: color 0.3s ease;
         }
@@ -233,9 +233,56 @@
             font-weight: 600;
             margin-bottom: 30px;
         }
+
         footer ul li {
             margin-bottom: 10px;
-            
+
+        }
+
+        /* Extra responsive improvements */
+        @media (max-width: 992px) {
+            .footer-content {
+                text-align: center;
+            }
+
+            .footer .d-flex {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .timeline {
+                padding-left: 0;
+            }
+
+            .timeline-date {
+                margin-left: 0;
+                padding-left: 10px;
+            }
+
+            .timeline-marker {
+                position: relative;
+                left: 0;
+                margin: 0 auto 1rem auto;
+            }
+
+            .timeline-content {
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .navbar-brand img {
+                width: 40px;
+            }
+
+            .footer-heading {
+                margin-top: 20px;
+            }
+
+            .footer-content p {
+                font-size: 0.9rem;
+            }
         }
     </style>
 
@@ -353,15 +400,16 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <div class="row footer-content">
-                <div class="col-lg-4 mb-4">
-                    <h5 class="mb-3 text-center">
-                        <img src="{% static 'assets/logo/transparent-logo.png'%}" width="" alt="" style="width: 170px;">
+            <div class="row footer-content text-center text-md-start">
+                <div class="col-12 col-md-6 col-lg-4 mb-4 px-0">
+                    <h5 class="mb-3">
+                        <img src="{% static 'assets/logo/transparent-logo.png'%}" alt="Stefi Logo"
+                            style="width: 150px;">
                     </h5>
                     <p>Plan your perfect trips with ease. Create itineraries, manage budgets, and generate invoices all
                         in one place.</p>
                 </div>
-                <div class="col-lg-2 col-md-4 mb-4 px-0">
+                <div class="col-6 col-md-3 col-lg-2 mb-4 px-0">
                     <h6 class="footer-heading">Quick Links</h6>
                     <ul class="list-unstyled">
                         <li><a href="{% url 'home:landing_page' %}">Home</a></li>
@@ -370,7 +418,7 @@
                         <li><a href="#">Contact</a></li>
                     </ul>
                 </div>
-                <div class="col-lg-2 col-md-4 mb-4 px-0">
+                <div class="col-6 col-md-3 col-lg-2 mb-4 px-0">
                     <h6 class="footer-heading">Features</h6>
                     <ul class="list-unstyled">
                         <li><a href="#">Trip Planning</a></li>
@@ -379,16 +427,17 @@
                         <li><a href="#">Invoice Generation</a></li>
                     </ul>
                 </div>
-                <div class="col-lg-4 col-md-4 mb-4 px-0">
+                <div class="col-12 col-md-12 col-lg-4 mb-4 px-0">
                     <h6 class="footer-heading">Connect With Us</h6>
-                    <div class="d-flex gap-3 mt-3">
-                        <a href="#" class="text-white"><i class="fab fa-facebook fa-2x"></i></a>
-                        <a href="#" class="text-white"><i class="fab fa-twitter fa-2x"></i></a>
-                        <a href="#" class="text-white"><i class="fab fa-instagram fa-2x"></i></a>
-                        <a href="#" class="text-white"><i class="fab fa-linkedin fa-2x"></i></a>
+                    <div class="d-flex justify-content-center justify-content-lg-start gap-3 mt-3">
+                        <a href="#"><i class="fab fa-facebook fa-2x"></i></a>
+                        <a href="#"><i class="fab fa-twitter fa-2x"></i></a>
+                        <a href="#"><i class="fab fa-instagram fa-2x"></i></a>
+                        <a href="#"><i class="fab fa-linkedin fa-2x"></i></a>
                     </div>
                 </div>
             </div>
+
             <hr class="my-4 bg-light">
             <div class="text-center">
                 <p class="mb-0">&copy; 2025 Stefi Travel. All rights reserved.</p>

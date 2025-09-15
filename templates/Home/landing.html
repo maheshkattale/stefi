@@ -36,20 +36,16 @@
     /* Floating Search Bar */
     .floating-search-container {
         position: fixed;
-        top: 30px;
+        top: 20px;
         z-index: 1050;
         width: 100%;
         transition: all 0.3s ease;
         display: flex;
-        align-content: space-between;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        justify-content: space-evenly;
-
-
-        /* left: 35%; */
-        /* transform: translateX(-50%); */
-        /* max-width: 55%; */
+        justify-content: center;
+        align-items: center;
+        padding: 0 15px;
+        flex-wrap: wrap;
+        gap: 10px;
     }
 
     .floating-search-container.scrolled {
@@ -268,6 +264,7 @@
         padding: 20px 0;
         touch-action: pan-y;
         max-width: 800px;
+        margin: 0 auto;
     }
 
     .carousel {
@@ -408,20 +405,6 @@
         transform: scale(1.1);
     }
 
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-        #carouselContainer .card {
-            flex: 0 0 220px;
-        }
-    }
-
-    @media (max-width: 480px) {
-        #carouselContainer .card {
-            flex: 0 0 200px;
-            margin: 0 10px;
-        }
-    }
-
     .menu-items {
         width: 75px;
         height: 75px;
@@ -465,17 +448,20 @@
         gap: 30px;
         justify-content: center;
         perspective: 1000px;
+        flex-wrap: wrap;
     }
 
     .card2 {
         background: rgba(229, 233, 243, 0.8);
         border-radius: 15px;
         padding: 30px 20px;
-        /* width: 250px; */
         transition: transform 0.5s, box-shadow 0.5s;
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         transform-style: preserve-3d;
         cursor: pointer;
+        flex: 1;
+        min-width: 250px;
+        max-width: 350px;
     }
 
     .card2:hover {
@@ -515,12 +501,10 @@
 <style>
     .carousel1 {
         width: 100%;
-        /* max-width: 1000px; */
         overflow: hidden;
         position: relative;
         cursor: grab;
         perspective: 1200px;
-        /* padding: 0 16px; */
     }
 
     .carousel1:active {
@@ -534,7 +518,6 @@
 
     .card1 {
         flex: 0 0 33.333%;
-        /* margin: 0 8px; */
         border-radius: 14px;
         background: #111827;
         color: #fff;
@@ -543,6 +526,7 @@
         user-select: none;
         transform: scale(0.95);
         transition: transform 0.6s ease;
+        margin: 0 8px;
     }
 
     .card1 img {
@@ -615,6 +599,274 @@
     .card1.next {
         transform: scale(0.9) rotateY(-15deg);
     }
+
+    /* Responsive adjustments */
+    @media (max-width: 1200px) {
+        .floating-search-container {
+            justify-content: space-between;
+        }
+        
+        .card1 {
+            flex: 0 0 50%;
+        }
+        
+        .stefi-different-section {
+            margin: 40px 0;
+            border-radius: 20px;
+        }
+    }
+    
+    @media (max-width: 992px) {
+        .hero-section {
+            padding: 4rem 0;
+        }
+        
+        .hero-section h1 {
+            font-size: 2.5rem;
+        }
+        
+        .floating-search-container {
+            top: 15px;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 15px;
+        }
+        
+        .floating-search-container > div:first-child {
+            width: 100% !important;
+        }
+        
+        .menu-items {
+            width: 60px;
+            height: 60px;
+            padding: 18px;
+        }
+        
+        .card1 {
+            flex: 0 0 50%;
+        }
+        
+        .card2 {
+            min-width: 200px;
+        }
+        
+        .achivements-count-div {
+            height: 120px;
+            width: 120px;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .hero-section {
+            height: auto;
+            min-height: 100vh;
+            padding: 5rem 0 2rem;
+        }
+        
+        .hero-section h1 {
+            font-size: 2rem;
+        }
+        
+        .hero-section p.lead {
+            font-size: 1rem;
+        }
+        
+        .floating-search-container {
+            position: fixed;
+            top: 0;
+            padding: 15px;
+            border-radius: 0 0 15px 15px;
+            margin-bottom: 1rem;
+        }
+        .text-muted {
+            font-size: 10px;
+        }
+        .stat-number{
+            font-size: 14px;
+        }
+        
+        .menu-items-container {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+        }
+        
+        .menu-items {
+            width: 50px;
+            height: 50px;
+            padding: 15px;
+        }
+        
+        #carouselContainer .card {
+            flex: 0 0 220px;
+            width: 180px;
+            height: 340px;
+        }
+        
+        #carouselContainer .card img {
+            height: 240px;
+        }
+        
+        .card1 {
+            flex: 0 0 100%;
+        }
+        
+        .stefi-different-section {
+            margin: 30px 15px;
+            border-radius: 15px;
+        }
+        
+        .card2s {
+            gap: 20px;
+        }
+        
+        .card2 {
+            min-width: 100%;
+            margin-bottom: 15px;
+        }
+        
+        .achivement-section .row > div {
+            margin-bottom: 20px;
+        }
+        
+        .achivements-count-div {
+            height: 100px;
+            width: 100px;
+        }
+        
+        .stat-number {
+            font-size: 1.75rem;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .hero-section {
+            padding: 4rem 0 1rem;
+        }
+        
+        .hero-section h1 {
+            font-size: 1.75rem;
+        }
+        
+        .hero-section .btn {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .floating-search-input {
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+        }
+        
+        .menu-items {
+            width: 45px;
+            height: 45px;
+            padding: 12px;
+        }
+        
+        #carouselContainer {
+            height: 50vh;
+        }
+        
+        #carouselContainer .card {
+            flex: 0 0 180px;
+            width: 150px;
+            height: 300px;
+            margin: 0 10px;
+        }
+        
+        #carouselContainer .card img {
+            height: 200px;
+            padding: 8px;
+        }
+        
+        #carouselContainer .card h3 {
+            font-size: 13px;
+        }
+        
+        #carouselContainer .card p {
+            font-size: 11px;
+        }
+        
+        .card1 {
+            margin: 0 5px;
+        }
+        
+        .overlay {
+            padding: 15px;
+        }
+        
+        .overlay h3 {
+            font-size: 16px;
+        }
+        
+        .overlay p {
+            font-size: 12px;
+        }
+        
+        .stefi-different-section {
+            margin: 20px 10px;
+            border-radius: 12px;
+            padding: 25px 15px;
+        }
+        
+        .card2 {
+            padding: 20px 15px;
+        }
+        
+        .card2-icon {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+        
+        .card2 h3 {
+            font-size: 1.1em;
+        }
+        
+        .achivements-count-div {
+            height: 80px;
+            width: 80px;
+        }
+        
+        .stat-number {
+            font-size: 1.5rem;
+        }
+    }
+    
+    @media (max-width: 400px) {
+        .hero-section h1 {
+            font-size: 1.5rem;
+        }
+        
+        .menu-items {
+            width: 40px;
+            height: 40px;
+            padding: 10px;
+        }
+        
+        #carouselContainer .card {
+            flex: 0 0 160px;
+            width: 130px;
+            height: 280px;
+        }
+        
+        #carouselContainer .card img {
+            height: 180px;
+        }
+        
+        .achivements-count-div {
+            height: 70px;
+            width: 70px;
+        }
+        
+        .stat-number {
+            font-size: 14px;
+        }
+    }
 </style>
 {% endblock %}
 
@@ -622,9 +874,9 @@
 <!-- Floating Search Bar -->
 <div class="floating-search-container w-100">
 
-    <div class="d-flex" style="background: #e4e8f2;border-radius: 50px;    width: 70%;">
+    <div class="d-flex" style="background: #e4e8f2;border-radius: 50px;width: 60%;">
         <span class="input-group-text border-0 floating-search-logo" style="border-radius: 50px 0px 0px 50px;">
-            <img src="{% static 'assets/logo/logo-symbol.jpeg'%}" width="55" alt="" style="border-radius: 50%;">
+            <img src="{% static 'assets/logo/logo-symbol.jpeg'%}" width="55" alt="" style="border-radius: 50%;" class="img-fluid">
         </span>
         <input type="text" class="form-control search-input floating-search-input"
             placeholder="Search destinations, states, or activities..." id="globalSearch">
@@ -633,25 +885,27 @@
         </span>
     </div>
 
-    <div>
-        <a href="#" class="" id="" title="Search">
-            <img src="{% static 'assets/icons/explore-india.png' %}" alt="" class="menu-items">
-        </a>
-    </div>
-    <div>
-        <a href="#" class="" id="" title="Search">
-            <img src="{% static 'assets/icons/bag-packing.png' %}" alt="" class="menu-items">
-        </a>
-    </div>
-    <div>
-        <a href="#" class="" id="" title="Search">
-            <img src="{% static 'assets/icons/trip-planner.png' %}" alt="" class="menu-items">
-        </a>
-    </div>
-    <div>
-        <a href="#" class="" id="" title="Search">
-            <img src="{% static 'assets/icons/profile.png' %}" alt="" class="menu-items">
-        </a>
+    <div class="menu-items-container d-flex">
+        <div class="px-2">
+            <a href="#" class="" id="" title="Search">
+                <img src="{% static 'assets/icons/explore-india.png' %}" alt="" class="menu-items img-fluid">
+            </a>
+        </div>
+        <div class="px-2">
+            <a href="#" class="" id="" title="Search">
+                <img src="{% static 'assets/icons/bag-packing.png' %}" alt="" class="menu-items img-fluid">
+            </a>
+        </div>
+        <div class="px-2">
+            <a href="#" class="" id="" title="Search">
+                <img src="{% static 'assets/icons/trip-planner.png' %}" alt="" class="menu-items img-fluid">
+            </a>
+        </div>
+        <div class="px-2">
+            <a href="#" class="" id="" title="Search">
+                <img src="{% static 'assets/icons/profile.png' %}" alt="" class="menu-items img-fluid">
+            </a>
+        </div>
     </div>
 
     <div class="search-results" id="searchResults"></div>
@@ -660,7 +914,6 @@
 <!-- Hero Section -->
 <section class="hero-section">
     <!-- Background Video -->
-    <!-- Replace this in your hero-section -->
     <video autoplay muted loop playsinline preload="none" class="hero-video">
         <source src="{% static 'assets/video/hero-bg.mp4' %}" type="video/mp4">
         <source src="{% static 'assets/video/hero-bg.webm' %}" type="video/webm">
@@ -673,7 +926,7 @@
     <!-- Content -->
     <div class="container position-relative">
         <div class="row align-items-center min-vh-75">
-            <div class="col-lg-6">
+            <div class="col-lg-6 order-lg-1 order-2">
                 <h1 class="display-3 fw-bold mb-4">Explore India</h1>
                 <p class="lead mb-5">
                     Plan perfect trips with detailed itineraries, budget management, and instant invoice generation
@@ -687,46 +940,40 @@
                     </a>
                 </div>
             </div>
-            <div class="col-lg-6">
-
+            <div class="col-lg-6 order-lg-2 order-1 mb-4 mb-lg-0">
                 <div class="carousel-container" id="carouselContainer" style="height: 70vh; align-content: center;">
-
                     <div class="carousel" id="carousel">
                         <div class="card active">
-                            <img src="{% static 'assets/images/delhi.jpg' %}" alt="Delhi">
+                            <img src="{% static 'assets/images/delhi.jpg' %}" alt="Delhi" class="img-fluid">
                             <h3>New Delhi, India</h3>
                             <p>Delhi is the capital of India, known for its history and culture.</p>
                         </div>
                         <div class="card">
-                            <img src="{% static 'assets/images/mumbai.jpg' %}" alt="Mumbai">
+                            <img src="{% static 'assets/images/mumbai.jpg' %}" alt="Mumbai" class="img-fluid">
                             <h3>Mumbai, India</h3>
                             <p>Mumbai is the capital of Maharashtra and a major trading port.</p>
                         </div>
                         <div class="card">
-                            <img src="{% static 'assets/images/goa.jpg' %}" alt="Goa">
+                            <img src="{% static 'assets/images/goa.jpg' %}" alt="Goa" class="img-fluid">
                             <h3>Goa, India</h3>
                             <p>Goa is famous for its beaches, nightlife, and Portuguese heritage.</p>
                         </div>
                         <div class="card">
-                            <img src="{% static 'assets/images/bangalore.jpg' %}" alt="Bangalore">
+                            <img src="{% static 'assets/images/bangalore.jpg' %}" alt="Bangalore" class="img-fluid">
                             <h3>Bangalore, India</h3>
                             <p>Known as the Silicon Valley of India for its IT industry.</p>
                         </div>
                         <div class="card">
-                            <img src="{% static 'assets/images/kolkata.jpg' %}" alt="Kolkata">
+                            <img src="{% static 'assets/images/kolkata.jpg' %}" alt="Kolkata" class="img-fluid">
                             <h3>Kolkata, India</h3>
                             <p>Cultural capital of India with colonial architecture.</p>
                         </div>
                     </div>
 
-                    <!-- <div class="indicators" id="indicators"></div> -->
-
                     <div style="display: flex; justify-content: center;">
                         <button class="control-btn" id="playPauseBtn">❚❚</button>
                     </div>
                 </div>
-
-
             </div>
         </div>
     </div>
@@ -734,11 +981,11 @@
 
 <section class="py-5 bg-white">
     <div class="container">
-        <h2 class="fw-bold mb-3">Most loved Places by travellers </h2>
+        <h2 class="fw-bold mb-3 text-center">Most loved Places by travellers</h2>
         <div class="carousel1" id="carousel1">
             <div class="track" id="track">
                 <div class="card1">
-                    <img src="https://picsum.photos/id/1018/600/400" alt="">
+                    <img src="https://picsum.photos/id/1018/600/400" alt="Mountain Escape" class="img-fluid">
                     <div class="overlay">
                         <h3>Mountain Escape</h3>
                         <p>Experience the serenity of the mountains with breathtaking views and fresh air.</p>
@@ -746,7 +993,7 @@
                     </div>
                 </div>
                 <div class="card1">
-                    <img src="https://picsum.photos/id/1025/600/400" alt="">
+                    <img src="https://picsum.photos/id/1025/600/400" alt="Wildlife Safari" class="img-fluid">
                     <div class="overlay">
                         <h3>Wildlife Safari</h3>
                         <p>Get closer to nature and discover exotic wildlife in their natural habitat.</p>
@@ -754,7 +1001,7 @@
                     </div>
                 </div>
                 <div class="card1">
-                    <img src="https://picsum.photos/id/1043/600/400" alt="">
+                    <img src="https://picsum.photos/id/1043/600/400" alt="City Lights" class="img-fluid">
                     <div class="overlay">
                         <h3>City Lights</h3>
                         <p>Explore the nightlife, skyscrapers, and vibrant culture of the big city.</p>
@@ -762,7 +1009,7 @@
                     </div>
                 </div>
                 <div class="card1">
-                    <img src="https://picsum.photos/id/1039/600/400" alt="">
+                    <img src="https://picsum.photos/id/1039/600/400" alt="Beach Paradise" class="img-fluid">
                     <div class="overlay">
                         <h3>Beach Paradise</h3>
                         <p>Relax on sandy shores, swim in turquoise waters, and enjoy tropical vibes.</p>
@@ -770,7 +1017,7 @@
                     </div>
                 </div>
                 <div class="card1">
-                    <img src="https://picsum.photos/id/1050/600/400" alt="">
+                    <img src="https://picsum.photos/id/1050/600/400" alt="Adventure Trails" class="img-fluid">
                     <div class="overlay">
                         <h3>Adventure Trails</h3>
                         <p>Hike through forests and discover hidden gems along adventurous trails.</p>
@@ -778,7 +1025,7 @@
                     </div>
                 </div>
                 <div class="card1">
-                    <img src="https://picsum.photos/id/1005/600/400" alt="">
+                    <img src="https://picsum.photos/id/1005/600/400" alt="Cultural Journey" class="img-fluid">
                     <div class="overlay">
                         <h3>Cultural Journey</h3>
                         <p>Immerse yourself in rich traditions, food, and art from around the world.</p>
@@ -789,6 +1036,7 @@
         </div>
     </div>
 </section>
+
 <!-- Statistics Section -->
 <section class="bg-white achivement-section">
     <div class="container achivement-path-vector py-5">
@@ -798,7 +1046,6 @@
                     <div class="stat-number" id="statDestinations">0</div>
                     <p class="text-muted">Destinations</p>
                 </div>
-
             </div>
             <div class="col-md-3 col-6 mb-4 d-flex justify-content-center">
                 <div class="achivements-count-div">
@@ -819,9 +1066,10 @@
                 </div>
             </div>
         </div>
+    </div>
 </section>
-<section class="stefi-different-section py-5 bg-white">
 
+<section class="stefi-different-section py-5 bg-white">
     <div class="container">
         <h1 class="text-center fw-bold">What Makes STEFI Different</h1>
         <div class="card2s py-5">
@@ -843,85 +1091,7 @@
         </div>
     </div>
 </section>
-<!-- States Carousel Section -->
-<!-- <section id="states" class="state-carousel py-5 bg-light">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="fw-bold">Explore by State</h2>
-            <p class="text-muted">Discover amazing destinations across India</p>
-        </div>
 
-        <div class="row" id="statesContainer">
-            <div class="col-12 text-center">
-                <div class="loading-spinner mx-auto"></div>
-                <p class="text-muted mt-2">Loading states...</p>
-            </div>
-        </div>
-
-        <div class="text-center mt-4">
-            <a href="#" class="btn btn-primary">
-                <i class="fas fa-globe-asia me-2"></i>View All States
-            </a>
-        </div>
-    </div>
-</section> -->
-
-<!-- Popular Destinations Section -->
-<!-- <section class="py-5 bg-white">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="fw-bold">Popular Destinations</h2>
-            <p class="text-muted">Most loved places by travelers</p>
-        </div>
-
-        <div class="row" id="destinationsContainer">
-            <div class="col-12 text-center">
-                <div class="loading-spinner mx-auto"></div>
-                <p class="text-muted mt-2">Loading destinations...</p>
-            </div>
-        </div>
-    </div>
-</section> -->
-
-<!-- Features Section -->
-<!-- <section id="features" class="py-5 bg-light">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="fw-bold">Why Choose Stefi?</h2>
-            <p class="text-muted">Everything you need for perfect trip planning</p>
-        </div>
-
-        <div class="row">
-            <div class="col-md-4 mb-4">
-                <div class="text-center">
-                    <div class="feature-icon">
-                        <i class="fas fa-route fa-2x text-white"></i>
-                    </div>
-                    <h4>Detailed Itineraries</h4>
-                    <p class="text-muted">Create hour-by-hour plans with activities, timings, and locations</p>
-                </div>
-            </div>
-            <div class="col-md-4 mb-4">
-                <div class="text-center">
-                    <div class="feature-icon">
-                        <i class="fas fa-calculator fa-2x text-white"></i>
-                    </div>
-                    <h4>Budget Management</h4>
-                    <p class="text-muted">Track expenses and manage your travel budget effectively</p>
-                </div>
-            </div>
-            <div class="col-md-4 mb-4">
-                <div class="text-center">
-                    <div class="feature-icon">
-                        <i class="fas fa-file-invoice-dollar fa-2x text-white"></i>
-                    </div>
-                    <h4>Instant Invoices</h4>
-                    <p class="text-muted">Generate professional invoices for your trips and expenses</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section> -->
 <!-- Trip Selection Modal -->
 <div class="modal fade" id="tripSelectionModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -936,6 +1106,7 @@
         </div>
     </div>
 </div>
+
 <!-- Destination Selection Modal -->
 <div class="modal fade" id="destinationSelectionModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered">
@@ -949,24 +1120,6 @@
         </div>
     </div>
 </div>
-
-<!-- CTA Section -->
-<!-- <section class="py-5 bg-primary text-white"
-    style="background-color: rgb(11 162 192) !important;margin: 10px;border-radius: 26px;">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-8">
-                <h2 class="fw-bold mb-3">Ready to Plan Your Adventure?</h2>
-                <p class="lead mb-0">Join thousands of travelers who trust Stefi for their trip planning needs</p>
-            </div>
-            <div class="col-lg-4 text-lg-end">
-                <a href="{% url 'home:login' %}" class="btn btn-light btn-lg px-4">
-                    <i class="fas fa-user-plus me-2"></i>Get Started
-                </a>
-            </div>
-        </div>
-    </div>
-</section> -->
 {% endblock %}
 
 {% block extra_js %}

@@ -45,7 +45,7 @@ def landing_page(request):
         'destination_types': destination_types,
     }
     
-    return render(request, 'home/landing.html', context)
+    return render(request, 'Home/landing.html', context)
 
 from django.http import JsonResponse
 
