@@ -38,7 +38,7 @@
         }
         
         .planning-card:hover {
-            transform: translateY(-5px);
+            transform: none; /* Removed hover effect for consistency when dynamic content is loaded */
         }
         
         .section-title {
@@ -152,13 +152,40 @@
         }
         
         .date-badge {
-            /* background: var(--secondary-color); */
             background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
             color: white;
             padding: 5px 12px;
             border-radius: 20px;
             font-size: 0.9rem;
             font-weight: 600;
+        }
+
+        /* Skeleton Loader Styles */
+        .skeleton {
+            animation: pulse 1.5s infinite ease-in-out;
+            background: linear-gradient(-90deg, #f0f0f0 0%, #f8f8f8 50%, #f0f0f0 100%);
+            background-size: 400% 400%;
+            border-radius: 8px;
+        }
+        .skeleton-text {
+            height: 12px;
+            margin: 5px 0;
+        }
+        .skeleton-row {
+            height: 40px;
+            margin-bottom: 10px;
+        }
+        .skeleton-suggestion {
+            height: 50px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+        @keyframes pulse {
+            0% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .placeholder-output {
+            opacity: 0.7;
         }
         
         @media (max-width: 768px) {
@@ -185,243 +212,96 @@
                         </nav>
                         <h2 class="mb-0">AI Trip Planner</h2>
                     </div>
-                    <button class="big-btn"><i class="fas fa-download me-2"></i> Export Plan</button>
+                    <!-- Export button visible only if a plan exists -->
+                    <button id="exportPlanBtn" class="big-btn" style="display:none;"><i class="fas fa-download me-2"></i> Export Plan</button>
                 </div>
 
-                <!-- Trip Planning Card -->
+                <!-- Trip Planning Card (Input Form) -->
                 <div class="planning-card">
                     <h4 class="section-title">Plan Your Trip</h4>
-                    <div class="row">
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label">Plan Name / City</label>
-                            <input type="text" class="form-control" placeholder="E.g., Pune">
+                    <form id="aiPlanForm">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Plan Name / City</label>
+                                <input type="text" id="plan_name" class="form-control" value="" placeholder="E.g., Pune to Agra Trip" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Destination</label>
+                                <input type="text" id="destination" class="form-control" value="" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Budget (INR/USD)</label>
+                                <input type="number" id="budget" class="form-control" value="" required min="100">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">Start Date</label>
+                                <input type="date" id="start_date" class="form-control" value="" required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">End Date</label>
+                                <input type="date" id="end_date" class="form-control" value="" required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">Trip Duration</label>
+                                <input type="text" id="tripDuration" class="form-control" value="" disabled>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">Peoples</label>
+                                <input type="number" id="peoples" class="form-control" value="" required min="1">
+                            </div>
                         </div>
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label">Destination</label>
-                            <input type="text" class="form-control" value="Agra">
+                        <div class="text-center mt-3">
+                            <button type="submit" id="generatePlanBtn" class="big-btn">
+                                <i class="fas fa-magic me-2"></i> Generate AI Plan
+                            </button>
                         </div>
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label">Budget</label>
-                            <input type="text" class="form-control" value="3,950">
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <label class="form-label">Start Date</label>
-                            <input type="date" class="form-control" value="2025-09-06">
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <label class="form-label">End Date</label>
-                            <input type="date" class="form-control" value="2025-09-10">
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <label class="form-label">Travel Days</label>
-                            <input type="text" class="form-control" value="Friday" disabled>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <label class="form-label">Peoples</label>
-                            <input type="text" class="form-control" value="2">
-
-                        </div>
-                    </div>
-                    <div class="text-center mt-3">
-                        <button class="big-btn"><i class="fas fa-magic me-2"></i> Generate AI Plan</button>
-                    </div>
+                    </form>
                 </div>
 
-                <!-- AI Suggestions -->
-                <div class="planning-card">
+                <!-- AI Suggestions (Dynamic Content) -->
+                <div id="aiSuggestionsContainer" class="planning-card" style="display: none;">
                     <h4 class="section-title">AI Suggestions</h4>
-                    <div class="ai-suggestion">
-                        <i class="fas fa-lightbulb text-warning me-2"></i> Compare cost vs time: train 14.5h, flight 3.3h (including buffer), bus 17.8h.
-                    </div>
-                    <div class="ai-suggestion">
-                        <i class="fas fa-lightbulb text-warning me-2"></i> Hidden gem near Agra: sunrise viewpoints & local markets.
-                    </div>
-                    <div class="ai-suggestion">
-                        <i class="fas fa-lightbulb text-warning me-2"></i> Save more: pre-book stays and use public transport for short hops.
-                    </div>
-                    <div class="ai-suggestion">
-                        <i class="fas fa-lightbulb text-warning me-2"></i> Food tip: try a local thali to keep costs predictable.
+                    <div id="aiSuggestionsList">
+                        <!-- AI Suggestions will be injected here -->
                     </div>
                 </div>
 
-                <!-- Itinerary -->
-                <div class="planning-card">
+                <!-- Itinerary (Dynamic Content) -->
+                <div id="itineraryContainer" class="planning-card" style="display: none;">
                     <h4 class="section-title">Your Itinerary</h4>
-                    
-                    <!-- Day 1 -->
-                    <div class="day-card">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h5 class="mb-0">Day 1: Arrival in Agra</h5>
-                            <span class="date-badge big-btn">06 Sept 2025</span>
-                        </div>
-                        <p class="text-muted">Arrive and check into your hotel. Evening visit to Mehtab Bagh for Taj Mahal view.</p>
-                        <table class="table">
-                            <tr>
-                                <th>Category</th>
-                                <th>Details</th>
-                                <th class="text-end">Cost</th>
-                            </tr>
-                            <tr>
-                                <td>Stay</td>
-                                <td>Luxury Hotel</td>
-                                <td class="text-end">₹1,400</td>
-                            </tr>
-                            <tr>
-                                <td>Food</td>
-                                <td>Dinner at hotel</td>
-                                <td class="text-end">₹120</td>
-                            </tr>
-                            <tr>
-                                <td>Local Travel</td>
-                                <td>Airport to hotel transfer</td>
-                                <td class="text-end">₹60</td>
-                            </tr>
-                            <tr class="fw-bold">
-                                <td colspan="2">Day Total</td>
-                                <td class="text-end">₹1,580</td>
-                            </tr>
-                        </table>
-                    </div>
-                    
-                    <!-- Day 2 -->
-                    <div class="day-card">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h5 class="mb-0">Day 2: Taj Mahal & Agra Fort</h5>
-                            <span class="date-badge big-btn">07 Sept 2025</span>
-                        </div>
-                        <p class="text-muted">Sunrise visit to Taj Mahal, followed by Agra Fort exploration.</p>
-                        <table class="table">
-                            <tr>
-                                <th>Category</th>
-                                <th>Details</th>
-                                <th class="text-end">Cost</th>
-                            </tr>
-                            <tr>
-                                <td>Stay</td>
-                                <td>Luxury Hotel</td>
-                                <td class="text-end">₹1,400</td>
-                            </tr>
-                            <tr>
-                                <td>Food</td>
-                                <td>All meals</td>
-                                <td class="text-end">₹850</td>
-                            </tr>
-                            <tr>
-                                <td>Local Travel</td>
-                                <td>Car with driver</td>
-                                <td class="text-end">₹420</td>
-                            </tr>
-                            <tr>
-                                <td>Activities</td>
-                                <td>Entrance fees & guide</td>
-                                <td class="text-end">₹700</td>
-                            </tr>
-                            <tr>
-                                <td colspan="2" class="text-muted">Notes: Intercity travel (one-way) suggestion: Train ~ ₹1,728 pp</td>
-                                <td></td>
-                            </tr>
-                            <tr class="fw-bold">
-                                <td colspan="2">Day Total</td>
-                                <td class="text-end">₹3,370</td>
-                            </tr>
-                        </table>
+                    <div id="itineraryList" style="max-height: 70vh;overflow-y: auto;">
+                        <!-- Day cards will be injected here -->
                     </div>
                 </div>
             </div>
 
             <!-- Right Column -->
             <div class="col-lg-4">
-                <!-- Budget Summary -->
-                <div class="budget-card">
+                
+                <!-- Budget Summary (Dynamic Content) -->
+                <div id="budgetSummaryContainer" class="budget-card" style="display: none;">
                     <h4 class="text-white">Budget Summary</h4>
                     <table class="cost-breakdown">
-                        <tr>
-                            <td>Travel</td>
-                            <td class="text-end">₹1,000</td>
-                        </tr>
-                        <tr>
-                            <td>Stay</td>
-                            <td class="text-end">₹1,400</td>
-                        </tr>
-                        <tr>
-                            <td>Food</td>
-                            <td class="text-end">₹850</td>
-                        </tr>
-                        <tr>
-                            <td>Activities</td>
-                            <td class="text-end">₹700</td>
-                        </tr>
-                        <tr>
-                            <td>Grand Total</td>
-                            <td class="text-end">₹3,950</td>
-                        </tr>
+                        <tbody id="budgetBreakdown">
+                            <!-- Budget rows will be injected here -->
+                        </tbody>
                     </table>
                 </div>
 
-                <!-- Transport Options -->
-                <div class="planning-card">
+                <!-- Transport Options (Dynamic Content) -->
+                <div id="transportOptionsContainer" class="planning-card" style="display: none;">
                     <h4 class="section-title">Transport Options</h4>
-                    <div class="row">
-                        <div class="col-md-12 mb-3">
-                            <div class="transport-card">
-                                <i class="fas fa-plane fa-2x text-primary mb-2"></i>
-                                <h5>Flight</h5>
-                                <div class="mb-2">
-                                    <div class="fw-bold">₹420</div>
-                                    <small>Price (one way)</small>
-                                </div>
-                                <div>
-                                    <div class="fw-bold">3 hrs</div>
-                                    <small>Duration</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-12 mb-3">
-                            <div class="transport-card">
-                                <i class="fas fa-train fa-2x text-success mb-2"></i>
-                                <h5>Train</h5>
-                                <div class="mb-2">
-                                    <div class="fw-bold">₹200</div>
-                                    <small>Price (one way)</small>
-                                </div>
-                                <div>
-                                    <div class="fw-bold">10 hrs 34 mins</div>
-                                    <small>Duration</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                            <div class="transport-card">
-                                <i class="fas fa-bus fa-2x text-info mb-2"></i>
-                                <h5>Bus</h5>
-                                <div class="mb-2">
-                                    <div class="fw-bold">₹120</div>
-                                    <small>Price (one way)</small>
-                                </div>
-                                <div>
-                                    <div class="fw-bold">24 hrs 20 mins</div>
-                                    <small>Duration</small>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="row" id="transportOptionsList">
+                        <!-- Transport cards will be injected here -->
                     </div>
                 </div>
 
-                <!-- Packing List -->
-                <div class="planning-card">
+                <!-- Packing List (Dynamic Content) -->
+                <div id="packingListContainer" class="planning-card" style="display: none;">
                     <h4 class="section-title">Packing List</h4>
-                    <ul class="packing-list">
-                        <li>ID card & copies</li>
-                        <li>Reusable water bottle</li>
-                        <li>Power bank</li>
-                        <li>Rain cover</li>
-                        <li>Basic meds</li>
-                        <li>Sunscreen</li>
-                        <li>Cap & sunglasses</li>
-                        <li>Power bar</li>
-                        <li>Travel adapter</li>
-                        <li>Comfortable shoes</li>
-                        <li>Light jacket</li>
+                    <ul class="packing-list" id="packingList">
+                        <!-- Packing list items will be injected here -->
                     </ul>
                 </div>
             </div>
@@ -431,192 +311,318 @@
 
 {% block extra_js %}
 <script>
-// ... existing code ...
+    // --- Configuration ---
+    // Assuming {{hosturl}} is a Django template variable available in the context
+    const API_HOST = "{{hosturl}}"; 
+    const AI_PLAN_API = `/api/trips/ai_trip_plan_view`;
 
-$(document).ready(function() {
-    // Remove floating search bar for creation page
-    $('.floating-search-container').remove();
-    
-    // Pre-fill form with initial data
-    const initialData = {{ initial_data|safe }};
-    if (initialData) {
-        if (initialData.title) {
-            $('#title').val(initialData.title);
-        }
-        if (initialData.destination) {
-            $('#destination').val(initialData.destination);
-        }
-    }
-    
-    // Set today's date as minimum for start date
-    const today = new Date().toISOString().split('T')[0];
-    $('#start_date').attr('min', today);
-    $('#end_date').attr('min', today);
-    
-    // Calculate trip duration
-    function calculateDuration() {
-        const startDate = new Date($('#start_date').val());
-        const endDate = new Date($('#end_date').val());
+    // --- Helper Functions ---
+
+    // Utility to show Bootstrap Toasts (keeping consistency with existing template)
+    function showToast(title, message, type = 'info') {
+        // Create toast element
+        const toastHtml = `
+            <div class="toast align-items-center text-white bg-${type} border-0 position-fixed bottom-0 end-0 m-3" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        <strong>${title}:</strong> ${message}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            </div>`;
         
-        if ($('#start_date').val() && $('#end_date').val() && startDate <= endDate) {
+        // Append and show
+        const toastEl = $(toastHtml);
+        $('body').append(toastEl);
+        const bsToast = new bootstrap.Toast(toastEl[0]);
+        bsToast.show();
+        
+        // Remove after hidden
+        toastEl.on('hidden.bs.toast', function () {
+            $(this).remove();
+        });
+    }
+
+    // Function to calculate and display trip duration
+    function calculateDuration() {
+        const startDateVal = $('#start_date').val();
+        const endDateVal = $('#end_date').val();
+        
+        if (startDateVal && endDateVal) {
+            const startDate = new Date(startDateVal);
+            const endDate = new Date(endDateVal);
+            
+            if (startDate > endDate) {
+                $('#tripDuration').val('Invalid Dates');
+                return 0;
+            }
+
             const diffTime = Math.abs(endDate - startDate);
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
-            $('#tripDuration').text(diffDays + ' days');
+            $('#tripDuration').val(diffDays + ' days');
+            return diffDays;
         } else {
-            $('#tripDuration').text('0 days');
+            $('#tripDuration').val('0 days');
+            return 0;
         }
     }
     
-    $('#start_date, #end_date').on('change', calculateDuration);
-    
-    // Set end date minimum based on start date
-    $('#start_date').on('change', function() {
-        $('#end_date').attr('min', $(this).val());
-        calculateDuration();
-    });
-    
-    // Auto-fill end date if empty
-    $('#start_date').on('change', function() {
-        if (!$('#end_date').val()) {
-            const startDate = new Date($(this).val());
-            startDate.setDate(startDate.getDate() + 3); // Default 3 days trip
-            $('#end_date').val(startDate.toISOString().split('T')[0]);
-            calculateDuration();
-        }
-    });
-    
-    // Calculate budget breakdown
-    $('#budget, #persons').on('input', function() {
-        const budget = parseFloat($('#budget').val()) || 0;
-        const persons = parseInt($('#persons').val()) || 1;
-        const days = parseInt($('#tripDuration').text()) || 1;
-        
-        if (budget > 0 && days > 0) {
-            const perDay = (budget / days).toFixed(0);
-            const perPerson = (budget / persons).toFixed(0);
-            
-            $('.budget-preview .text-primary').text('₹' + perDay);
-            $('.budget-preview .text-success').text('₹' + perPerson);
-            $('.budget-preview .text-info').text('₹' + budget.toFixed(0));
-        }
-    });
-    
-    // Form submission with AJAX
-    $('#tripCreationForm').on('submit', function(e) {
-        e.preventDefault();
-        
-        // Basic validation
-        let isValid = true;
-        $('.form-control:required').each(function() {
-            if (!$(this).val().trim()) {
-                $(this).addClass('is-invalid');
-                isValid = false;
-            } else {
-                $(this).removeClass('is-invalid');
-            }
-        });
-        
-        // Date validation
-        const startDate = new Date($('#start_date').val());
-        const endDate = new Date($('#end_date').val());
-        
-        if (startDate && endDate && startDate > endDate) {
-            $('#end_date').addClass('is-invalid');
-            isValid = false;
-        }
-        
-        if (!isValid) {
-            showToast('Error', 'Please fill all required fields correctly', 'error');
-            return;
-        }
-        
-        // Show loading state
-        const submitBtn = $(this).find('button[type="submit"]');
-        const originalText = submitBtn.html();
-        submitBtn.html('<i class="fas fa-spinner fa-spin me-2"></i>Creating Trip...');
-        submitBtn.prop('disabled', true);
-        
-        // Prepare form data
-        const formData = {
-            'title': $('#title').val(),
-            'destination': $('#destination').val(),
-            'persons': $('#persons').val(),
-            'travel_method': $('#travel_method').val(),
-            'budget': $('#budget').val(),
-            'start_date': $('#start_date').val(),
-            'end_date': $('#end_date').val(),
-            'notes': $('#notes').val(),
-            'currency': $('#currency').val()
-        };
-        
-        // Send AJAX request
-        $.ajax({
-            url: '{% url "home:create_trip" %}',
-            type: 'POST',
-            data: formData,
-            headers: {
-                'X-CSRFToken': '{{ csrf_token }}'
-            },
-            success: function(response) {
-                debugger
-                console.log("response",)
-                if (response.success) {
-                    showToast('Success', 'Trip created successfully!', 'success');
-                    // Redirect to trip detail page
-                    setTimeout(() => {
-                        window.location.href = response.redirect_url;
-                    }, 1000);
-                } else {
-                    showToast('Error', response.message, 'error');
-                    submitBtn.html(originalText);
-                    submitBtn.prop('disabled', false);
-                }
-            },
-            error: function(xhr) {
-                let errorMessage = 'Failed to create trip. Please try again.';
-                if (xhr.responseJSON && xhr.responseJSON.errors) {
-                    errorMessage = Object.values(xhr.responseJSON.errors).flat().join(', ');
-                }
-                showToast('Error', errorMessage, 'error');
-                submitBtn.html(originalText);
-                submitBtn.prop('disabled', false);
-            }
-        });
-    });
-});
+    // --- Rendering Functions ---
 
-function selectTravelMethod(method) {
-    $('.travel-method-card').removeClass('selected');
-    $(`.travel-method-card[data-method="${method}"]`).addClass('selected');
-    $('#travel_method').val(method);
-}
+    function showLoadingState() {
+        $('#generatePlanBtn').html('<i class="fas fa-spinner fa-spin me-2"></i> Generating Plan...');
+        $('#generatePlanBtn').prop('disabled', true);
+        $('#exportPlanBtn').hide();
 
-function searchDestinations() {
-    // Implement destination search functionality
-    console.log('Opening destination search...');
-}
+        // Show all containers with skeleton content
+        const outputContainers = [
+            '#itineraryContainer', '#aiSuggestionsContainer', 
+            '#budgetSummaryContainer', '#transportOptionsContainer', 
+            '#packingListContainer'
+        ];
+        
+        // Use a simple skeleton HTML structure for each section
+        const skeletonText = '<div class="skeleton-text skeleton w-75"></div><div class="skeleton-text skeleton w-50"></div>';
+        
+        $('#aiSuggestionsList').html(
+            '<div class="ai-suggestion placeholder-output"><div class="skeleton-suggestion skeleton"></div></div>'.repeat(3)
+        );
+        $('#itineraryList').html(
+            '<div class="day-card placeholder-output"><div class="skeleton-row skeleton w-50 mb-3"></div>' +
+            '<table class="table"><tr><td><div class="skeleton-row skeleton w-75"></div></td></tr><tr><td><div class="skeleton-row skeleton w-90"></div></td></tr></table></div>'.repeat(2)
+        );
+        $('#budgetBreakdown').html(
+            '<tr><td><div class="skeleton-text skeleton w-50"></div></td><td class="text-end"><div class="skeleton-text skeleton w-50"></div></td></tr>'.repeat(4) +
+            '<tr><td><div class="skeleton-text skeleton w-75"></div></td><td class="text-end"><div class="skeleton-text skeleton w-50"></div></td></tr>'
+        );
+        $('#transportOptionsList').html(
+            '<div class="col-md-12 mb-3"><div class="transport-card placeholder-output"><div class="skeleton-row skeleton w-25 mx-auto mb-2"></div><div class="skeleton-text skeleton w-50 mx-auto"></div><div class="skeleton-text skeleton w-30 mx-auto"></div><div class="skeleton-text skeleton w-40 mx-auto mt-2"></div></div></div>'.repeat(2)
+        );
+        $('#packingList').html(
+            '<li><div class="skeleton-text skeleton w-75"></div></li>'.repeat(4)
+        );
 
-function showToast(title, message, type = 'info') {
-    // Create toast element
-    const toast = document.createElement('div');
-    toast.className = `toast align-items-center text-white bg-${type} border-0`;
-    toast.innerHTML = `
-        <div class="d-flex">
-            <div class="toast-body">
-                <strong>${title}:</strong> ${message}
+        outputContainers.forEach(id => $(id).show());
+    }
+
+    function hideLoadingState(originalText) {
+        $('#generatePlanBtn').html(originalText);
+        $('#generatePlanBtn').prop('disabled', false);
+    }
+    
+    function clearOutputContainers() {
+        $('#aiSuggestionsContainer, #itineraryContainer, #budgetSummaryContainer, #transportOptionsContainer, #packingListContainer').hide();
+        $('#aiSuggestionsList, #itineraryList, #budgetBreakdown, #transportOptionsList, #packingList').empty();
+        $('#exportPlanBtn').hide();
+    }
+
+    function renderTripPlan(plan) {
+        // 1. Render AI Suggestions
+        const suggestionsHtml = plan.ai_suggestions.map(suggestion => 
+            `<div class="ai-suggestion"><i class="fas fa-lightbulb text-warning me-2"></i> ${suggestion}</div>`
+        ).join('');
+        $('#aiSuggestionsList').html(suggestionsHtml);
+
+        // 2. Render Budget Summary
+        const budget = plan.budget_summary;
+        const budgetHtml = `
+            <tr><td>Travel</td><td class="text-end">${budget.travel}</td></tr>
+            <tr><td>Stay</td><td class="text-end">${budget.stay}</td></tr>
+            <tr><td>Food</td><td class="text-end">${budget.food}</td></tr>
+            <tr><td>Activities</td><td class="text-end">${budget.activities}</td></tr>
+            <tr class="fw-bold"><td>Grand Total</td><td class="text-end">${budget.grand_total}</td></tr>
+        `;
+        $('#budgetBreakdown').html(budgetHtml);
+
+        // 3. Render Transport Options
+        const transportHtml = plan.transport_options.map(opt => `
+            <div class="col-md-12 mb-3">
+                <div class="transport-card">
+                    <i class="fas ${opt.icon} fa-2x text-primary mb-2"></i>
+                    <h5>${opt.type}</h5>
+                    <div class="mb-2">
+                        <div class="fw-bold">${opt.price}</div>
+                        <small>Price (one way)</small>
+                    </div>
+                    <div>
+                        <div class="fw-bold">${opt.duration}</div>
+                        <small>Duration</small>
+                    </div>
+                </div>
             </div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-        </div>
-    `;
-    
-    // Add to page
-    document.body.appendChild(toast);
-    const bsToast = new bootstrap.Toast(toast);
-    bsToast.show();
-    
-    // Remove after hidden
-    toast.addEventListener('hidden.bs.toast', () => {
-        document.body.removeChild(toast);
+        `).join('');
+        $('#transportOptionsList').html(transportHtml);
+
+        // 4. Render Itinerary
+        const itineraryHtml = plan.itinerary.map(day => {
+            const activitiesHtml = day.activities.map(activity => `
+                <tr>
+                    <td>${activity.category}</td>
+                    <td>${activity.details}</td>
+                    <td class="text-end">${activity.cost}</td>
+                </tr>
+            `).join('');
+            
+            return `
+                <div class="day-card">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="mb-0">${day.title}</h5>
+                        <span class="date-badge big-btn">${day.date}</span>
+                    </div>
+                    <p class="text-muted">${day.description}</p>
+                    <table class="table">
+                        <tr>
+                            <th style="width: 25%;">Category</th>
+                            <th style="width: 50%;">Details</th>
+                            <th class="text-end" style="width: 25%;">Cost</th>
+                        </tr>
+                        ${activitiesHtml}
+                        <tr class="fw-bold">
+                            <td colspan="2">Day Total</td>
+                            <td class="text-end">${day.day_total}</td>
+                        </tr>
+                    </table>
+                </div>
+            `;
+        }).join('');
+        $('#itineraryList').html(itineraryHtml);
+
+        // 5. Render Packing List
+        const packingHtml = plan.packing_list.map(item => `<li>${item}</li>`).join('');
+        $('#packingList').html(packingHtml);
+
+        // Show all containers
+        $('#aiSuggestionsContainer, #itineraryContainer, #budgetSummaryContainer, #transportOptionsContainer, #packingListContainer').slideDown(400);
+        $('#exportPlanBtn').show(); // Show export button now that plan is available
+    }
+
+    // --- Main Logic ---
+
+    $(document).ready(function() {
+        // Remove floating search bar (as in original template)
+        
+        // Initial setup for date min limits
+        const today = new Date().toISOString().split('T')[0];
+        $('#start_date').attr('min', today);
+        $('#end_date').attr('min', today);
+        
+        // Calculate trip duration on load and change
+        calculateDuration();
+        $('#start_date, #end_date').on('change', calculateDuration);
+        
+        // Set end date minimum based on start date
+        $('#start_date').on('change', function() {
+            $('#end_date').attr('min', $(this).val());
+        });
+        
+        // --- API INTEGRATION ---
+
+        $('#aiPlanForm').on('submit', function(e) {
+            e.preventDefault();
+            
+            // Basic validation check
+            let isValid = true;
+            $('.form-control:required').each(function() {
+                if (!$(this).val().trim()) {
+                    $(this).addClass('is-invalid');
+                    isValid = false;
+                } else {
+                    $(this).removeClass('is-invalid');
+                }
+            });
+            
+            if (!isValid) {
+                showToast('Error', 'Please fill all required fields correctly.', 'danger');
+                return;
+            }
+
+            const days = calculateDuration();
+            if (days === 0) {
+                 showToast('Error', 'Please ensure the start date is before or the same as the end date.', 'danger');
+                 return;
+            }
+
+            // Prepare API data payload
+            const formData = {
+                'start_location': $('#plan_name').val(),
+                'destination': $('#destination').val(),
+                // FIX: Parse budget as integer
+                'budget': parseInt($('#budget').val(), 10),
+                'start_date': $('#start_date').val(),
+                'end_date': $('#end_date').val(),
+                // FIX: Parse people as integer
+                'people': parseInt($('#peoples').val(), 10),
+                'trip_duration': days 
+                // Add any other necessary fields for the backend AI view
+            };
+            
+            const submitBtn = $('#generatePlanBtn');
+            const originalText = submitBtn.html();
+            
+            clearOutputContainers();
+            showLoadingState();
+
+            // Send AJAX request to the AI Trip Plan endpoint
+            $.ajax({
+                url: AI_PLAN_API,
+                type: 'POST',
+                // Assuming CSRF token is required and available in the template context
+                headers: {
+                    'X-CSRFToken': $('input[name="csrfmiddlewaretoken"]').val()
+                },
+                data: JSON.stringify(formData),
+                contentType: 'application/json',
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success && response.trip_plan) {
+                        showToast('Success', 'AI plan generated successfully!', 'success');
+                        renderTripPlan(response.trip_plan);
+                    } else {
+                        // Handle success: false or missing trip_plan structure
+                        showToast('Warning', response.message || 'AI could not generate a plan with the given constraints.', 'warning');
+                    }
+                },
+                error: function(xhr) {
+                    let errorMessage = 'Failed to generate plan. Server error.';
+                    
+                    // Attempt to get a more specific error message from the response body (common in DRF)
+                    if (xhr.responseJSON) {
+                        if (xhr.responseJSON.message) {
+                            errorMessage = xhr.responseJSON.message;
+                        } else if (xhr.responseJSON.detail) {
+                            errorMessage = xhr.responseJSON.detail;
+                        } else {
+                            // Serialize complex error objects (like Django Rest Framework field validation errors)
+                            try {
+                                errorMessage = JSON.stringify(xhr.responseJSON, null, 2);
+                            } catch (e) {
+                                // Fallback if serialization fails
+                                errorMessage = 'Invalid input data. Please check your fields.';
+                            }
+                        }
+                    } else if (xhr.status === 400) {
+                        errorMessage = 'Invalid input data. Please check your fields.';
+                    } else if (xhr.responseText) {
+                         // Fallback for non-JSON response text
+                         errorMessage = `Server Error (${xhr.status}): ${xhr.responseText.substring(0, 100)}...`;
+                    }
+                    
+                    showToast('Error', errorMessage, 'danger');
+                    clearOutputContainers();
+                },
+                complete: function() {
+                    hideLoadingState(originalText);
+                }
+            });
+        });
+        
+        // Placeholder for Export functionality (can be implemented as another API call later)
+        $('#exportPlanBtn').on('click', function() {
+            showToast('Export', 'Preparing plan for export...', 'info');
+            // Logic to fetch or prepare the downloadable file goes here
+        });
+
     });
-}</script>
+
+</script>
 {% endblock %}

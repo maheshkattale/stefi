@@ -392,133 +392,43 @@
 </head>
 
 <body>
-    <!-- Navigation -->
-    <!-- <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'home:landing_page' %}">
-                <img src="{% static 'assets/logo/logo-symbol.jpeg'%}" width="50" alt="">
-            </a>
-            
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav mx-auto">
-                    {% if request.session.token %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'home:dashboard' %}">
-                            <i class="fas fa-home"></i> Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'home:trip_list' %}">
-                            <i class="fas fa-suitcase"></i> My Trips
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <i class="fas fa-map-marked-alt"></i> Destinations
-                        </a>
-                    </li>
-                    {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'home:landing_page' %}">
-                            <i class="fas fa-home"></i> Home
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#features">
-                            <i class="fas fa-star"></i> Features
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#about">
-                            <i class="fas fa-info-circle"></i> About
-                        </a>
-                    </li>
-                    {% endif %}
-                </ul>
-                
-                <ul class="navbar-nav">
-                    {% if request.session.token %}
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-user-circle"></i> {{ request.session.user_name }}
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">
-                                <i class="fas fa-user"></i> Profile
-                            </a></li>
-                            <li><a class="dropdown-item" href="#">
-                                <i class="fas fa-cog"></i> Settings
-                            </a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <form method="post" action="{% url 'home:logout' %}" class="d-inline">
-                                    {% csrf_token %}
-                                    <button type="submit" class="dropdown-item">
-                                        <i class="fas fa-sign-out-alt"></i> Logout
-                                    </button>
-                                </form>
-                            </li>
-                        </ul>
-                    </li>
-                    {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'home:login' %}">
-                            <i class="fas fa-sign-in-alt"></i> Login
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="btn btn-primary ms-2" href="/customer-registration">
-                            <i class="fas fa-user-plus"></i> Sign Up
-                        </a>
-                    </li>
-                    {% endif %}
-                </ul>
-            </div>
-        </div>
-    </nav> -->
 
-    <!-- Messages -->
 
     <div class="floating-search-container w-100">
 
-    <div class="d-flex" style="background: #e4e8f2;border-radius: 50px;    width: 70%;">
-        <span class="input-group-text border-0 floating-search-logo" style="border-radius: 50px 0px 0px 50px;">
-            <img src="{% static 'assets/logo/logo-symbol.jpeg'%}" width="55" alt="" style="border-radius: 50%;">
-        </span>
-        <input type="text" class="form-control search-input floating-search-input"
-            placeholder="Search destinations, states, or activities..." id="globalSearch">
-        <span class="input-group-text border-0 floating-search-icon" style="border-radius: 0 50px 50px 0;">
-            <i class="fas fa-search fa-xl"></i>
-        </span>
-    </div>
+        <div class="d-flex" style="background: #e4e8f2;border-radius: 50px;    width: 70%;">
+            <span class="input-group-text border-0 floating-search-logo" style="border-radius: 50px 0px 0px 50px;">
+                <img src="{% static 'assets/logo/logo-symbol.jpeg'%}" width="55" alt="" style="border-radius: 50%;">
+            </span>
+            <input type="text" class="form-control search-input floating-search-input"
+                placeholder="Search destinations, states, or activities..." id="globalSearch">
+            <span class="input-group-text border-0 floating-search-icon" style="border-radius: 0 50px 50px 0;">
+                <i class="fas fa-search fa-xl"></i>
+            </span>
+        </div>
+        <div>
+            <a href="#" class="" id="" title="explore india">
+                <img src="{% static 'assets/icons/explore-india.png' %}" alt="" class="menu-items">
+            </a>
+        </div>
+        <div>
+            <a href="#" class="" id="" title="bag packing">
+                <img src="{% static 'assets/icons/bag-packing.png' %}" alt="" class="menu-items">
+            </a>
+        </div>
+        <div>
+            <a href="/trip_planner/plan_trip/" class="" id="" title="trip planner">
+                <img src="{% static 'assets/icons/trip-planner.png' %}" alt="" class="menu-items">
+            </a>
+        </div>
+        <div>
+            <a href="#" class="" id="" title="profile">
+                <img src="{% static 'assets/icons/profile.png' %}" alt="" class="menu-items">
+            </a>
+        </div>
 
-    <div>
-        <a href="#" class="" id="" title="explore india">
-            <img src="{% static 'assets/icons/explore-india.png' %}" alt="" class="menu-items">
-        </a>
+        <div class="search-results" id="searchResults"></div>
     </div>
-    <div>
-        <a href="#" class="" id="" title="bag packing">
-            <img src="{% static 'assets/icons/bag-packing.png' %}" alt="" class="menu-items">
-        </a>
-    </div>
-    <div>
-        <a href="/trip_planner/plan_trip/" class="" id="" title="trip planner">
-            <img src="{% static 'assets/icons/trip-planner.png' %}" alt="" class="menu-items">
-        </a>
-    </div>
-    <div>
-        <a href="#" class="" id="" title="profile">
-            <img src="{% static 'assets/icons/profile.png' %}" alt="" class="menu-items">
-        </a>
-    </div>
-
-    <div class="search-results" id="searchResults"></div>
-</div>
 
 
     {% if messages %}

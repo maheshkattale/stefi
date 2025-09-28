@@ -8,5 +8,8 @@ urlpatterns = [
     path('itinerary/add', add_itinerary_item, name='api_add_itinerary_item'),
     path('itinerary/delete/<int:item_id>', delete_itinerary_item, name='api_delete_itinerary_item'),
     path('invoice/generate/<int:trip_id>', generate_invoice, name='api_generate_invoice'),
+    path('ai_trip_plan_gemini', ai_trip_plan_gemini, name='ai_trip_plan_gemini'),
+    path('ai_trip_plan_view', ai_trip_plan_view, name='ai_trip_plan_view'),
+    
     
 ]

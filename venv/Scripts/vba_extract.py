@@ -1,4 +1,4 @@
-#!D:\scrab\stefi\stefi\venv\Scripts\python.exe
+#!D:\stefi\venv\Scripts\python.exe
 
 ##############################################################################
 #

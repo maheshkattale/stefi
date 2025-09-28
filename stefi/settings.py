@@ -64,7 +64,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     #Backend
-    'User',
+    'User', 
     'Masters',
     'trips',
     'home_api',
