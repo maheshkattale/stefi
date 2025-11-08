@@ -1,7 +1,12 @@
 {% extends 'base.html' %}
+
 {% load static %}
 
+
+
 {% block title %}Plan New Trip - Stefi Travel{% endblock %}
+
+
 
 {% block extra_css %}
     <style>
@@ -160,6 +165,47 @@
             font-weight: 600;
         }
 
+        /* Autocomplete dropdown styles */
+        .autocomplete-container {
+            position: relative;
+        }
+        
+        .autocomplete-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 0 0 10px 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        
+        .autocomplete-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            border-bottom: 1px solid #f8f9fa;
+        }
+        
+        .autocomplete-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .autocomplete-item:last-child {
+            border-bottom: none;
+        }
+        
+        .location-icon {
+            width: 20px;
+            text-align: center;
+            margin-right: 8px;
+            color: var(--primary-color);
+        }
+
         /* Skeleton Loader Styles */
         .skeleton {
             animation: pulse 1.5s infinite ease-in-out;
@@ -196,6 +242,8 @@
     </style>
 {% endblock %}
 
+
+
 {% block content %}
     <div class="container dashboard-container pt-5 mt-5">
         <div class="row mt-5">
@@ -224,11 +272,22 @@
                         <div class="row">
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Plan Name / City</label>
-                                <input type="text" id="plan_name" class="form-control" value="" placeholder="E.g., Pune to Agra Trip" required>
+                                <div class="autocomplete-container">
+                                    <input type="text" id="plan_name" class="form-control" value="" placeholder="E.g., Pune to Agra Trip" required>
+                                    <div id="plan_name_autocomplete" class="autocomplete-dropdown"></div>
+                                </div>
+                                <div class="mt-1">
+                                    <button type="button" id="getCurrentLocation" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-location-arrow me-1"></i> Use Current Location
+                                    </button>
+                                </div>
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Destination</label>
-                                <input type="text" id="destination" class="form-control" value="" required>
+                                <div class="autocomplete-container">
+                                    <input type="text" id="destination" class="form-control" value="" placeholder="Enter destination city" required>
+                                    <div id="destination_autocomplete" class="autocomplete-dropdown"></div>
+                                </div>
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Budget (INR/USD)</label>
@@ -309,18 +368,34 @@
     </div>
 {% endblock %}
 
+
+
 {% block extra_js %}
 <script>
     // --- Configuration ---
-    // Assuming {{hosturl}} is a Django template variable available in the context
     const API_HOST = "{{hosturl}}"; 
     const AI_PLAN_API = `/api/trips/ai_trip_plan_view`;
+    
+    // Popular Indian cities and destinations for autocomplete
+    const POPULAR_DESTINATIONS = [
+        "Mumbai, Maharashtra", "Delhi", "Bangalore, Karnataka", "Hyderabad, Telangana",
+        "Chennai, Tamil Nadu", "Kolkata, West Bengal", "Pune, Maharashtra", "Ahmedabad, Gujarat",
+        "Jaipur, Rajasthan", "Lucknow, Uttar Pradesh", "Kanpur, Uttar Pradesh", "Nagpur, Maharashtra",
+        "Indore, Madhya Pradesh", "Thane, Maharashtra", "Bhopal, Madhya Pradesh", "Visakhapatnam, Andhra Pradesh",
+        "Patna, Bihar", "Vadodara, Gujarat", "Ghaziabad, Uttar Pradesh", "Ludhiana, Punjab",
+        "Agra, Uttar Pradesh", "Nashik, Maharashtra", "Faridabad, Haryana", "Meerut, Uttar Pradesh",
+        "Rajkot, Gujarat", "Kalyan-Dombivli, Maharashtra", "Vasai-Virar, Maharashtra", "Varanasi, Uttar Pradesh",
+        "Srinagar, Jammu & Kashmir", "Aurangabad, Maharashtra", "Dhanbad, Jharkhand", "Amritsar, Punjab",
+        "Goa", "Manali, Himachal Pradesh", "Shimla, Himachal Pradesh", "Darjeeling, West Bengal",
+        "Ooty, Tamil Nadu", "Munnar, Kerala", "Kochi, Kerala", "Kodaikanal, Tamil Nadu",
+        "Leh, Ladakh", "Rishikesh, Uttarakhand", "Haridwar, Uttarakhand", "Varkala, Kerala",
+        "Pondicherry", "Andaman and Nicobar Islands", "Lakshadweep", "Kashmir"
+    ];
 
     // --- Helper Functions ---
 
-    // Utility to show Bootstrap Toasts (keeping consistency with existing template)
+    // Utility to show Bootstrap Toasts
     function showToast(title, message, type = 'info') {
-        // Create toast element
         const toastHtml = `
             <div class="toast align-items-center text-white bg-${type} border-0 position-fixed bottom-0 end-0 m-3" role="alert" aria-live="assertive" aria-atomic="true">
                 <div class="d-flex">
@@ -331,13 +406,11 @@
                 </div>
             </div>`;
         
-        // Append and show
         const toastEl = $(toastHtml);
         $('body').append(toastEl);
         const bsToast = new bootstrap.Toast(toastEl[0]);
         bsToast.show();
         
-        // Remove after hidden
         toastEl.on('hidden.bs.toast', function () {
             $(this).remove();
         });
@@ -365,6 +438,160 @@
             $('#tripDuration').val('0 days');
             return 0;
         }
+    }
+    
+    // Autocomplete functionality
+    function initializeAutocomplete(inputId, dropdownId) {
+        const input = $(`#${inputId}`);
+        const dropdown = $(`#${dropdownId}`);
+        
+        input.on('input', function() {
+            const query = $(this).val().toLowerCase();
+            
+            if (query.length < 2) {
+                dropdown.hide();
+                return;
+            }
+            
+            const filtered = POPULAR_DESTINATIONS.filter(dest => 
+                dest.toLowerCase().includes(query)
+            );
+            
+            if (filtered.length > 0) {
+                const suggestionsHtml = filtered.map(dest => `
+                    <div class="autocomplete-item" data-value="${dest}">
+                        <i class="fas fa-map-marker-alt location-icon"></i>
+                        ${dest}
+                    </div>
+                `).join('');
+                
+                dropdown.html(suggestionsHtml).show();
+            } else {
+                dropdown.hide();
+            }
+        });
+        
+        // Handle click on autocomplete items
+        dropdown.on('click', '.autocomplete-item', function() {
+            const value = $(this).data('value');
+            input.val(value);
+            dropdown.hide();
+        });
+        
+        // Hide dropdown when clicking outside
+        $(document).on('click', function(e) {
+            if (!$(e.target).closest('.autocomplete-container').length) {
+                dropdown.hide();
+            }
+        });
+        
+        // Keyboard navigation
+        input.on('keydown', function(e) {
+            const items = dropdown.find('.autocomplete-item');
+            const activeItem = dropdown.find('.autocomplete-item.active');
+            
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (activeItem.length === 0) {
+                    items.first().addClass('active');
+                } else {
+                    activeItem.removeClass('active').next().addClass('active');
+                }
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (activeItem.length === 0) {
+                    items.last().addClass('active');
+                } else {
+                    activeItem.removeClass('active').prev().addClass('active');
+                }
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                const selected = dropdown.find('.autocomplete-item.active');
+                if (selected.length) {
+                    input.val(selected.data('value'));
+                    dropdown.hide();
+                }
+            }
+        });
+    }
+    
+    // Get current location using browser's Geolocation API
+    function getCurrentLocation() {
+        if (!navigator.geolocation) {
+            showToast('Error', 'Geolocation is not supported by your browser', 'warning');
+            return;
+        }
+        
+        $('#getCurrentLocation').html('<i class="fas fa-spinner fa-spin me-1"></i> Detecting...').prop('disabled', true);
+        
+        navigator.geolocation.getCurrentPosition(
+            function(position) {
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude;
+                
+                // Use a geocoding service to get city name
+                reverseGeocode(lat, lng);
+            },
+            function(error) {
+                let errorMessage = 'Unable to retrieve your location';
+                switch(error.code) {
+                    case error.PERMISSION_DENIED:
+                        errorMessage = 'Location access denied. Please enable location permissions.';
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        errorMessage = 'Location information unavailable.';
+                        break;
+                    case error.TIMEOUT:
+                        errorMessage = 'Location request timed out.';
+                        break;
+                }
+                showToast('Location Error', errorMessage, 'warning');
+                $('#getCurrentLocation').html('<i class="fas fa-location-arrow me-1"></i> Use Current Location').prop('disabled', false);
+            },
+            {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 60000
+            }
+        );
+    }
+    
+    // Reverse geocode coordinates to get city name
+    function reverseGeocode(lat, lng) {
+        // Using OpenStreetMap Nominatim API (free, no API key required)
+        const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=10`;
+        
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: function(data) {
+                let cityName = '';
+                
+                if (data.address) {
+                    // Try to get city name from different possible fields
+                    cityName = data.address.city || 
+                              data.address.town || 
+                              data.address.village || 
+                              data.address.county ||
+                              data.address.state;
+                    
+                    if (cityName) {
+                        $('#plan_name').val(cityName);
+                        showToast('Success', `Location set to ${cityName}`, 'success');
+                    } else {
+                        showToast('Info', 'Could not determine city name from location', 'info');
+                    }
+                } else {
+                    showToast('Error', 'Could not determine location name', 'warning');
+                }
+                
+                $('#getCurrentLocation').html('<i class="fas fa-location-arrow me-1"></i> Use Current Location').prop('disabled', false);
+            },
+            error: function() {
+                showToast('Error', 'Failed to get location name', 'warning');
+                $('#getCurrentLocation').html('<i class="fas fa-location-arrow me-1"></i> Use Current Location').prop('disabled', false);
+            }
+        });
     }
     
     // --- Rendering Functions ---
@@ -515,6 +742,21 @@
             $('#end_date').attr('min', $(this).val());
         });
         
+        // Initialize autocomplete for both fields
+        initializeAutocomplete('plan_name', 'plan_name_autocomplete');
+        initializeAutocomplete('destination', 'destination_autocomplete');
+        
+        // Current location button event
+        $('#getCurrentLocation').on('click', getCurrentLocation);
+        
+        // Try to auto-detect location on page load (with user permission)
+        setTimeout(() => {
+            // Only auto-detect if the field is empty
+            if (!$('#plan_name').val()) {
+                getCurrentLocation();
+            }
+        }, 1000);
+
         // --- API INTEGRATION ---
 
         $('#aiPlanForm').on('submit', function(e) {
