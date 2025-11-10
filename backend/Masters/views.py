@@ -155,6 +155,22 @@ class updatedestination(GenericAPIView):
                 return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
     
 
+class gethotelslist(GenericAPIView):
+
+    def post(self,request):
+        data={}
+        request_data = request.data.copy()
+
+        hotels_objs = Hotel.objects.filter(is_active=True)    
+        if hotels_objs.exists():
+            serializer = HotelSerializer(hotels_objs,many=True)
+
+
+            return Response({"data":serializer.data,"response": {"n": 1, "msg": "Hotels found successfully","status":"success"}})
+
+        else:
+            return Response({"data" : [],"response":{"n":0,"msg":'Hotels not found',"status":"error"}})  
+
 
 
 

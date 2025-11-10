@@ -1,0 +1,182 @@
+{% extends "admin-base.html" %}
+{% block content %}
+
+<div class="">
+  <div class="">
+    
+    <h1 class="text-3xl font-semibold text-center text-gradient mb-8">
+      <i class="fas fa-hotel"></i> Add New Hotel
+    </h1>
+
+    <div id="message-box" class="hidden mb-4 p-3 rounded-lg text-white text-center"></div>
+
+    <form id="addHotelForm" enctype="multipart/form-data" class="space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <div>
+          <label class="font-medium text-gray-700">Hotel Name</label>
+          <input type="text" name="name" class="input-field" placeholder="Enter hotel name" required>
+        </div>
+
+        <div>
+          <label class="font-medium text-gray-700">Hotel Type</label>
+          <select name="hotel_type" class="input-field">
+            <option value="">Select Type</option>
+            <option value="hotel">Hotel</option>
+            <option value="resort">Resort</option>
+            <option value="villa">Villa</option>
+            <option value="hostel">Hostel</option>
+            <option value="homestay">Homestay</option>
+            <option value="apartment">Apartment</option>
+            <option value="camp">Camp</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="font-medium text-gray-700">Destination ID</label>
+          <input type="number" name="destination" class="input-field" placeholder="Destination ID" required>
+        </div>
+
+        <div>
+          <label class="font-medium text-gray-700">Star Rating</label>
+          <select name="star_rating" class="input-field">
+            <option value="">Select Rating</option>
+            {% for i in "12345" %}
+              <option value="{{ i }}">{{ i }} Star</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="md:col-span-2">
+          <label class="font-medium text-gray-700">Address</label>
+          <textarea name="address" rows="2" class="input-field" placeholder="Enter address..." required></textarea>
+        </div>
+
+        <div>
+          <label class="font-medium text-gray-700">Contact Email</label>
+          <input type="email" name="contact_email" class="input-field" placeholder="email@example.com" required>
+        </div>
+
+        <div>
+          <label class="font-medium text-gray-700">Contact Phone</label>
+          <input type="text" name="contact_phone" class="input-field" placeholder="+91 XXXXX XXXXX" required>
+        </div>
+
+        <div class="md:col-span-2">
+          <label class="font-medium text-gray-700">Description</label>
+          <textarea name="description" rows="3" class="input-field" placeholder="Describe your hotel..."></textarea>
+        </div>
+
+        <div>
+          <label class="font-medium text-gray-700">Average Price/Night</label>
+          <input type="number" step="0.01" name="average_price_per_night" class="input-field" placeholder="₹ 2500">
+        </div>
+
+        <div>
+          <label class="font-medium text-gray-700">Rating (1–5)</label>
+          <input type="number" name="rating" step="0.1" max="5" class="input-field" placeholder="4.5">
+        </div>
+
+        <div class="md:col-span-2">
+          <label class="font-medium text-gray-700">Upload Image</label>
+          <input type="file" name="image" class="input-field">
+        </div>
+      </div>
+
+      <div class="text-center pt-6">
+        <button type="submit" id="submitBtn"
+          class="btn-modern w-full sm:w-auto px-10 py-3 rounded-lg font-semibold text-white flex items-center justify-center gap-2 mx-auto">
+          <i class="fas fa-save"></i> Save Hotel
+          <div class="spinner-border spinner-border-sm text-light ms-2 d-none" id="loadingSpinner"></div>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<style>
+  .text-gradient {
+    background: linear-gradient(90deg, #007CF0, #00DFD8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .input-field {
+    width: 100%;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 10px 14px;
+    outline: none;
+    transition: 0.3s;
+    background: rgba(255, 255, 255, 0.8);
+  }
+
+  .input-field:focus {
+    border-color: #3B71FE;
+    box-shadow: 0 0 0 4px rgba(59, 113, 254, 0.15);
+  }
+
+  .btn-modern {
+    background: linear-gradient(90deg, #007CF0, #00DFD8);
+    transition: all 0.3s ease;
+  }
+
+  .btn-modern:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 124, 240, 0.3);
+  }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    .input-field {
+      font-size: 0.9rem;
+    }
+  }
+</style>
+
+<script>
+document.getElementById('addHotelForm').addEventListener('submit', function (e) {
+  e.preventDefault();
+
+  const form = e.target;
+  const formData = new FormData(form);
+  const messageBox = document.getElementById('message-box');
+  const submitBtn = document.getElementById('submitBtn');
+  const spinner = document.getElementById('loadingSpinner');
+
+  submitBtn.disabled = true;
+  spinner.classList.remove('d-none');
+
+  fetch("", {  // ✅ Update with your actual API endpoint
+    method: 'POST',
+    body: formData,
+    headers: {
+      'X-CSRFToken': '{{ csrf_token }}'
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    spinner.classList.add('d-none');
+    submitBtn.disabled = false;
+    messageBox.classList.remove('hidden');
+
+    if (data.success) {
+      messageBox.textContent = "✅ Hotel added successfully!";
+      messageBox.className = "mb-4 p-3 rounded-lg text-white bg-gradient-to-r from-green-500 to-emerald-600";
+      form.reset();
+    } else {
+      messageBox.textContent = data.error || "❌ Something went wrong.";
+      messageBox.className = "mb-4 p-3 rounded-lg text-white bg-gradient-to-r from-red-500 to-pink-600";
+    }
+  })
+  .catch(() => {
+    spinner.classList.add('d-none');
+    submitBtn.disabled = false;
+    messageBox.textContent = "❌ Server error!";
+    messageBox.className = "mb-4 p-3 rounded-lg text-white bg-gradient-to-r from-red-500 to-pink-600";
+    messageBox.classList.remove('hidden');
+  });
+});
+</script>
+
+{% endblock %}

@@ -39,6 +39,7 @@ def createtoken(uuid,email,source):
 
 class login(GenericAPIView):
     def post(self,request):
+        print("request.data",request.data)
         email = request.data.get("email")
         Password = request.data.get("password")
         source = request.data.get("source")

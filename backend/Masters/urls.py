@@ -8,6 +8,8 @@ urlpatterns = [
     path('adddestination', adddestination.as_view(), name = 'adddestination'),
     path('updatedestination', updatedestination.as_view(), name = 'updatedestination'),
 
+    path('get-hotels-list', gethotelslist.as_view(), name = 'gethotelslist'),
+
 
 
 ]

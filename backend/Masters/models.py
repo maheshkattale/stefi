@@ -189,6 +189,7 @@ class Hotel(models.Model):
     def __str__(self):
         return f"{self.name} - {self.destination.name}"
 
+
 class RoomType(models.Model):
     hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE, related_name='room_types')
     name = models.CharField(max_length=100)
