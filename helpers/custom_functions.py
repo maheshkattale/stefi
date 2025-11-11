@@ -82,9 +82,39 @@ def save_file(folder_path, uploaded_file, request):
     file_url = request.build_absolute_uri(settings.MEDIA_URL + str(relative_file_path).replace("\\", "/"))
     return {'msg': 'File saved successfully', 'url': file_url, 'n': 1}
 
+from rest_framework import pagination
+from rest_framework.response import Response
+from rest_framework.exceptions import NotFound
+from django.core.paginator import InvalidPage
 
+class CustomPagination(pagination.PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 50
+    page_query_param = 'p'
 
+    def paginate_queryset(self, queryset, request, view=None):
+        # For POST requests, get page number from request.data
+        if request.method == 'POST' and hasattr(request, 'data'):
+            self.page_size = request.data.get(self.page_size_query_param, self.page_size)
+            page_number = request.data.get(self.page_query_param, 1)
+        else:
+            return super().paginate_queryset(queryset, request, view)
+        
+        paginator = self.django_paginator_class(queryset, self.page_size)
+        try:
+            self.page = paginator.page(page_number)
+        except InvalidPage as exc:
+            msg = self.invalid_page_message.format(
+                page_number=page_number, message=str(exc)
+            )
+            raise NotFound(msg)
 
+        if paginator.num_pages > 1 and self.template is not None:
+            self.display_page_controls = True
+
+        self.request = request
+        return list(self.page)
 
 
 

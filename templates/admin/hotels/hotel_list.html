@@ -1,39 +1,187 @@
 {% extends "admin-base.html" %}
-{% block content %}
-<div class="container mx-auto p-4">
-  <div class="flex flex-col sm:flex-row justify-between items-center mb-6">
-    <h1 class="text-3xl font-bold text-blue-700">🏨 Hotels</h1>
-    <a href="{% url 'masters_ui:hotel_add' %}" 
-       class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition">
-      ➕ Add Hotel
-    </a>
-  </div>
+{% load static %}
+{% load i18n %}
 
-  {% for message in messages %}
-    <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-3 mb-3 rounded">
-      {{ message }}
-    </div>
-  {% endfor %}
+{% block title %}Hotels - List{% endblock %}
 
-  <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-    {% for hotel in hotels %}
-      <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition p-4">
-        <img src="{{ hotel.image|default:'NA' }}" 
-             alt="{{ hotel.name }}" class="rounded-xl w-full h-48 object-cover mb-3">
-        <h2 class="text-xl font-semibold">{{ hotel.name }}</h2>
-        <p class="text-gray-600 text-sm">{{ hotel.destination.name }}</p>
-        <p class="text-yellow-500 font-medium mt-1">⭐ {{ hotel.star_rating|default:"N/A" }}</p>
-
-        <div class="flex justify-between items-center mt-4">
-          <a href="{% url 'hotel_edit' hotel.pk %}" 
-             class="bg-yellow-400 text-white px-3 py-1 rounded-lg hover:bg-yellow-500">✏️ Edit</a>
-          <a href="{% url 'hotel_delete' hotel.pk %}" 
-             class="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600">🗑️ Delete</a>
+{% block layout %}
+<!-- Basic Layout -->
+<div class="card">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h5 class="card-header">Hotels</h5>
         </div>
-      </div>
-    {% empty %}
-      <p class="text-gray-500 col-span-full text-center">No hotels found.</p>
-    {% endfor %}
-  </div>
+        <div class="d-flex justify-content-end">
+            <div class="d-flex align-items-center">
+                <i class="ri-search-line ri-22px me-2"></i>
+                <input type="text" id="search" class="form-control border-0 shadow-none bg-body" placeholder="Search hotels..."
+                    aria-label="Search..." onkeyup="Pagination()" />
+            </div>
+            <a class="btn btn-primary waves-effect waves-light m-4" href="/stefi-admin-masters/hotels/add">Add Hotel</a>
+        </div>
+    </div>
+
+    <div class="table-responsive text-nowrap">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Sr No</th>
+                    <th>Hotel Name</th>
+                    <th>Owner</th>
+                    <th>Contact</th>
+                    <th>City</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody class="table-border-bottom-0" id="hotel_table_body">
+                <!-- Data will be loaded here dynamically -->
+            </tbody>
+        </table>
+        <div class="d-flex justify-content-end m-3" id="secondpagination-demo2">
+            <ul id="pagination-demo2" class="pagination-sm"></ul>
+        </div>
+    </div>
 </div>
-{% endblock %}
+{% endblock layout %}
+
+
+{% block page_js %}
+{{ block.super }}
+
+<script>
+    $(document).ready(function () {
+        Pagination()
+    });
+
+    function Pagination() {
+        $('#secondpagination-demo2').html('<ul id="pagination-demo2" class="pagination-sm"></ul>');
+        get_table_data(1);
+    }
+
+    function get_table_data(p) {
+        var search = $('#search').val() || '';
+        var fd = new FormData();
+        fd.append('search', search);
+        fd.append('p', p);
+        fd.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+
+        $.ajax({
+            url: hosturl + "/api/Masters/hotel_list_pagination_api",
+            data: fd,
+            headers: { "Authorization": "Bearer {{token}}" },
+            type: 'POST',
+            processData: false,
+            contentType: false,
+            beforeSend: function () {
+                swal({
+                    icon: "info",
+                    title: "",
+                    text: "Loading hotels...",
+                    buttons: false,
+                });
+            },
+            success: function (response) {
+                swal.close();
+                var infohtml = '';
+                if (response.count != 0) {
+                    var counter = parseInt(p + "1") - 10;
+
+                    $.each(response.results, function (i, o) {
+                        infohtml += `
+                            <tr>
+                                <td>${++counter}</td>
+                                <td>${o.name || '-'}</td>
+                                <td>${o.owner_name || '-'}</td>
+                                <td>${o.contact_number || '-'}</td>
+                                <td>${o.city || '-'}</td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                            <i class="ri-more-2-line"></i>
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="/hotel/edit_hotel/${o.id}">
+                                                <i class="ri-pencil-line me-1"></i> Edit
+                                            </a>
+                                            <a class="dropdown-item" href="javascript:void(0);" onclick="delete_hotel('${o.id}')">
+                                                <i class="ri-delete-bin-6-line me-1"></i> Delete
+                                            </a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                    });
+
+                    $('#hotel_table_body').html(infohtml);
+
+                    var totalPages = Math.ceil(response.count / 10);
+                    $('#pagination-demo2').twbsPagination({
+                        totalPages: totalPages,
+                        visiblePages: 3,
+                        next: 'Next',
+                        prev: 'Prev',
+                        onPageClick: function (event, page) {
+                            get_table_data(page);
+                        }
+                    });
+                } else {
+                    $('#hotel_table_body').html(`
+                        <tr class="text-center">
+                            <td colspan="6">No Hotels Found</td>
+                        </tr>
+                    `);
+                    swal({
+                        icon: "error",
+                        title: "",
+                        text: "No hotels found!",
+                        button: "Close",
+                    });
+                }
+            }
+        });
+    }
+
+    function delete_hotel(id) {
+        swal({
+            title: "Are you sure?",
+            text: "This will permanently delete the hotel record.",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true
+        }).then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
+                    url: hosturl + "/api/Hotels/hotel_delete",
+                    type: 'POST',
+                    headers: { 'Authorization': 'Bearer {{token}}' },
+                    data: {
+                        csrfmiddlewaretoken: '{{ csrf_token }}',
+                        'hotel_id': id
+                    },
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.response.n == 1) {
+                            swal({
+                                icon: "success",
+                                title: "",
+                                text: response.response.msg,
+                                button: "Close",
+                            }).then(() => {
+                                Pagination();
+                            });
+                        } else {
+                            swal({
+                                icon: "error",
+                                title: "",
+                                text: response.response.msg,
+                                button: "Close",
+                            });
+                        }
+                    }
+                });
+            }
+        });
+    }
+</script>
+{% endblock page_js %}
