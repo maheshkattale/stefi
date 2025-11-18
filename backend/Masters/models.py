@@ -3,6 +3,7 @@ from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 class TravelCategory(models.Model):
+    
     CATEGORY_TYPES = [
         ('bus', 'Bus'),
         ('train', 'Train'),
@@ -26,6 +27,7 @@ class TravelCategory(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.get_category_type_display()})"
+
 
 class State(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -161,7 +163,7 @@ class Hotel(models.Model):
     contact_email = models.EmailField()
     contact_phone = models.CharField(max_length=15)
     star_rating = models.PositiveIntegerField(choices=STAR_RATINGS, null=True, blank=True)
-    description = models.TextField()
+    description = models.TextField(null=True, blank=True)
     amenities = models.TextField(blank=True, help_text="Comma separated amenities")
     check_in_time = models.TimeField(default='14:00:00')
     check_out_time = models.TimeField(default='12:00:00')
@@ -188,7 +190,6 @@ class Hotel(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.destination.name}"
-
 
 class RoomType(models.Model):
     hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE, related_name='room_types')

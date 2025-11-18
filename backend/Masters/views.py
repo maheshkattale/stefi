@@ -243,9 +243,19 @@ class addhotel(GenericAPIView):
 
 
 
+class get_hotel_types(GenericAPIView):
+    def post(self,request):
+        hotel_types = [{'key': ht[0], 'value': ht[1]} for ht in Hotel.HOTEL_TYPES]
+        return Response({"data": hotel_types, "response": {"n": 1, "msg": "Hotel types fetched successfully", "status": "success"}})
 
-
-
+class get_destinations(GenericAPIView):
+    def post(self,request):
+        destinations_objs = Destination.objects.filter(is_active=True)    
+        if destinations_objs.exists():
+            serializer = DestinationSerializer(destinations_objs,many=True)
+            return Response({"data":serializer.data,"response": {"n": 1, "msg": "Destinations found successfully","status":"success"}})
+        else:
+            return Response({"data" : [],"response":{"n":0,"msg":'Destinations not found',"status":"error"}})
 
 
 

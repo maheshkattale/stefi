@@ -58,7 +58,23 @@ def add_hotel(request):
 def hotel_add(request):
     token = request.session.get('token',False)
     if token:
-        return render(request, 'admin/hotels/hotel_add.html')
+        if request.method == 'GET':
+            hotel_types=[]
+            destinations=[]
+            get_destinations_url=hosturl+"/api/Masters/get-destinations"
+            get_destinations_request = requests.post(get_destinations_url)
+            get_destinations_response = get_destinations_request.json()
+            if get_destinations_response['response']['status']=='success':
+                destinations=get_destinations_response['data']
+                
+            get_hotels_type_url=hosturl+"/api/Masters/get-hotel-types"
+            get_hotel_types_request = requests.post(get_hotels_type_url)
+            get_hotel_types_response = get_hotel_types_request.json()
+            if get_hotel_types_response['response']['status']=='success':
+                hotel_types=get_hotel_types_response['data']
+            
+            print("hotel_types",hotel_types )
+            return render(request, 'admin/hotels/hotel_add.html',{'hotel_types':hotel_types,'destinations':destinations})
     else:
         messages.error(request, 'Session expired. Please log in again.')
         return redirect('admin_ui:login') # change this.
