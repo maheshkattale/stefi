@@ -4,316 +4,331 @@
 {% block title %}Plan New Trip - Stefi Travel{% endblock %}
 
 {% block extra_css %}
-    <style>
-        :root {
-            --primary-color: #057b93;
-            --secondary-color: #11ccf1;
-            --accent-color: #ff6b6b;
-            --light-bg: #f8fafc;
-            --dark-text: #2c3e50;
-        }
-        
-        body {
-            background-color: var(--light-bg);
-            color: var(--dark-text);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        .navbar {
-            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
-        }
-        
-        .dashboard-container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        
-        .planning-card {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-            padding: 25px;
-            margin-bottom: 25px;
-            transition: transform 0.3s ease;
-        }
-        
-        .planning-card:hover {
-            transform: none; /* Removed hover effect for consistency when dynamic content is loaded */
-        }
-        
-        .section-title {
-            color: var(--primary-color);
-            font-weight: 700;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #e9ecef;
-        }
-        
-        .budget-card {
-            background: linear-gradient(135deg, #10c6ea 0%, #068099 100%);
-            color: white;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        
-        .day-card {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
-        }
-        
-        .transport-card {
-            text-align: center;
-            padding: 15px;
-            border-radius: 12px;
-            background: white;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s ease;
-            height: 100%;
-        }
-        
-        .transport-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        .ai-suggestion {
-            background: #f1f9ff;
-            border-left: 4px solid var(--secondary-color);
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 8px;
-        }
-        
-        .packing-list {
-            list-style-type: none;
-            padding: 0;
-        }
-        
-        .packing-list li {
-            padding: 8px 0;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .packing-list li:before {
-            content: "•";
-            color: var(--secondary-color);
-            font-weight: bold;
-            display: inline-block;
-            width: 1em;
-            margin-left: -1em;
-        }
-        
-        .cost-breakdown {
-            width: 100%;
-            margin-top: 15px;
-        }
-        
-        .cost-breakdown tr {
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        
-        .cost-breakdown tr:last-child {
-            border-bottom: none;
-            font-weight: bold;
-        }
-        
-        .big-btn {
-            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
-            border: none;
-            border-radius: 12px;
-            padding: 12px 25px;
-            font-weight: 600;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(59, 113, 254, 0.3);
-            color: white;
-        }
-        
-        .big-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(59, 113, 254, 0.4);
-        }
-        
-        .form-control, .form-select {
-            border: 2px solid #e9ecef;
-            border-radius: 10px;
-            padding: 12px 15px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-        
-        .form-control:focus, .form-select:focus {
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 0 0.2rem rgba(17, 204, 241, 0.15);
-        }
-        
-        .date-badge {
-            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
-            color: white;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 600;
+<style>
+    :root {
+        --primary-color: #057b93;
+        --secondary-color: #11ccf1;
+        --accent-color: #ff6b6b;
+        --light-bg: #f8fafc;
+        --dark-text: #2c3e50;
+    }
+
+    body {
+        background-color: var(--light-bg);
+        color: var(--dark-text);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .navbar {
+        background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+    }
+
+    .dashboard-container {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .planning-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        padding: 25px;
+        margin-bottom: 25px;
+        transition: transform 0.3s ease;
+    }
+
+    .planning-card:hover {
+        transform: none;
+        /* Removed hover effect for consistency when dynamic content is loaded */
+    }
+
+    .section-title {
+        color: var(--primary-color);
+        font-weight: 700;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #e9ecef;
+    }
+
+    .budget-card {
+        background: linear-gradient(135deg, #10c6ea 0%, #068099 100%);
+        color: white;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .day-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .transport-card {
+        text-align: center;
+        padding: 15px;
+        border-radius: 12px;
+        background: white;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        height: 100%;
+    }
+
+    .transport-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .ai-suggestion {
+        background: #f1f9ff;
+        border-left: 4px solid var(--secondary-color);
+        padding: 15px;
+        margin-bottom: 15px;
+        border-radius: 8px;
+    }
+
+    .packing-list {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .packing-list li {
+        padding: 8px 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    .packing-list li:before {
+        content: "•";
+        color: var(--secondary-color);
+        font-weight: bold;
+        display: inline-block;
+        width: 1em;
+        margin-left: -1em;
+    }
+
+    .cost-breakdown {
+        width: 100%;
+        margin-top: 15px;
+    }
+
+    .cost-breakdown tr {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .cost-breakdown tr:last-child {
+        border-bottom: none;
+        font-weight: bold;
+    }
+
+    .big-btn {
+        background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+        border: none;
+        border-radius: 12px;
+        padding: 12px 25px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(59, 113, 254, 0.3);
+        color: white;
+    }
+
+    .big-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(59, 113, 254, 0.4);
+    }
+
+    .form-control,
+    .form-select {
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        padding: 12px 15px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 0 0.2rem rgba(17, 204, 241, 0.15);
+    }
+
+    .date-badge {
+        background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+        color: white;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    /* Skeleton Loader Styles */
+    .skeleton {
+        animation: pulse 1.5s infinite ease-in-out;
+        background: linear-gradient(-90deg, #f0f0f0 0%, #f8f8f8 50%, #f0f0f0 100%);
+        background-size: 400% 400%;
+        border-radius: 8px;
+    }
+
+    .skeleton-text {
+        height: 12px;
+        margin: 5px 0;
+    }
+
+    .skeleton-row {
+        height: 40px;
+        margin-bottom: 10px;
+    }
+
+    .skeleton-suggestion {
+        height: 50px;
+        margin-bottom: 15px;
+        border-radius: 8px;
+    }
+
+    @keyframes pulse {
+        0% {
+            background-position: 100% 50%;
         }
 
-        /* Skeleton Loader Styles */
-        .skeleton {
-            animation: pulse 1.5s infinite ease-in-out;
-            background: linear-gradient(-90deg, #f0f0f0 0%, #f8f8f8 50%, #f0f0f0 100%);
-            background-size: 400% 400%;
-            border-radius: 8px;
+        100% {
+            background-position: 0% 50%;
         }
-        .skeleton-text {
-            height: 12px;
-            margin: 5px 0;
-        }
-        .skeleton-row {
-            height: 40px;
-            margin-bottom: 10px;
-        }
-        .skeleton-suggestion {
-            height: 50px;
+    }
+
+    .placeholder-output {
+        opacity: 0.7;
+    }
+
+    @media (max-width: 768px) {
+        .transport-card {
             margin-bottom: 15px;
-            border-radius: 8px;
         }
-        @keyframes pulse {
-            0% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        .placeholder-output {
-            opacity: 0.7;
-        }
-        
-        @media (max-width: 768px) {
-            .transport-card {
-                margin-bottom: 15px;
-            }
-        }
-    </style>
+    }
+</style>
 {% endblock %}
 
 {% block content %}
-    <div class="container dashboard-container pt-5 mt-5">
-        <div class="row mt-5">
-            <!-- Left Column -->
-            <div class="col-lg-8">
-                <!-- Header -->
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <div>
-                        <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="/">Home</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">AI Trip Planner</li>
-                            </ol>
-                        </nav>
-                        <h2 class="mb-0">AI Trip Planner</h2>
-                    </div>
-                    <!-- Export button visible only if a plan exists -->
-                    <button id="exportPlanBtn" class="big-btn" style="display:none;"><i class="fas fa-download me-2"></i> Export Plan</button>
+<div class="container dashboard-container pt-5 mt-5">
+    <div class="row mt-5">
+        <!-- Left Column -->
+        <div class="col-lg-8">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/">Home</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">AI Trip Planner</li>
+                        </ol>
+                    </nav>
+                    <h2 class="mb-0">AI Trip Planner</h2>
                 </div>
+                <!-- Export button visible only if a plan exists -->
+                <button id="exportPlanBtn" class="big-btn" style="display:none;"><i class="fas fa-download me-2"></i>
+                    Export Plan</button>
+            </div>
 
-                <!-- Trip Planning Card (Input Form) -->
-                <div class="planning-card">
-                    <h4 class="section-title">Plan Your Trip</h4>
-                    <form id="aiPlanForm">
-                        {% csrf_token %}
-                        <div class="row">
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">Plan Name / City</label>
-                                <input type="text" id="plan_name" class="form-control" value="" placeholder="E.g., Pune to Agra Trip" required>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">Destination</label>
-                                <input type="text" id="destination" class="form-control" value="" required>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">Budget (INR/USD)</label>
-                                <input type="number" id="budget" class="form-control" value="" required min="100">
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <label class="form-label">Start Date</label>
-                                <input type="date" id="start_date" class="form-control" value="" required>
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <label class="form-label">End Date</label>
-                                <input type="date" id="end_date" class="form-control" value="" required>
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <label class="form-label">Trip Duration</label>
-                                <input type="text" id="tripDuration" class="form-control" value="" disabled>
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <label class="form-label">Peoples</label>
-                                <input type="number" id="peoples" class="form-control" value="" required min="1">
-                            </div>
+            <!-- Trip Planning Card (Input Form) -->
+            <div class="planning-card">
+                <h4 class="section-title">Plan Your Trip</h4>
+                <form id="aiPlanForm">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Plan Name / City</label>
+                            <input type="text" id="plan_name" class="form-control" value=""
+                                placeholder="E.g., Pune to Agra Trip" required>
                         </div>
-                        <div class="text-center mt-3">
-                            <button type="submit" id="generatePlanBtn" class="big-btn">
-                                <i class="fas fa-magic me-2"></i> Generate AI Plan
-                            </button>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Destination</label>
+                            <input type="text" id="destination" class="form-control" value="" required>
                         </div>
-                    </form>
-                </div>
-
-                <!-- AI Suggestions (Dynamic Content) -->
-                <div id="aiSuggestionsContainer" class="planning-card" style="display: none;">
-                    <h4 class="section-title">AI Suggestions</h4>
-                    <div id="aiSuggestionsList">
-                        <!-- AI Suggestions will be injected here -->
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Budget (INR/USD)</label>
+                            <input type="number" id="budget" class="form-control" value="" required min="100">
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">Start Date</label>
+                            <input type="date" id="start_date" class="form-control" value="" required>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">End Date</label>
+                            <input type="date" id="end_date" class="form-control" value="" required>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">Trip Duration</label>
+                            <input type="text" id="tripDuration" class="form-control" value="" disabled>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">Peoples</label>
+                            <input type="number" id="peoples" class="form-control" value="" required min="1">
+                        </div>
                     </div>
-                </div>
-
-                <!-- Itinerary (Dynamic Content) -->
-                <div id="itineraryContainer" class="planning-card" style="display: none;">
-                    <h4 class="section-title">Your Itinerary</h4>
-                    <div id="itineraryList" style="max-height: 70vh;overflow-y: auto;">
-                        <!-- Day cards will be injected here -->
+                    <div class="text-center mt-3">
+                        <button type="submit" id="generatePlanBtn" class="big-btn">
+                            <i class="fas fa-magic me-2"></i> Generate AI Plan
+                        </button>
                     </div>
+                </form>
+            </div>
+
+            <!-- AI Suggestions (Dynamic Content) -->
+            <div id="aiSuggestionsContainer" class="planning-card" style="display: none;">
+                <h4 class="section-title">AI Suggestions</h4>
+                <div id="aiSuggestionsList">
+                    <!-- AI Suggestions will be injected here -->
                 </div>
             </div>
 
-            <!-- Right Column -->
-            <div class="col-lg-4">
-                
-                <!-- Budget Summary (Dynamic Content) -->
-                <div id="budgetSummaryContainer" class="budget-card" style="display: none;">
-                    <h4 class="text-white">Budget Summary</h4>
-                    <table class="cost-breakdown">
-                        <tbody id="budgetBreakdown">
-                            <!-- Budget rows will be injected here -->
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Transport Options (Dynamic Content) -->
-                <div id="transportOptionsContainer" class="planning-card" style="display: none;">
-                    <h4 class="section-title">Transport Options</h4>
-                    <div class="row" id="transportOptionsList">
-                        <!-- Transport cards will be injected here -->
-                    </div>
-                </div>
-
-                <!-- Packing List (Dynamic Content) -->
-                <div id="packingListContainer" class="planning-card" style="display: none;">
-                    <h4 class="section-title">Packing List</h4>
-                    <ul class="packing-list" id="packingList">
-                        <!-- Packing list items will be injected here -->
-                    </ul>
+            <!-- Itinerary (Dynamic Content) -->
+            <div id="itineraryContainer" class="planning-card" style="display: none;">
+                <h4 class="section-title">Your Itinerary</h4>
+                <div id="itineraryList" style="max-height: 70vh;overflow-y: auto;">
+                    <!-- Day cards will be injected here -->
                 </div>
             </div>
         </div>
+
+        <!-- Right Column -->
+        <div class="col-lg-4">
+
+            <!-- Budget Summary (Dynamic Content) -->
+            <div id="budgetSummaryContainer" class="budget-card" style="display: none;">
+                <h4 class="text-white">Budget Summary</h4>
+                <table class="cost-breakdown">
+                    <tbody id="budgetBreakdown">
+                        <!-- Budget rows will be injected here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Transport Options (Dynamic Content) -->
+            <div id="transportOptionsContainer" class="planning-card" style="display: none;">
+                <h4 class="section-title">Transport Options</h4>
+                <div class="row" id="transportOptionsList">
+                    <!-- Transport cards will be injected here -->
+                </div>
+            </div>
+
+            <!-- Packing List (Dynamic Content) -->
+            <div id="packingListContainer" class="planning-card" style="display: none;">
+                <h4 class="section-title">Packing List</h4>
+                <ul class="packing-list" id="packingList">
+                    <!-- Packing list items will be injected here -->
+                </ul>
+            </div>
+        </div>
     </div>
+</div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
     // --- Configuration ---
     // Assuming {{hosturl}} is a Django template variable available in the context
-    const API_HOST = "{{hosturl}}"; 
+    const API_HOST = "{{hosturl}}";
     const AI_PLAN_API = `/api/trips/ai_trip_plan_view`;
 
     // --- Helper Functions ---
@@ -330,13 +345,13 @@
                     <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
                 </div>
             </div>`;
-        
+
         // Append and show
         const toastEl = $(toastHtml);
         $('body').append(toastEl);
         const bsToast = new bootstrap.Toast(toastEl[0]);
         bsToast.show();
-        
+
         // Remove after hidden
         toastEl.on('hidden.bs.toast', function () {
             $(this).remove();
@@ -347,11 +362,11 @@
     function calculateDuration() {
         const startDateVal = $('#start_date').val();
         const endDateVal = $('#end_date').val();
-        
+
         if (startDateVal && endDateVal) {
             const startDate = new Date(startDateVal);
             const endDate = new Date(endDateVal);
-            
+
             if (startDate > endDate) {
                 $('#tripDuration').val('Invalid Dates');
                 return 0;
@@ -366,7 +381,7 @@
             return 0;
         }
     }
-    
+
     // --- Rendering Functions ---
 
     function showLoadingState() {
@@ -376,14 +391,14 @@
 
         // Show all containers with skeleton content
         const outputContainers = [
-            '#itineraryContainer', '#aiSuggestionsContainer', 
-            '#budgetSummaryContainer', '#transportOptionsContainer', 
+            '#itineraryContainer', '#aiSuggestionsContainer',
+            '#budgetSummaryContainer', '#transportOptionsContainer',
             '#packingListContainer'
         ];
-        
+
         // Use a simple skeleton HTML structure for each section
         const skeletonText = '<div class="skeleton-text skeleton w-75"></div><div class="skeleton-text skeleton w-50"></div>';
-        
+
         $('#aiSuggestionsList').html(
             '<div class="ai-suggestion placeholder-output"><div class="skeleton-suggestion skeleton"></div></div>'.repeat(3)
         );
@@ -409,7 +424,7 @@
         $('#generatePlanBtn').html(originalText);
         $('#generatePlanBtn').prop('disabled', false);
     }
-    
+
     function clearOutputContainers() {
         $('#aiSuggestionsContainer, #itineraryContainer, #budgetSummaryContainer, #transportOptionsContainer, #packingListContainer').hide();
         $('#aiSuggestionsList, #itineraryList, #budgetBreakdown, #transportOptionsList, #packingList').empty();
@@ -418,111 +433,113 @@
 
     function renderTripPlan(plan) {
         // 1. Render AI Suggestions
-        const suggestionsHtml = plan.ai_suggestions.map(suggestion => 
+        const suggestions = plan.ai_suggestions || [];
+        const suggestionsHtml = suggestions.map(suggestion =>
             `<div class="ai-suggestion"><i class="fas fa-lightbulb text-warning me-2"></i> ${suggestion}</div>`
-        ).join('');
+        ).join('') || '<div class="ai-suggestion">No suggestions available.</div>';
         $('#aiSuggestionsList').html(suggestionsHtml);
 
         // 2. Render Budget Summary
-        const budget = plan.budget_summary;
+        const budget = plan.budget_summary || {};
         const budgetHtml = `
-            <tr><td>Travel</td><td class="text-end">${budget.travel}</td></tr>
-            <tr><td>Stay</td><td class="text-end">${budget.stay}</td></tr>
-            <tr><td>Food</td><td class="text-end">${budget.food}</td></tr>
-            <tr><td>Activities</td><td class="text-end">${budget.activities}</td></tr>
-            <tr class="fw-bold"><td>Grand Total</td><td class="text-end">${budget.grand_total}</td></tr>
-        `;
-        $('#budgetBreakdown').html(budgetHtml);
+        ${budget.travel ? `<tr><td>Travel</td><td class="text-end">${budget.travel}</td></tr>` : ''}
+        ${budget.stay ? `<tr><td>Stay</td><td class="text-end">${budget.stay}</td></tr>` : ''}
+        ${budget.food ? `<tr><td>Food</td><td class="text-end">${budget.food}</td></tr>` : ''}
+        ${budget.activities ? `<tr><td>Activities</td><td class="text-end">${budget.activities}</td></tr>` : ''}
+        ${budget.grand_total ? `<tr class="fw-bold"><td>Grand Total</td><td class="text-end">${budget.grand_total}</td></tr>` : ''}
+    `;
+        $('#budgetBreakdown').html(budgetHtml || '<tr><td colspan="2">No budget data available.</td></tr>');
 
         // 3. Render Transport Options
-        const transportHtml = plan.transport_options.map(opt => `
+        const transport = plan.transport_options || [];
+        const transportHtml = transport.map(opt => {
+            const icon = opt.icon || 'fa-bus';
+            const price = opt.price || '';
+            const duration = opt.duration || '';
+            return `
             <div class="col-md-12 mb-3">
                 <div class="transport-card">
-                    <i class="fas ${opt.icon} fa-2x text-primary mb-2"></i>
+                    <i class="fas ${icon} fa-2x text-primary mb-2"></i>
                     <h5>${opt.type}</h5>
-                    <div class="mb-2">
-                        <div class="fw-bold">${opt.price}</div>
-                        <small>Price (one way)</small>
-                    </div>
-                    <div>
-                        <div class="fw-bold">${opt.duration}</div>
-                        <small>Duration</small>
-                    </div>
+                    ${price ? `<div class="fw-bold">${price}</div>` : ''}
+                    ${duration ? `<small>${duration}</small>` : ''}
                 </div>
             </div>
-        `).join('');
+        `;
+        }).join('') || '<p>No transport options available.</p>';
         $('#transportOptionsList').html(transportHtml);
 
         // 4. Render Itinerary
-        const itineraryHtml = plan.itinerary.map(day => {
-            const activitiesHtml = day.activities.map(activity => `
-                <tr>
-                    <td>${activity.category}</td>
-                    <td>${activity.details}</td>
-                    <td class="text-end">${activity.cost}</td>
-                </tr>
-            `).join('');
-            
+        const itinerary = plan.itinerary || [];
+        const itineraryHtml = itinerary.map(day => {
+            const activities = day.activities || [];
+            const activitiesHtml = activities.length ? activities.map(activity => `
+            <tr>
+                <td>${activity.category || ''}</td>
+                <td>${activity.details || ''}</td>
+                <td class="text-end">${activity.cost || ''}</td>
+            </tr>
+        `).join('') : `
+            <tr><td colspan="3" class="text-center text-muted">No detailed activities available.</td></tr>
+        `;
+
             return `
-                <div class="day-card">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="mb-0">${day.title}</h5>
-                        <span class="date-badge big-btn">${day.date}</span>
-                    </div>
-                    <p class="text-muted">${day.description}</p>
-                    <table class="table">
-                        <tr>
-                            <th style="width: 25%;">Category</th>
-                            <th style="width: 50%;">Details</th>
-                            <th class="text-end" style="width: 25%;">Cost</th>
-                        </tr>
-                        ${activitiesHtml}
-                        <tr class="fw-bold">
-                            <td colspan="2">Day Total</td>
-                            <td class="text-end">${day.day_total}</td>
-                        </tr>
-                    </table>
+            <div class="day-card">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0">${day.title || ''}</h5>
+                    <span class="date-badge big-btn">${day.date || ''}</span>
                 </div>
-            `;
-        }).join('');
+                ${day.description ? `<p class="text-muted">${day.description}</p>` : ''}
+                <table class="table">
+                    <tr>
+                        <th style="width: 25%;">Category</th>
+                        <th style="width: 50%;">Details</th>
+                        <th class="text-end" style="width: 25%;">Cost</th>
+                    </tr>
+                    ${activitiesHtml}
+                    ${day.day_total ? `<tr class="fw-bold"><td colspan="2">Day Total</td><td class="text-end">${day.day_total}</td></tr>` : ''}
+                </table>
+            </div>
+        `;
+        }).join('') || '<p>No itinerary available.</p>';
         $('#itineraryList').html(itineraryHtml);
 
         // 5. Render Packing List
-        const packingHtml = plan.packing_list.map(item => `<li>${item}</li>`).join('');
+        const packingList = plan.packing_list || [];
+        const packingHtml = packingList.map(item => `<li>${item}</li>`).join('') || '<li>No packing list available.</li>';
         $('#packingList').html(packingHtml);
 
         // Show all containers
         $('#aiSuggestionsContainer, #itineraryContainer, #budgetSummaryContainer, #transportOptionsContainer, #packingListContainer').slideDown(400);
-        $('#exportPlanBtn').show(); // Show export button now that plan is available
+        $('#exportPlanBtn').show();
     }
-
     // --- Main Logic ---
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         // Remove floating search bar (as in original template)
-        
+
         // Initial setup for date min limits
         const today = new Date().toISOString().split('T')[0];
         $('#start_date').attr('min', today);
         $('#end_date').attr('min', today);
-        
+
         // Calculate trip duration on load and change
         calculateDuration();
         $('#start_date, #end_date').on('change', calculateDuration);
-        
+
         // Set end date minimum based on start date
-        $('#start_date').on('change', function() {
+        $('#start_date').on('change', function () {
             $('#end_date').attr('min', $(this).val());
         });
-        
+
         // --- API INTEGRATION ---
 
-        $('#aiPlanForm').on('submit', function(e) {
+        $('#aiPlanForm').on('submit', function (e) {
             e.preventDefault();
-            
+
             // Basic validation check
             let isValid = true;
-            $('.form-control:required').each(function() {
+            $('.form-control:required').each(function () {
                 if (!$(this).val().trim()) {
                     $(this).addClass('is-invalid');
                     isValid = false;
@@ -530,7 +547,7 @@
                     $(this).removeClass('is-invalid');
                 }
             });
-            
+
             if (!isValid) {
                 showToast('Error', 'Please fill all required fields correctly.', 'danger');
                 return;
@@ -538,8 +555,8 @@
 
             const days = calculateDuration();
             if (days === 0) {
-                 showToast('Error', 'Please ensure the start date is before or the same as the end date.', 'danger');
-                 return;
+                showToast('Error', 'Please ensure the start date is before or the same as the end date.', 'danger');
+                return;
             }
 
             // Prepare API data payload
@@ -552,13 +569,13 @@
                 'end_date': $('#end_date').val(),
                 // FIX: Parse people as integer
                 'people': parseInt($('#peoples').val(), 10),
-                'trip_duration': days 
+                'trip_duration': days
                 // Add any other necessary fields for the backend AI view
             };
-            
+
             const submitBtn = $('#generatePlanBtn');
             const originalText = submitBtn.html();
-            
+
             clearOutputContainers();
             showLoadingState();
 
@@ -573,7 +590,7 @@
                 data: JSON.stringify(formData),
                 contentType: 'application/json',
                 dataType: 'json',
-                success: function(response) {
+                success: function (response) {
                     if (response.success && response.trip_plan) {
                         showToast('Success', 'AI plan generated successfully!', 'success');
                         renderTripPlan(response.trip_plan);
@@ -582,9 +599,9 @@
                         showToast('Warning', response.message || 'AI could not generate a plan with the given constraints.', 'warning');
                     }
                 },
-                error: function(xhr) {
+                error: function (xhr) {
                     let errorMessage = 'Failed to generate plan. Server error.';
-                    
+
                     // Attempt to get a more specific error message from the response body (common in DRF)
                     if (xhr.responseJSON) {
                         if (xhr.responseJSON.message) {
@@ -603,21 +620,21 @@
                     } else if (xhr.status === 400) {
                         errorMessage = 'Invalid input data. Please check your fields.';
                     } else if (xhr.responseText) {
-                         // Fallback for non-JSON response text
-                         errorMessage = `Server Error (${xhr.status}): ${xhr.responseText.substring(0, 100)}...`;
+                        // Fallback for non-JSON response text
+                        errorMessage = `Server Error (${xhr.status}): ${xhr.responseText.substring(0, 100)}...`;
                     }
-                    
+
                     showToast('Error', errorMessage, 'danger');
                     clearOutputContainers();
                 },
-                complete: function() {
+                complete: function () {
                     hideLoadingState(originalText);
                 }
             });
         });
-        
+
         // Placeholder for Export functionality (can be implemented as another API call later)
-        $('#exportPlanBtn').on('click', function() {
+        $('#exportPlanBtn').on('click', function () {
             showToast('Export', 'Preparing plan for export...', 'info');
             // Logic to fetch or prepare the downloadable file goes here
         });
