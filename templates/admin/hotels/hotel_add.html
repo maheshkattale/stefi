@@ -1,0 +1,255 @@
+{% extends "admin-base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}Add Hotel{% endblock %}
+
+{% block layout %}
+<div class="row">
+  <div class="col-xl-12">
+    <div class="card mb-12 shadow-lg">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">🏨 Add New Hotel</h5>
+      </div>
+
+      <div class="card-body">
+        <form id="hotelForm" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="row g-4">
+            <!-- BASIC INFO -->
+            <div class="form-floating col-md-6">
+              <input type="text" class="form-control" id="name" placeholder="Hotel Name">
+              <label for="name">Hotel Name *</label>
+            </div>
+
+            <div class="form-floating col-md-6">
+              <select class="form-control" id="hotel_type">
+                <option value="">Select Type</option>
+                {% for h in hotel_types %}
+                  <option value="{{ h.key }}">{{ h.value }}</option>
+                {% endfor %}
+              </select>
+              <label for="hotel_type">Hotel Type *</label>
+            </div>
+
+            <div class="form-floating col-md-6">
+              <select class="form-control" id="destination">
+                <option value="">Select Destination</option>
+                {% for d in destinations %}
+                <option value="{{ d.id }}">{{ d.name }}</option>
+                {% endfor %}
+              </select>
+              <label for="destination">Destination *</label>
+            </div>
+
+            <div class="form-floating col-md-6">
+              <input type="email" class="form-control" id="contact_email" placeholder="Contact Email">
+              <label for="contact_email">Contact Email *</label>
+            </div>
+
+            <div class="form-floating col-md-6">
+              <input type="text" class="form-control" id="contact_phone" placeholder="Contact Phone">
+              <label for="contact_phone">Contact Phone *</label>
+            </div>
+
+            <div class="form-floating col-md-6">
+              <select class="form-control" id="star_rating">
+                <option value="">Select Rating</option>
+                {% for i in "12345" %}
+                <option value="{{ i }}">{{ i }} Star</option>
+                {% endfor %}
+              </select>
+              <label for="star_rating">Star Rating</label>
+            </div>
+
+            <div class="form-floating col-md-6">
+              <input type="time" class="form-control" id="check_in_time" value="14:00">
+              <label for="check_in_time">Check-in Time</label>
+            </div>
+
+            <div class="form-floating col-md-6">
+              <input type="time" class="form-control" id="check_out_time" value="12:00">
+              <label for="check_out_time">Check-out Time</label>
+            </div>
+
+            <div class="form-floating col-md-12">
+              <textarea id="address" class="form-control" placeholder="Address" style="height:60px;"></textarea>
+              <label for="address">Address *</label>
+            </div>
+
+            <div class="form-floating col-md-12">
+              <textarea id="description" class="form-control" placeholder="Description" style="height:60px;"></textarea>
+              <label for="description">Description</label>
+            </div>
+
+            <div class="form-floating col-md-12">
+              <textarea id="amenities" class="form-control" placeholder="Comma separated amenities" style="height:60px;"></textarea>
+              <label for="amenities">Amenities</label>
+            </div>
+
+            <!-- BOOL FIELDS -->
+            <div class="col-md-12">
+              <div class="form-check form-switch d-inline-block me-3">
+                <input class="form-check-input" type="checkbox" id="has_swimming_pool">
+                <label class="form-check-label" for="has_swimming_pool">Swimming Pool</label>
+              </div>
+              <div class="form-check form-switch d-inline-block me-3">
+                <input class="form-check-input" type="checkbox" id="has_spa">
+                <label class="form-check-label" for="has_spa">Spa</label>
+              </div>
+              <div class="form-check form-switch d-inline-block me-3">
+                <input class="form-check-input" type="checkbox" id="has_gym">
+                <label class="form-check-label" for="has_gym">Gym</label>
+              </div>
+              <div class="form-check form-switch d-inline-block me-3">
+                <input class="form-check-input" type="checkbox" id="has_restaurant" checked>
+                <label class="form-check-label" for="has_restaurant">Restaurant</label>
+              </div>
+              <div class="form-check form-switch d-inline-block me-3">
+                <input class="form-check-input" type="checkbox" id="wifi_available" checked>
+                <label class="form-check-label" for="wifi_available">WiFi</label>
+              </div>
+              <div class="form-check form-switch d-inline-block me-3">
+                <input class="form-check-input" type="checkbox" id="parking_available">
+                <label class="form-check-label" for="parking_available">Parking</label>
+              </div>
+            </div>
+
+            <div class="form-floating col-md-6">
+              <input type="file" id="image" class="form-control" accept="image/*">
+              <label for="image">Hotel Image</label>
+            </div>
+
+            <div class="form-floating col-md-6">
+              <input type="url" class="form-control" id="website" placeholder="Website">
+              <label for="website">Website</label>
+            </div>
+
+            <div class="form-floating col-md-6">
+              <input type="text" class="form-control" id="average_price_per_night" placeholder="Average Price/Night">
+              <label for="average_price_per_night">Average Price/Night</label>
+            </div>
+
+            <div class="form-floating col-md-6">
+              <input type="number" class="form-control" id="rating" placeholder="Rating" min="0" max="5" step="0.1">
+              <label for="rating">Rating</label>
+            </div>
+
+            <div class="form-check form-switch col-md-12">
+              <input class="form-check-input" type="checkbox" id="is_active" checked>
+              <label class="form-check-label" for="is_active">Active</label>
+            </div>
+          </div>
+
+          <hr class="my-4">
+
+          <!-- ROOMS SECTION -->
+          <h5 class="mt-3">🛏 Room Types</h5>
+          <div id="roomContainer"></div>
+          <button type="button" class="btn btn-outline-primary mt-3" onclick="addRoomRow()">+ Add Room Type</button>
+
+          <hr class="my-4">
+
+          <div class="btn btn-primary" onclick="saveHotel()">Submit</div>
+          <div class="btn btn-danger" onclick="window.history.back()">Cancel</div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock layout %}
+
+{% block page_js %}
+{{ block.super }}
+
+<script>
+let roomIndex = 0;
+
+function addRoomRow() {
+  const html = `
+  <div class="border rounded p-3 mb-3 bg-light position-relative" id="room_${roomIndex}">
+    <button type="button" class="btn-close position-absolute top-0 end-0 m-2" onclick="removeRoom(${roomIndex})"></button>
+    <div class="row g-3">
+      <div class="col-md-4"><input type="text" class="form-control" placeholder="Room Name" name="room_name"></div>
+      <div class="col-md-4"><input type="number" class="form-control" placeholder="Max Occupancy" name="room_max"></div>
+      <div class="col-md-4"><input type="number" class="form-control" placeholder="Base Price" name="room_price" step="0.01"></div>
+      <div class="col-md-6"><input type="text" class="form-control" placeholder="Size (sq ft)" name="room_size"></div>
+      <div class="col-md-6"><input type="text" class="form-control" placeholder="Bed Type" name="room_bed"></div>
+      <div class="col-md-12"><textarea class="form-control" placeholder="Amenities (comma separated)" name="room_amenities"></textarea></div>
+      <div class="col-md-12"><input type="file" class="form-control" name="room_image"></div>
+    </div>
+  </div>`;
+  $("#roomContainer").append(html);
+  roomIndex++;
+}
+
+function removeRoom(index) {
+  $("#room_" + index).remove();
+}
+
+function saveHotel() {
+  const formData = new FormData();
+  formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+
+  const fields = [
+    'name', 'hotel_type', 'destination', 'contact_email', 'contact_phone', 'star_rating',
+    'address', 'description', 'amenities', 'check_in_time', 'check_out_time', 'website',
+    'average_price_per_night', 'rating'
+  ];
+  fields.forEach(f => formData.append(f, $("#" + f).val()));
+
+  ['has_swimming_pool','has_spa','has_gym','has_restaurant','wifi_available','parking_available','is_active']
+    .forEach(f => formData.append(f, $("#" + f).is(":checked")));
+
+  const image = $("#image")[0].files[0];
+  if (image) formData.append('image', image);
+
+  // Room Data
+  const rooms = [];
+  $("#roomContainer > div").each(function() {
+    const r = {
+      name: $(this).find("[name='room_name']").val(),
+      max_occupancy: $(this).find("[name='room_max']").val(),
+      base_price: $(this).find("[name='room_price']").val(),
+      amenities: $(this).find("[name='room_amenities']").val(),
+      size: $(this).find("[name='room_size']").val(),
+      bed_type: $(this).find("[name='room_bed']").val()
+    };
+    const img = $(this).find("[name='room_image']")[0].files[0];
+    rooms.push({ ...r, image: img });
+  });
+
+  formData.append('rooms', JSON.stringify(rooms));
+
+  $.ajax({
+    url: hosturl + "/stefi-admin-masters/add_hotel",
+    type: "POST",
+    data: formData,
+    processData: false,
+    contentType: false,
+    dataType: "json",
+    beforeSend: () => swal({ title: "Saving...", icon: "info", buttons: false }),
+    success: (res) => {
+  console.log("re", res);
+  if (res.response.status === "success") {
+    swal({
+      title: "Hotel added!",
+      text: res.response.msg,
+      icon: "success"
+    }).then(() => {
+      window.location.href = hosturl + "/masters/hotels_list/";
+    });
+  } else {
+    swal({
+      title: "Error",
+      text: res.response.msg,
+      icon: "error"
+    });
+  }
+},
+
+    error: () => swal("Error", "Server error!", "error")
+  });
+}
+</script>
+{% endblock page_js %}

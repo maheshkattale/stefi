@@ -55,11 +55,11 @@ def vendor_list(request):
 
 @api_view(['POST'])
 def add_vendor(request):
-    data = request.data
+    data = request.data.copy()
     alredy_exists = Vendor.objects.filter(Q(name__iexact=data.get('name')) & Q(isActive=True))
     if alredy_exists.exists():
         return Response({"response":{"n":0,"msg":"Vendor with this name already exists","status":"error"}})
-    
+    data['isActive']=True
     serializer = VendorSerializers(data=data)
     if serializer.is_valid():
         serializer.save()

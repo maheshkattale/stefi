@@ -35,6 +35,11 @@ urlpatterns = [
     # frontend
     path('',include(('home.urls', 'home'),namespace='home')),
     path('trip_planner/', include(('trip_planner.urls', 'trip_planner'),namespace='trip_planner')),
+    path('stefi-admin-pannel/', include(('admin_ui.urls', 'admin_ui'),namespace='admin_ui')),
+    path('stefi-admin-dashboard/', include(('dashboard_ui.urls', 'dashboard_ui'),namespace='dashboard_ui')),
+    path('stefi-admin-masters/', include(('masters_ui.urls', 'masters_ui'),namespace='masters_ui')),
+    path('stefi-admin-product/', include(('product_ui.urls', 'product_ui'),namespace='product_ui')),
+    path('stefi-admin-vendor/', include(('vendor_ui.urls', 'vendor_ui'),namespace='vendor_ui')),
 
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

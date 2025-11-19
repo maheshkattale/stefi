@@ -26,6 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 sys.path.append(os.path.join(settings.BASE_DIR, "backend"))
 sys.path.append(os.path.join(settings.BASE_DIR, "frontend"))
+sys.path.append(os.path.join(settings.BASE_DIR, "admin_frontend"))
 
 EMAIL_USE_TLS = True
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -75,6 +76,14 @@ INSTALLED_APPS = [
     'home',
     'trip_planner',
 
+    #Admin UI
+    'admin_ui',
+    'dashboard_ui',
+    'masters_ui',
+    'vendor_ui',
+    'product_ui',
+
+
 
 ]
 
@@ -86,6 +95,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'backend.User.middleware.Custom404Middleware',
+
 ]
 
 ROOT_URLCONF = 'stefi.urls'
