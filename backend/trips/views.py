@@ -504,6 +504,9 @@ FASTEST_MODEL = "gemini-2.5-flash-preview-05-20"
 
 # --- Gemini Client Helper Functions ---
 
+
+
+
 def get_gemini_model():
     """Initializes and returns the fastest, appropriate GenerativeModel."""
     try:

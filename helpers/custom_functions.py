@@ -16,7 +16,10 @@ from mimetypes import guess_type
 from django.conf import settings
 import logging
 from django.utils.text import slugify
+from rest_framework.response import Response
+from rest_framework import pagination
 
+from pathlib import Path
 
 def format_indian_rupees(number):
     number=int(number)
@@ -83,6 +86,31 @@ def save_file(folder_path, uploaded_file, request):
     return {'msg': 'File saved successfully', 'url': file_url, 'n': 1}
 
 
+class CustomPagination(pagination.PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 50
+    page_query_param = 'p'
+
+    def get_paginated_response(self, data):
+        # Check if page exists before trying to access it
+        if not hasattr(self, 'page'):
+            return Response({
+                "response": {"n": 1, "msg": "list fetched successfully", "status": "success"},
+                'count': 0,
+                'next': None,
+                'previous': None,
+                'data': data,
+            })
+        
+        return Response({
+            "response": {"n": 1, "msg": "list fetched successfully", "status": "success"},
+            'count': self.page.paginator.count,
+            'next': self.get_next_link(),
+            'previous': self.get_previous_link(),
+            'data': data,
+        })
+   
 
 
 

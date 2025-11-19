@@ -68,6 +68,8 @@ INSTALLED_APPS = [
     'Masters',
     'trips',
     'home_api',
+    'vendor',
+    'product',
 
     #Frontend
     'home',

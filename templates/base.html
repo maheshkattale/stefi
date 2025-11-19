@@ -284,108 +284,125 @@
                 font-size: 0.9rem;
             }
         }
-            /* Floating Search Bar */
-    .floating-search-container {
-        position: fixed;
-        top: 30px;
-        z-index: 1050;
-        width: 100%;
-        transition: all 0.3s ease;
-        display: flex;
-        align-content: space-between;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        justify-content: space-evenly;
+
+        /* Floating Search Bar */
+        .floating-search-container {
+            position: fixed;
+            top: 30px;
+            z-index: 1050;
+            width: 100%;
+            transition: all 0.3s ease;
+            display: flex;
+            align-content: space-between;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: space-evenly;
 
 
-        /* left: 35%; */
-        /* transform: translateX(-50%); */
-        /* max-width: 55%; */
-    }
+            /* left: 35%; */
+            /* transform: translateX(-50%); */
+            /* max-width: 55%; */
+        }
 
-    .floating-search-container.scrolled {
-        top: 10px;
-    }
+        .floating-search-container.scrolled {
+            top: 10px;
+        }
 
-    .search-input {
-        border: none;
-        border-radius: 50px;
-        padding: 1rem 2rem;
-        font-size: 1.1rem;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    }
+        .search-input {
+            border: none;
+            border-radius: 50px;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
 
-    .search-results {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background: white;
-        border-radius: 15px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-        max-height: 300px;
-        overflow-y: auto;
-        display: none;
-    }
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            max-height: 300px;
+            overflow-y: auto;
+            display: none;
+        }
 
-    .search-result-item {
-        padding: 1rem;
-        border-bottom: 1px solid #eee;
-        cursor: pointer;
-        transition: background-color 0.2s ease;
-    }
+        .search-result-item {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
 
-    .search-result-item:hover {
-        background-color: #f8f9fa;
-    }
+        .search-result-item:hover {
+            background-color: #f8f9fa;
+        }
 
-    .search-result-item:last-child {
-        border-bottom: none;
-    }
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+
         /* Features Section */
-    .feature-icon {
-        width: 80px;
-        height: 80px;
-        background: linear-gradient(135deg, #11ccf1, #057b93);
-        border-radius: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 1.5rem;
-    }
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #11ccf1, #057b93);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+        }
+
         /* Statistics */
-    .stat-number {
-        font-size: 2.5rem;
-        font-weight: 700;
-    }
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
         .menu-items {
-        width: 75px;
-        height: 75px;
-        border-radius: 25%;
-        background: #e6e9f3bf;
-        padding: 23px;
-        transition: transform 0.3s ease;
-    }
-    .floating-search-icon {
-        border-radius: 0 50px 50px 0;
-        background: #e6e9f3bf;
-        margin: 0 !important;
-    }
+            width: 75px;
+            height: 75px;
+            border-radius: 25%;
+            background: #e6e9f3bf;
+            padding: 23px;
+            transition: transform 0.3s ease;
+        }
 
-    .floating-search-input {
-        background: #e6e9f3bf;
-        box-shadow: none;
-    }
+        .floating-search-icon {
+            border-radius: 0 50px 50px 0;
+            background: #e6e9f3bf;
+            margin: 0 !important;
+        }
 
-    .floating-search-input::placeholder {
-        color: #363636;
-    }
+        .floating-search-input {
+            background: #e6e9f3bf;
+            box-shadow: none;
+        }
 
-    .floating-search-logo {
-        background: #e6e9f3bf;
-        margin: 0 !important;
-        padding: 7px;
-    }
+        .floating-search-input::placeholder {
+            color: #363636;
+        }
+
+        .floating-search-logo {
+            background: #e6e9f3bf;
+            margin: 0 !important;
+            padding: 7px;
+        }
+
+        /* Optional styling for the language dropdown */
+        #google_translate_element {
+            margin: 20px 0;
+        }
+
+        .goog-te-gadget-simple {
+            background: #f5f5f5 !important;
+            border-radius: 6px !important;
+            padding: 6px 10px !important;
+            font-size: 16px !important;
+        }
     </style>
 
     {% block extra_css %}{% endblock %}
@@ -406,26 +423,27 @@
                 <i class="fas fa-search fa-xl"></i>
             </span>
         </div>
-        <div>
+        <!-- <div>
             <a href="#" class="" id="" title="explore india">
                 <img src="{% static 'assets/icons/explore-india.png' %}" alt="" class="menu-items">
             </a>
-        </div>
-        <div>
+        </div> -->
+        <!-- <div>
             <a href="#" class="" id="" title="bag packing">
                 <img src="{% static 'assets/icons/bag-packing.png' %}" alt="" class="menu-items">
             </a>
-        </div>
+        </div> -->
         <div>
             <a href="/trip_planner/plan_trip/" class="" id="" title="trip planner">
                 <img src="{% static 'assets/icons/trip-planner.png' %}" alt="" class="menu-items">
             </a>
         </div>
-        <div>
+        <!-- <div>
             <a href="#" class="" id="" title="profile">
                 <img src="{% static 'assets/icons/profile.png' %}" alt="" class="menu-items">
             </a>
-        </div>
+        </div> -->
+        <div id="google_translate_element"></div>
 
         <div class="search-results" id="searchResults"></div>
     </div>
@@ -611,6 +629,23 @@
             // Get from localStorage, cookies, or wherever you store the token
             return localStorage.getItem('authToken') || '';
         }
+    </script>
+
+
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+
+                // Only Indian Languages + English
+                includedLanguages: 'en,hi,ta,te,kn,ml,mr,gu,pa,bn,or,ur',
+
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+            }, 'google_translate_element');
+        }
+    </script>
+
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
     </script>
     {% block extra_js %}{% endblock %}
 </body>
