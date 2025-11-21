@@ -59,6 +59,8 @@ class Destination(models.Model):
         ('city', 'City'),
     ]
 
+    
+
     name = models.CharField(max_length=200)
     state = models.ForeignKey(State, on_delete=models.CASCADE, related_name='destinations')
     destination_type = models.CharField(max_length=20, choices=DESTINATION_TYPES)
