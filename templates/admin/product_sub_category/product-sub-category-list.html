@@ -3,14 +3,14 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}Vendor - Forms{% endblock %}
+{% block title %}Product Sub Category - Forms{% endblock %}
 
 {% block layout %}
 <!-- Basic Layout -->
 <div class="card">
     <div class="d-flex justify-content-between align-items-center">
         <div>
-            <h5 class="card-header">Vendor</h5>
+            <h5 class="card-header">Product Sub Category</h5>
         </div>
         <div class="d-flex justify-content-end">
             <div class="d-flex align-items-center">
@@ -18,19 +18,19 @@
                 <input type="text" id="search" class="form-control border-0 shadow-none bg-body" placeholder="Search..."
                     aria-label="Search..." onkeyup="Pagination()" />
             </div>
-            <a class="btn btn-primary waves-effect waves-light m-4" href="/stefi-admin-vendor/add-vendor">Add Vendor</a>
+            <a class="btn btn-primary waves-effect waves-light m-4" href="/stefi-admin-product/add-product-sub-category">Add Product Sub Category</a>
         </div>
     </div>
     <div class="table-responsive text-nowrap">
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th>Vendor Name</th>
-                    <th>Description</th>
+                    <th>Sub Category</th>
+                    <th>Parant Category</th>
                     <th>Actions</th>
                 </tr>
             </thead>
-            <tbody class="table-border-bottom-0" id="vendor_table_body">
+            <tbody class="table-border-bottom-0" id="product_sub_category_table_body">
 
 
 
@@ -71,7 +71,7 @@
         fd.append('p', p)
         fd.append('csrfmiddlewaretoken', '{{csrf_token}}')
         $.ajax({
-            url: hosturl + "/api/vendor/vendor_list_pagination",
+            url: hosturl + "/api/product/product_sub_category_list_pagination",
             data: fd,
             headers: { "Authorization": "Bearer {{token}}" },
 
@@ -101,16 +101,16 @@
                                                 
                                     <tr>
                                         <td><span>${o.name || ''}</span></td>
-                                        <td>${o.phone || ''}</td>
+                                        <td>${o.category_name || ''}</td>
     
                                         <td>
                                             <div class="dropdown">
                                                 <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
                                                     data-bs-toggle="dropdown"><i class="ri-more-2-line"></i></button>
                                                 <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="/stefi-admin-vendor/edit-vendor/${o.id}"><i class="ri-pencil-line me-1"></i>
+                                                    <a class="dropdown-item" href="/stefi-admin-product/edit-product-sub-category/${o.id}"><i class="ri-pencil-line me-1"></i>
                                                         Edit</a>
-                                                    <a class="dropdown-item" href="javascript:void(0);" onclick="delete_vendor(${o.id})"><i
+                                                    <a class="dropdown-item" href="javascript:void(0);" onclick="delete_product_sub_category(${o.id})"><i
                                                             class="ri-delete-bin-6-line me-1"></i> Delete</a>
                                                 </div>
                                             </div>
@@ -124,7 +124,7 @@
 
                         counter += 1
                     });
-                    $('#vendor_table_body').html(infohtml);
+                    $('#product_sub_category_table_body').html(infohtml);
                     var totalfilter = Math.ceil(parseInt(response.count) / 10);
                     $('#pagination-demo2').twbsPagination({
                         totalPages: totalfilter,
@@ -157,7 +157,7 @@
                                     <td colspan="3">No Data found</td>
                                 </tr>
                     `
-                    $('#vendor_table_body').html(infohtml);
+                    $('#product_sub_category_table_body').html(infohtml);
 
                     swal({
                         icon: "error",
@@ -172,7 +172,7 @@
 
     }
 
-    function delete_vendor(id) {
+    function delete_product_sub_category(id) {
         swal({
             title: "Are you sure?",
             text: "you want to delete it .",
@@ -183,7 +183,7 @@
             .then((willDelete) => {
                 if (willDelete) {
                     $.ajax({
-                        url: hosturl + "/api/vendor/delete_vendor",
+                        url: hosturl + "/api/product/delete_product_subcategory",
                         type: 'POST',
                         headers: {
                             'Authorization': 'Bearer {{token}}'
@@ -250,7 +250,7 @@
             .then((willDelete) => {
                 if (willDelete) {
                     $.ajax({
-                        url: hosturl + "/api/vendor/change_vendor_status",
+                        url: hosturl + "/api/product/change_product_sub_category_status",
                         type: 'POST',
                         headers: {
                             'Authorization': 'Bearer {{token}}'

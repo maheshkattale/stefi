@@ -71,7 +71,7 @@ def add_vendor(request):
 
 @api_view(['POST'])
 def update_vendor(request):
-    data = request.data
+    data = request.data.copy()
     vendor_id = data.get('id')
     try:
         vendor_obj = Vendor.objects.get(id=vendor_id, isActive=True)
@@ -94,7 +94,7 @@ def update_vendor(request):
 
 @api_view(['POST'])
 def delete_vendor(request):
-    data = request.data
+    data = request.data.copy()
     vendor_id = data.get('id')
     try:
         vendor_obj = Vendor.objects.get(id=vendor_id, isActive=True)
@@ -108,7 +108,8 @@ def delete_vendor(request):
 
 @api_view(['POST'])
 def vendor_by_id(request):
-    data = request.data
+    data = request.data.copy()
+    print("data",data)
     vendor_id = data.get('id')
     try:
         vendor_obj = Vendor.objects.get(id=vendor_id, isActive=True)

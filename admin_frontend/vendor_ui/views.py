@@ -35,3 +35,27 @@ def add_vendor(request):
     else:
         messages.error(request, 'Session expired. Please log in again.')
         return redirect('Frontend_User:login') # change this.
+    
+def edit_vendor(request,id):
+    token = request.session.get('token',False)
+    if token:
+        headers = {'Authorization': f'Bearer {token}'}
+        if request.method == 'POST':
+
+            data=request.POST.copy()
+
+            edit_vendor_url=hosturl+"/api/vendor/update_vendor"
+            edit_vendor_request = requests.post(edit_vendor_url, data=data,headers=headers,files=request.FILES)
+            edit_vendor_response = edit_vendor_request.json()
+            return HttpResponse(json.dumps(edit_vendor_response),content_type='application/json')
+        else:
+            data={'id':id}
+            get_vendor_details_url=hosturl+"/api/vendor/vendor_by_id"
+            get_vendor_details_request = requests.post(get_vendor_details_url, data=data,headers=headers)
+            get_vendor_details_response = get_vendor_details_request.json()
+            print("get_vendor_details_response",get_vendor_details_response)
+            return render(request, 'admin/vendor/edit-vendor.html',{'vendor':get_vendor_details_response['data']})
+    else:
+        messages.error(request, 'Session expired. Please log in again.')
+        return redirect('Frontend_User:login') # change this.
+    

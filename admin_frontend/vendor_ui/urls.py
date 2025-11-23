@@ -10,6 +10,9 @@ urlpatterns = [
     path('vendor_list', views.vendor_list, name='vendor_list'),
     path('vendor-list', views.vendor_list, name='vendor_list'),
     path('add-vendor',views.add_vendor, name='add_vendor'),
+    path('edit-vendor/<str:id>',views.edit_vendor, name='edit_vendor'),
+
+
 
 
 

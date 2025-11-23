@@ -15,6 +15,18 @@ class ProductSubCategorySerializers(serializers.ModelSerializer):
     class Meta:
         model=ProductSubCategory
         fields='__all__'
+
+
+class CustomProductSubCategorySerializers(serializers.ModelSerializer):
+    category_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = ProductSubCategory
+        fields = '__all__'
+
+    def get_category_name(self, obj):
+        return obj.category.name if obj.category else None
+
 class ProductBrandSerializers(serializers.ModelSerializer):
 
     class Meta:

@@ -11,12 +11,15 @@ urlpatterns = [
 
 
     path('product_category_list', product_category_list, name='api_product_category_list'),
+    path('product_category_list_pagination', product_category_list_pagination.as_view(), name='api_product_category_list_pagination'),
+
     path('add_product_category', add_product_category, name='api_add_product_category'),
     path('update_product_category', update_product_category, name='api_update_product_category'),
     path('delete_product_category', delete_product_category, name='api_delete_product_category'),
     path('product_category_by_id', product_category_by_id, name='api_product_category_by_id'),
 
 
+    path('product_sub_category_list_pagination', product_sub_category_list_pagination.as_view(), name='api_product_sub_category_list_pagination'),
     path('product_subcategory_list', product_subcategory_list, name='api_product_subcategory_list'),
     path('add_product_subcategory', add_product_subcategory, name='api_add_product_subcategory'),
     path('update_product_subcategory', update_product_subcategory, name='api_update_product_subcategory'),

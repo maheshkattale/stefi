@@ -54,7 +54,9 @@ def product_list(request):
 
 @api_view(['POST'])
 def add_product(request):
-    data = request.data
+    data = request.data.copy()
+    data['isActive']=True
+
     alredy_exists = Product.objects.filter(Q(name__iexact=data.get('name')) & Q(isActive=True))
     if alredy_exists.exists():
         return Response({"response":{"n":0,"msg":"Product  with this name already exists","status":"error"}})
@@ -68,7 +70,7 @@ def add_product(request):
 
 @api_view(['POST'])
 def update_product(request):
-    data = request.data
+    data = request.data.copy()
     product_id = data.get('id')
     try:
         product_obj = Product.objects.get(id=product_id, isActive=True)
@@ -89,7 +91,7 @@ def update_product(request):
 
 @api_view(['POST'])
 def delete_product(request):
-    data = request.data
+    data = request.data.copy()
     product_id = data.get('id')
     try:
         product_obj = Product.objects.get(id=product_id, isActive=True)
@@ -103,7 +105,7 @@ def delete_product(request):
 @api_view(['POST'])
 def product_by_id(request):
 
-    data = request.data
+    data = request.data.copy()
     product_id = data.get('id')
     try:
         product_obj = Product.objects.get(id=product_id, isActive=True)
@@ -112,6 +114,9 @@ def product_by_id(request):
     
     serializer=ProductSerializers(product_obj)
     return Response({"response":{"n":1,"msg":"Product product fetched successfully","status":"success"},"data":serializer.data})
+
+
+
 
 @api_view(['GET'])
 def product_category_list(request):
@@ -122,9 +127,23 @@ def product_category_list(request):
     else:
         return Response({"response":{"n":1,"msg":"No product categories found","status":"success"},"data":[]})
 
+
+class product_category_list_pagination(GenericAPIView):
+    pagination_class = CustomPagination
+    def post(self, request):
+        productcategorys_obj = ProductCategory.objects.filter(isActive=True).order_by('name')
+        if productcategorys_obj.exists():
+            page4 = self.paginate_queryset(productcategorys_obj)
+            serializer=ProductCategorySerializers(page4,many=True)
+            return self.get_paginated_response(serializer.data)
+        else:
+            return self.get_paginated_response([])
+
 @api_view(['POST'])
 def add_product_category(request):
-    data = request.data
+    data = request.data.copy()
+    data['isActive']=True
+
     alredy_exists = ProductCategory.objects.filter(Q(name__iexact=data.get('name')) & Q(isActive=True))
     if alredy_exists.exists():
         return Response({"response":{"n":0,"msg":"Product category with this name already exists","status":"error"}})
@@ -138,7 +157,7 @@ def add_product_category(request):
     
 @api_view(['POST'])
 def update_product_category(request):
-    data = request.data
+    data = request.data.copy()
     category_id = data.get('id')
     try:
         category_obj = ProductCategory.objects.get(id=category_id, isActive=True)
@@ -159,7 +178,7 @@ def update_product_category(request):
 
 @api_view(['POST'])
 def delete_product_category(request):
-    data = request.data
+    data = request.data.copy()
     category_id = data.get('id')
     try:
         category_obj = ProductCategory.objects.get(id=category_id, isActive=True)
@@ -173,7 +192,7 @@ def delete_product_category(request):
 @api_view(['POST'])
 def product_category_by_id(request):
 
-    data = request.data
+    data = request.data.copy()
     category_id = data.get('id')
     try:
         category_obj = ProductCategory.objects.get(id=category_id, isActive=True)
@@ -182,6 +201,18 @@ def product_category_by_id(request):
     
     serializer=ProductCategorySerializers(category_obj)
     return Response({"response":{"n":1,"msg":"Product category fetched successfully","status":"success"},"data":serializer.data})
+
+
+class product_sub_category_list_pagination(GenericAPIView):
+    pagination_class = CustomPagination
+    def post(self, request):
+        productsubcategorys_obj = ProductSubCategory.objects.filter(isActive=True).order_by('name')
+        if productsubcategorys_obj.exists():
+            page4 = self.paginate_queryset(productsubcategorys_obj)
+            serializer=CustomProductSubCategorySerializers(page4,many=True)
+            return self.get_paginated_response(serializer.data)
+        else:
+            return self.get_paginated_response([])
 
 
 @api_view(['GET'])
@@ -196,7 +227,9 @@ def product_subcategory_list(request):
 
 @api_view(['POST'])
 def add_product_subcategory(request):
-    data = request.data
+    data = request.data.copy()
+    data['isActive']=True
+
     alredy_exists = ProductSubCategory.objects.filter(Q(name__iexact=data.get('name')) & Q(isActive=True))
     if alredy_exists.exists():
         return Response({"response":{"n":0,"msg":"Product subcategory with this name already exists","status":"error"}})
@@ -214,7 +247,7 @@ def add_product_subcategory(request):
 
 @api_view(['POST'])
 def update_product_subcategory(request):
-    data = request.data
+    data = request.data.copy()
     subcategory_id = data.get('id')
     try:
         subcategory_obj = ProductSubCategory.objects.get(id=subcategory_id, isActive=True)
@@ -237,7 +270,7 @@ def update_product_subcategory(request):
 
 @api_view(['POST'])
 def delete_product_subcategory(request):
-    data = request.data
+    data = request.data.copy()
     subcategory_id = data.get('id')
     try:
         subcategory_obj = ProductSubCategory.objects.get(id=subcategory_id, isActive=True)
@@ -250,7 +283,7 @@ def delete_product_subcategory(request):
 @api_view(['POST'])
 def product_subcategory_by_id(request):
 
-    data = request.data
+    data = request.data.copy()
     subcategory_id = data.get('id')
     try:
         subcategory_obj = ProductSubCategory.objects.get(id=subcategory_id, isActive=True)
@@ -274,7 +307,9 @@ def product_brand_list(request):
 
 @api_view(['POST'])
 def add_product_brand(request):
-    data = request.data
+    data = request.data.copy()
+    data['isActive']=True
+
     alredy_exists = ProductBrand.objects.filter(Q(name__iexact=data.get('name')) & Q(isActive=True))
     if alredy_exists.exists():
         return Response({"response":{"n":0,"msg":"Product brand with this name already exists","status":"error"}})
@@ -288,7 +323,7 @@ def add_product_brand(request):
     
 @api_view(['POST'])
 def update_product_brand(request):
-    data = request.data
+    data = request.data.copy()
     brand_id = data.get('id')
     try:
         brand_obj = ProductBrand.objects.get(id=brand_id, isActive=True)
@@ -308,7 +343,7 @@ def update_product_brand(request):
     
 @api_view(['POST'])
 def delete_product_brand(request):
-    data = request.data
+    data = request.data.copy()
     brand_id = data.get('id')
     try:
         brand_obj = ProductBrand.objects.get(id=brand_id, isActive=True)
@@ -321,7 +356,7 @@ def delete_product_brand(request):
 @api_view(['POST'])
 def product_brand_by_id(request):
 
-    data = request.data
+    data = request.data.copy()
     brand_id = data.get('id')
     try:
         brand_obj = ProductBrand.objects.get(id=brand_id, isActive=True)
@@ -347,7 +382,9 @@ def product_size_unit_list(request):
 
 @api_view(['POST'])
 def add_product_size_unit(request):
-    data = request.data
+    data = request.data.copy()
+    data['isActive']=True
+
     alredy_exists = ProductSizeUnit.objects.filter(Q(name__iexact=data.get('name')) & Q(isActive=True))
     if alredy_exists.exists():
         return Response({"response":{"n":0,"msg":"Product size unit with this name already exists","status":"error"}})
@@ -361,7 +398,7 @@ def add_product_size_unit(request):
     
 @api_view(['POST'])
 def update_product_size_unit(request):
-    data = request.data
+    data = request.data.copy()
     size_unit_id = data.get('id')
     try:
         size_unit_obj = ProductSizeUnit.objects.get(id=size_unit_id, isActive=True)
@@ -381,7 +418,7 @@ def update_product_size_unit(request):
     
 @api_view(['POST'])
 def delete_product_size_unit(request):
-    data = request.data
+    data = request.data.copy()
     size_unit_id = data.get('id')
     try:
         size_unit_obj = ProductSizeUnit.objects.get(id=size_unit_id, isActive=True)
@@ -394,7 +431,7 @@ def delete_product_size_unit(request):
 @api_view(['POST'])
 def product_size_unit_by_id(request):
 
-    data = request.data
+    data = request.data.copy()
     size_unit_id = data.get('id')
     try:
         size_unit_obj = ProductSizeUnit.objects.get(id=size_unit_id, isActive=True)
@@ -439,7 +476,9 @@ def product_color_list(request):
 
 @api_view(['POST'])
 def add_product_color(request):
-    data = request.data
+    data = request.data.copy()
+    data['isActive']=True
+
     alredy_exists = ProductColor.objects.filter(Q(name__iexact=data.get('name')) & Q(isActive=True))
     if alredy_exists.exists():
         return Response({"response":{"n":0,"msg":"Product color with this name already exists","status":"error"}})
@@ -453,7 +492,7 @@ def add_product_color(request):
     
 @api_view(['POST'])
 def update_product_color(request):
-    data = request.data
+    data = request.data.copy()
     color_id = data.get('id')
     try:
         color_obj = ProductColor.objects.get(id=color_id, isActive=True)
@@ -473,7 +512,7 @@ def update_product_color(request):
     
 @api_view(['POST'])
 def delete_product_color(request):
-    data = request.data
+    data = request.data.copy()
     color_id = data.get('id')
     try:
         color_obj = ProductColor.objects.get(id=color_id, isActive=True)
@@ -486,7 +525,7 @@ def delete_product_color(request):
 @api_view(['POST'])
 def product_color_by_id(request):
 
-    data = request.data
+    data = request.data.copy()
     color_id = data.get('id')
     try:
         color_obj = ProductColor.objects.get(id=color_id, isActive=True)
