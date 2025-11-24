@@ -128,3 +128,194 @@ def edit_product_sub_category(request,id):
         messages.error(request, 'Session expired. Please log in again.')
         return redirect('Frontend_User:login') # change this.
     
+
+
+
+def product_size_list(request):
+    token = request.session.get('token',False)
+    if token:
+
+        return render(request, 'admin/product_size/product-size-list.html')
+    else:
+        messages.error(request, 'Session expired. Please log in again.')
+        return redirect('Frontend_User:login') # change this.
+    
+def add_product_size(request):
+    token = request.session.get('token',False)
+    if token:
+        headers = {'Authorization': f'Bearer {token}'}
+        if request.method == 'POST':
+            print("jii")
+            data=request.POST.copy()
+            add_product_size_url=hosturl+"/api/product/add_product_size_unit"
+
+            add_product_size_request = requests.post(add_product_size_url, data=data,headers=headers,files=request.FILES)
+            add_product_size_response = add_product_size_request.json()
+            return HttpResponse(json.dumps(add_product_size_response),content_type='application/json')
+        else:
+            return render(request, 'admin/product_size/add-product-size.html')
+    else:
+        messages.error(request, 'Session expired. Please log in again.')
+        return redirect('Frontend_User:login') # change this.
+    
+def edit_product_size(request,id):
+    token = request.session.get('token',False)
+    if token:
+        headers = {'Authorization': f'Bearer {token}'}
+        if request.method == 'POST':
+            data=request.POST.copy()
+            edit_product_size_url=hosturl+"/api/product/update_product_size_unit"
+            edit_product_size_request = requests.post(edit_product_size_url, data=data,headers=headers,files=request.FILES)
+            edit_product_size_response = edit_product_size_request.json()
+            return HttpResponse(json.dumps(edit_product_size_response),content_type='application/json')
+        else:
+            data={'id':id}
+            get_product_size_details_url=hosturl+"/api/product/product_size_unit_by_id"
+            get_product_size_details_request = requests.post(get_product_size_details_url, data=data,headers=headers)
+            get_product_size_details_response = get_product_size_details_request.json()
+            print("get_product_size_details_response",get_product_size_details_response)
+            return render(request, 'admin/product_size/edit-product-size.html',{'product_size':get_product_size_details_response['data']})
+    else:
+        messages.error(request, 'Session expired. Please log in again.')
+        return redirect('Frontend_User:login') # change this.
+    
+
+def product_color_list(request):
+    token = request.session.get('token',False)
+    if token:
+
+        return render(request, 'admin/product_color/product-color-list.html')
+    else:
+        messages.error(request, 'Session expired. Please log in again.')
+        return redirect('Frontend_User:login') # change this.
+    
+def add_product_color(request):
+    token = request.session.get('token',False)
+    if token:
+        headers = {'Authorization': f'Bearer {token}'}
+        if request.method == 'POST':
+            print("jii")
+            data=request.POST.copy()
+            add_product_color_url=hosturl+"/api/product/add_product_color"
+
+            add_product_color_request = requests.post(add_product_color_url, data=data,headers=headers,files=request.FILES)
+            add_product_color_response = add_product_color_request.json()
+            return HttpResponse(json.dumps(add_product_color_response),content_type='application/json')
+        else:
+            return render(request, 'admin/product_color/add-product-color.html')
+    else:
+        messages.error(request, 'Session expired. Please log in again.')
+        return redirect('Frontend_User:login') # change this.
+    
+def edit_product_color(request,id):
+    token = request.session.get('token',False)
+    if token:
+        headers = {'Authorization': f'Bearer {token}'}
+        if request.method == 'POST':
+            data=request.POST.copy()
+            edit_product_color_url=hosturl+"/api/product/update_product_color"
+            edit_product_color_request = requests.post(edit_product_color_url, data=data,headers=headers,files=request.FILES)
+            edit_product_color_response = edit_product_color_request.json()
+            return HttpResponse(json.dumps(edit_product_color_response),content_type='application/json')
+        else:
+            data={'id':id}
+            get_product_color_details_url=hosturl+"/api/product/product_color_by_id"
+            get_product_color_details_request = requests.post(get_product_color_details_url, data=data,headers=headers)
+            get_product_color_details_response = get_product_color_details_request.json()
+            print("get_product_color_details_response",get_product_color_details_response)
+            return render(request, 'admin/product_color/edit-product-color.html',{'product_color':get_product_color_details_response['data']})
+    else:
+        messages.error(request, 'Session expired. Please log in again.')
+        return redirect('Frontend_User:login') # change this.
+    
+
+
+
+def product_list(request):
+    token = request.session.get('token',False)
+    if token:
+
+        return render(request, 'admin/product/product-list.html')
+    else:
+        messages.error(request, 'Session expired. Please log in again.')
+        return redirect('Frontend_User:login') # change this.
+    
+def add_product(request):
+    token = request.session.get('token',False)
+    if token:
+        headers = {'Authorization': f'Bearer {token}'}
+        if request.method == 'POST':
+            print("jii")
+            data=request.POST.copy()
+            add_product_url=hosturl+"/api/product/add_product"
+
+            add_product_request = requests.post(add_product_url, data=data,headers=headers,files=request.FILES)
+            add_product_response = add_product_request.json()
+            return HttpResponse(json.dumps(add_product_response),content_type='application/json')
+        else:
+            
+            return render(request, 'admin/product/add-product.html')
+    else:
+        messages.error(request, 'Session expired. Please log in again.')
+        return redirect('Frontend_User:login') # change this.
+    
+def edit_product(request,id):
+    token = request.session.get('token',False)
+    if token:
+        headers = {'Authorization': f'Bearer {token}'}
+        if request.method == 'POST':
+            data=request.POST.copy()
+            edit_product_url=hosturl+"/api/product/update_product"
+            edit_product_request = requests.post(edit_product_url, data=data,headers=headers,files=request.FILES)
+            edit_product_response = edit_product_request.json()
+            return HttpResponse(json.dumps(edit_product_response),content_type='application/json')
+        else:
+            data={'id':id}
+            get_product_details_url=hosturl+"/api/product/product_by_id"
+            get_product_details_request = requests.post(get_product_details_url, data=data,headers=headers)
+            get_product_details_response = get_product_details_request.json()
+            print("get_product_details_response",get_product_details_response)
+            return render(request, 'admin/product/edit-product.html',{'product':get_product_details_response['data']})
+    else:
+        messages.error(request, 'Session expired. Please log in again.')
+        return redirect('Frontend_User:login') # change this.
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
