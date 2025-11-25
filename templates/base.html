@@ -288,7 +288,7 @@
         /* Floating Search Bar */
         .floating-search-container {
             position: fixed;
-            top: 30px;
+            top: 5px;
             z-index: 1050;
             width: 100%;
             transition: all 0.3s ease;
@@ -297,7 +297,7 @@
             flex-direction: row;
             flex-wrap: nowrap;
             justify-content: space-evenly;
-
+            max-width: 1140px;
 
             /* left: 35%; */
             /* transform: translateX(-50%); */
@@ -403,7 +403,242 @@
             padding: 6px 10px !important;
             font-size: 16px !important;
         }
+
+        .custom-footer {
+            background: #d8e7f5;
+            /* same baby blue background */
+            padding: 50px 0 20px;
+            font-family: Arial, sans-serif;
+        }
+
+        .footer-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .footer-col {
+            margin: 10px 20px;
+            min-width: 180px;
+        }
+
+        .logo-col {
+            min-width: 240px;
+        }
+
+        .footer-logo {
+            width: 180px;
+        }
+
+        .footer-col h4 {
+            font-weight: bold;
+            margin-bottom: 12px;
+            font-size: 18px;
+        }
+
+        .footer-col ul {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 0px;
+        }
+
+        .footer-col a {
+            text-decoration: none;
+            color: #000;
+            font-size: 15px;
+        }
+
+        .footer-col a:hover {
+            text-decoration: underline;
+        }
+
+        .store-btn {
+            width: 100px;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        /* Footer Links Row */
+        .footer-links {
+            text-align: center;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            text-decoration: none;
+            color: #000;
+            font-weight: 600;
+            letter-spacing: 1px;
+            padding: 0 10px;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* Cyan line */
+        .footer-separator {
+            width: 100%;
+            border-bottom: 3px solid #48b6e0;
+            margin: 8px 0 15px;
+        }
+
+        /* Footer Bottom */
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .footer-bottom p {
+            font-size: 14px;
+            margin: 0;
+        }
+
+        /* Social Icons */
+        .footer-icons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .icon-box {
+            border: 2px solid #48b6e0;
+            padding: 6px 10px;
+            border-radius: 5px;
+            color: #48b6e0;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .icon-box:hover {
+            background: #48b6e0;
+            color: #fff;
+        }
+
+        /* NAVBAR WRAPPER */
+        .custom-navbar {
+            position: absolute;
+            top: 25px;
+            width: 100%;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* MAIN CONTAINER */
+        .floating-search-container {
+            width: 100%;
+            max-width: 1400px;
+                padding: 0 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* SEARCH BOX */
+        .floating-search-box {
+            display: flex;
+            align-items: center;
+            background: white;
+            border-radius: 50px;
+            padding: 8px 20px;
+            width: 45%;
+            box-shadow: 0 0 18px rgba(0, 0, 0, 0.15);
+        }
+
+        /* LEFT LOGO */
+        .left-logo img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+        }
+
+        /* INPUT */
+        .floating-search-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            padding: 0 15px;
+            font-size: 18px;
+            color: #333;
+        }
+
+        /* SEARCH ICON */
+        .search-icon {
+            font-size: 20px;
+            color: #111;
+            cursor: pointer;
+        }
+
+        /* RIGHT NAV LINKS */
+        .right-menu {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .right-menu a {
+            color: white;
+            font-size: 18px;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .right-menu a:hover {
+            color: #e0e0e0;
+        }
+
+        .whatsapp-float {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 40px;
+            right: 40px;
+            background-color: #25d366;
+            color: #FFF;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 30px;
+            box-shadow: 2px 2px 3px #999;
+            z-index: 100;
+        }
+
+        .whatsapp-float-icon {
+            margin-top: 16px;
+        }
+
+        .ai-trip-float {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 110px;
+            right: 40px;
+            background-color: #258ad3;
+            color: #FFF;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 30px;
+            box-shadow: 2px 2px 3px #999;
+            z-index: 100;
+        }
+        .whatsapp-float-icon:hover,.ai-trip-float-icon:hover{
+            color: #000;
+        }
+
+        .ai-trip-float-icon {
+            margin-top: 16px;
+        }
     </style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 
     {% block extra_css %}{% endblock %}
 </head>
@@ -411,43 +646,39 @@
 <body>
 
 
-    <div class="floating-search-container w-100">
 
-        <div class="d-flex" style="background: #e4e8f2;border-radius: 50px;    width: 70%;">
-            <span class="input-group-text border-0 floating-search-logo" style="border-radius: 50px 0px 0px 50px;">
-                <img src="{% static 'assets/logo/logo-symbol.jpeg'%}" width="55" alt="" style="border-radius: 50%;">
-            </span>
-            <input type="text" class="form-control search-input floating-search-input"
-                placeholder="Search destinations, states, or activities..." id="globalSearch">
-            <span class="input-group-text border-0 floating-search-icon" style="border-radius: 0 50px 50px 0;">
-                <i class="fas fa-search fa-xl"></i>
-            </span>
-        </div>
-        <!-- <div>
-            <a href="#" class="" id="" title="explore india">
-                <img src="{% static 'assets/icons/explore-india.png' %}" alt="" class="menu-items">
-            </a>
-        </div> -->
-        <!-- <div>
-            <a href="#" class="" id="" title="bag packing">
-                <img src="{% static 'assets/icons/bag-packing.png' %}" alt="" class="menu-items">
-            </a>
-        </div> -->
-        <div>
-            <a href="/trip_planner/plan_trip/" class="" id="" title="trip planner">
-                <img src="{% static 'assets/icons/trip-planner.png' %}" alt="" class="menu-items">
-            </a>
-        </div>
-        <!-- <div>
-            <a href="#" class="" id="" title="profile">
-                <img src="{% static 'assets/icons/profile.png' %}" alt="" class="menu-items">
-            </a>
-        </div> -->
-        <div id="google_translate_element"></div>
+    <div class="custom-navbar">
 
-        <div class="search-results" id="searchResults"></div>
+        <div class="floating-search-container">
+
+            <!-- Search Box -->
+            <div class="floating-search-box">
+                <a class="left-logo" href="/">
+                    <img src="{% static 'assets/logo/logo-symbol.jpeg' %}" alt="">
+                </a>
+
+                <input type="text" id="globalSearch" class="floating-search-input"
+                    placeholder="Plan your trip with AI...">
+
+                <span class="search-icon">
+                    <i class="fas fa-search"></i>
+                </span>
+            </div>
+
+            <!-- Right Menu -->
+            <div class="right-menu">
+                <a href="#">Explore India</a>
+                <a href="#">Bag Packing</a>
+                <a href="#">Stay</a>
+                <a href="/trip_planner/plan_trip/">AI Trip Planner</a>
+                <a href="#">Profile</a>
+            </div>
+
+            <!-- <div id="google_translate_element"></div> -->
+        </div>
+
+        <div id="searchResults" class="search-results"></div>
     </div>
-
 
     {% if messages %}
     <div class="container mt-3">
@@ -467,7 +698,7 @@
     </main>
 
     <!-- Footer -->
-    <footer class="footer">
+    <!-- <footer class="footer">
         <div class="container">
             <div class="row footer-content text-center text-md-start">
                 <div class="col-12 col-md-6 col-lg-4 mb-4 px-0">
@@ -511,6 +742,86 @@
             <div class="text-center">
                 <p class="mb-0">&copy; 2025 Stefi Travel. All rights reserved.</p>
             </div>
+        </div>
+    </footer> -->
+    <footer class="custom-footer">
+        <div class="container">
+
+            <div class="footer-top">
+                <!-- Logo -->
+                <div class="footer-col logo-col">
+                    <img src="{% static 'assets/logo/transparent-logo.png' %}" class="footer-logo">
+                </div>
+
+                <!-- Quick Links -->
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Press</a></li>
+                        <li><a href="#">Resources</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Blog</a></li>
+                    </ul>
+                </div>
+
+                <!-- Business -->
+                <div class="footer-col">
+                    <h4>Do Business With Us</h4>
+                    <ul>
+                        <li><a href="#">Owners & DMO/CVB</a></li>
+                        <li><a href="#">Business Advantage</a></li>
+                        <li><a href="#">Sponsored Placements</a></li>
+                        <li><a href="#">Advertise with Us</a></li>
+                        <li><a href="#">Access our Content API</a></li>
+                    </ul>
+                </div>
+
+                <!-- Get the App -->
+                <div class="footer-col app-col">
+                    <h4>Get the APP</h4>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/6/67/App_Store_%28iOS%29.svg"
+                        class="store-btn">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
+                        class="store-btn">
+                </div>
+            </div>
+
+            <!-- Footer links -->
+            <div class="footer-links">
+                <a href="#">Contact Us</a> |
+                <a href="#">Help & Support</a> |
+                <a href="#">Terms & Conditions</a> |
+                <a href="#">Privacy Policy</a> |
+                <a href="#">Sitemap</a> |
+                <a href="#">Payment Policy</a>
+            </div>
+
+            <!-- Blue Separator -->
+            <div class="footer-separator"></div>
+
+            <!-- Bottom Section -->
+            <div class="footer-bottom">
+                <p>Zentro Technologies LLP. Copyright © 2025 Ticket House. All rights reserved.</p>
+
+                <div class="footer-icons">
+                    <span class="icon-box"><i class="fab fa-instagram"></i></span>
+                    <span class="icon-box"><i class="fab fa-facebook"></i></span>
+                    <span class="icon-box"><i class="fab fa-twitter"></i></span>
+                </div>
+            </div>
+
+        </div>
+
+        <div>
+            <a href="https://api.whatsapp.com/send?phone=51955081075&text=Hola%21%20Quisiera%20m%C3%A1s%20informaci%C3%B3n%20sobre%20Varela%202."
+                class="whatsapp-float" target="_blank">
+                <i class="fa fa-whatsapp whatsapp-float-icon"></i>
+            </a>
+            <a href="/trip_planner/plan_trip/"
+                class="ai-trip-float" target="_blank">
+                <i class="fa fa-robot ai-trip-float-icon"></i>
+            </a>
         </div>
     </footer>
 
