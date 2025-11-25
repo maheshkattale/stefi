@@ -366,6 +366,20 @@ def product_brand_by_id(request):
     serializer=ProductBrandSerializers(brand_obj)
     return Response({"response":{"n":1,"msg":"Product brand fetched successfully","status":"success"},"data":serializer.data})
 
+class product_size_list_pagination(GenericAPIView):
+    pagination_class = CustomPagination
+    def post(self, request):
+        productsizes_obj = ProductSizeUnit.objects.filter(isActive=True).order_by('name')
+        if productsizes_obj.exists():
+            page4 = self.paginate_queryset(productsizes_obj)
+            serializer=ProductSizeUnitSerializers(page4,many=True)
+            return self.get_paginated_response(serializer.data)
+        else:
+            return self.get_paginated_response([])
+        
+
+
+
 
 @api_view(['GET'])
 def product_size_unit_list(request):
@@ -463,7 +477,16 @@ def product_size_unit_by_id(request):
 
 
 
-
+class product_color_list_pagination(GenericAPIView):
+    pagination_class = CustomPagination
+    def post(self, request):
+        productcolors_obj = ProductColor.objects.filter(isActive=True).order_by('name')
+        if productcolors_obj.exists():
+            page4 = self.paginate_queryset(productcolors_obj)
+            serializer=ProductColorSerializers(page4,many=True)
+            return self.get_paginated_response(serializer.data)
+        else:
+            return self.get_paginated_response([])
 @api_view(['GET'])
 def product_color_list(request):
     colors_obj = ProductColor.objects.filter(isActive=True).order_by('name')
