@@ -1,0 +1,223 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Stefi - Plan Your Perfect Trip{% endblock %}
+<style>
+    .popular-states-section h4 {
+    font-weight: 600;
+    margin-bottom: 25px;
+}
+
+/* Horizontal scroll on mobile */
+.states-row {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.state-item {
+    text-align: center;
+    width: 110px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.state-item img {
+    width: 55px;
+    height: 55px;
+    object-fit: contain;
+    margin-bottom: 10px;
+}
+
+.state-item p {
+    font-size: 14px;
+    font-weight: 500;
+    margin: 0;
+}
+
+.state-item:hover {
+    transform: translateY(-5px);
+}
+ 
+@media (max-width: 576px) {
+    .states-row {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        padding-bottom: 10px;
+    }
+    .state-item {
+        min-width: 90px;
+    }
+}
+
+</style>
+{% block extra_css %}
+
+{% endblock %}
+<section class="popular-states-section container text-center my-5">
+
+    <h4 class="mb-4">Popular States</h4>
+
+    <div class="states-row">
+
+        <!-- Start Static State Items -->
+        <div class="state-item">
+            <img src="{% static 'assets/states/andhra-pradesh.svg' %}" alt="">
+            <p>Andhra Pradesh</p>
+        </div>
+
+        <div class="state-item">
+            <img src="{% static 'assets/states/arunachal-pradesh.svg' %}" alt="">
+            <p>Arunachal Pradesh</p>
+        </div>
+
+        <div class="state-item">
+            <img src="{% static 'assets/states/assam.svg' %}" alt="">
+            <p>Assam</p>
+        </div>
+
+        <div class="state-item">
+            <img src="{% static 'assets/states/bihar.svg' %}" alt="">
+            <p>Bihar</p>
+        </div>
+
+        <div class="state-item">
+            <img src="{% static 'assets/states/chhattisgarh.svg' %}" alt="">
+            <p>Chhattisgarh</p>
+        </div>
+
+        <div class="state-item">
+            <img src="{% static 'assets/states/goa.svg' %}" alt="">
+            <p>Goa</p>
+        </div>
+
+        <div class="state-item">
+            <img src="{% static 'assets/states/gujarat.svg' %}" alt="">
+            <p>Gujarat</p>
+        </div>
+
+        <div class="state-item">
+            <img src="{% static 'assets/states/haryana.svg' %}" alt="">
+            <p>Haryana</p>
+        </div>
+
+        <div class="state-item">
+            <img src="{% static 'assets/states/himachal-pradesh.svg' %}" alt="">
+            <p>Himachal Pradesh</p>
+        </div>
+
+        <div class="state-item">
+            <img src="{% static 'assets/states/jammu-kashmir.svg' %}" alt="">
+            <p>Jammu & Kashmir</p>
+        </div>
+
+        <div class="state-item">
+            <img src="{% static 'assets/states/jharkhand.svg' %}" alt="">
+            <p>Jharkhand</p>
+        </div>
+
+        <div class="state-item">
+            <img src="{% static 'assets/states/karnataka.svg' %}" alt="">
+            <p>Karnataka</p>
+        </div>
+
+        <div class="state-item">
+            <img src="{% static 'assets/states/kerala.svg' %}" alt="">
+            <p>Kerala</p>
+        </div>
+
+        <div class="state-item">
+            <img src="{% static 'assets/states/madhya-pradesh.svg' %}" alt="">
+            <p>Madhya Pradesh</p>
+        </div>
+
+        <div class="state-item">
+            <img src="{% static 'assets/states/maharashtra.svg' %}" alt="">
+            <p>Maharashtra</p>
+        </div>
+
+        <div class="state-item">
+            <img src="{% static 'assets/states/manipur.svg' %}" alt="">
+            <p>Manipur</p>
+        </div>
+
+        <div class="state-item">
+            <img src="{% static 'assets/states/meghalaya.svg' %}" alt="">
+            <p>Meghalaya</p>
+        </div>
+
+        <div class="state-item">
+            <img src="{% static 'assets/states/mizoram.svg' %}" alt="">
+            <p>Mizoram</p>
+        </div>
+
+        <div class="state-item">
+            <img src="{% static 'assets/states/nagaland.svg' %}" alt="">
+            <p>Nagaland</p>
+        </div>
+
+        <div class="state-item">
+            <img src="{% static 'assets/states/odisha.svg' %}" alt="">
+            <p>Odisha</p>
+        </div>
+
+        <div class="state-item">
+            <img src="{% static 'assets/states/punjab.svg' %}" alt="">
+            <p>Punjab</p>
+        </div>
+
+        <div class="state-item">
+            <img src="{% static 'assets/states/rajasthan.svg' %}" alt="">
+            <p>Rajasthan</p>
+        </div>
+
+        <div class="state-item">
+            <img src="{% static 'assets/states/sikkim.svg' %}" alt="">
+            <p>Sikkim</p>
+        </div>
+
+        <div class="state-item">
+            <img src="{% static 'assets/states/tamil-nadu.svg' %}" alt="">
+            <p>Tamil Nadu</p>
+        </div>
+
+        <div class="state-item">
+            <img src="{% static 'assets/states/telangana.svg' %}" alt="">
+            <p>Telangana</p>
+        </div>
+
+        <div class="state-item">
+            <img src="{% static 'assets/states/tripura.svg' %}" alt="">
+            <p>Tripura</p>
+        </div>
+
+        <div class="state-item">
+            <img src="{% static 'assets/states/uttar-pradesh.svg' %}" alt="">
+            <p>Uttar Pradesh</p>
+        </div>
+
+        <div class="state-item">
+            <img src="{% static 'assets/states/uttarakhand.svg' %}" alt="">
+            <p>Uttarakhand</p>
+        </div>
+
+        <div class="state-item">
+            <img src="{% static 'assets/states/west-bengal.svg' %}" alt="">
+            <p>West Bengal</p>
+        </div>
+
+    </div>
+</section>
+
+
+{% block content %}
+
+
+
+
+{% endblock %}
+
+{% block extra_js %}
+
+{% endblock %}

@@ -34,6 +34,13 @@
         background:url("{% static 'assets/images/hero-bg.jpg' %}") no-repeat center center/cover;
 
     }
+    .card{
+        text-decoration: none;
+        color: white;
+    }
+    a.card:hover{
+        color: #4ac9f5;
+    }
 </style>
 {% endblock %}
 
@@ -60,35 +67,35 @@
             style="height: 50vh; align-content: center; margin-top: 0px;">
             <div class="carousel" id="carousel">
 
-                <div class="card active">
+                <a class="card active" href="/state/delhi">
                     <img src="{% static 'assets/images/delhi.jpg' %}" alt="Delhi" class="img-fluid">
                     <h3>New Delhi, India</h3>
                     <!-- <p>Delhi is the capital of India, known for its history and culture.</p> -->
-                </div>
+                </a>
 
-                <div class="card">
+                <a class="card" href="/state/mumbai">
                     <img src="{% static 'assets/images/mumbai.jpg' %}" alt="Mumbai" class="img-fluid">
                     <h3>Mumbai, India</h3>
                     <!-- <p>Mumbai is the capital of Maharashtra and a major trading port.</p> -->
-                </div>
+                </a>
 
-                <div class="card">
+                <a class="card" href="/state/goa">
                     <img src="{% static 'assets/images/goa.jpg' %}" alt="Goa" class="img-fluid">
                     <h3>Goa, India</h3>
                     <!-- <p>Goa is famous for its beaches, nightlife, and Portuguese heritage.</p> -->
-                </div>
+                </a>
 
-                <div class="card">
+                <a class="card" href="/state/bangalore">
                     <img src="{% static 'assets/images/bangalore.jpg' %}" alt="Bangalore" class="img-fluid">
                     <h3>Bangalore, India</h3>
                     <!-- <p>Known as the Silicon Valley of India for its IT industry.</p> -->
-                </div>
+                </a>
 
-                <div class="card">
+                <a class="card" href="/state/kolkata">
                     <img src="{% static 'assets/images/kolkata.jpg' %}" alt="Kolkata" class="img-fluid">
                     <h3>Kolkata, India</h3>
                     <!-- <p>Cultural capital of India with colonial architecture.</p> -->
-                </div>
+                </a>
 
             </div>
 
@@ -100,7 +107,7 @@
 
 </section>
 
-<section class="places-section container">
+<section class="places-section container my-3">
     <div class="places-left">
         <p class="places-subtitle">Enjoy With Your Love Ones</p>
         <h2 class="places-title">Places to Travel</h2>
@@ -218,7 +225,7 @@
     </div>
 </section>
 
-<section class="prod-section container">
+<section class="prod-section container my-2">
     <div class="prod-header">
         <div>
             <p class="prod-sub">Shop Travel Accessories</p>
@@ -243,7 +250,7 @@
         <!-- Product 1: uses uploaded file path as example image -->
         <article class="product-card" data-category="electronics" data-id="p1">
             <div class="product-thumb">
-                <img src="/mnt/data/WhatsApp Image 2025-11-19 at 2.40.04 PM.jpeg" alt="Camera Kit">
+                <img src="{%static 'assets/images/products/p1.jpg'%}" alt="Camera Kit">
                 <div class="prod-badge">Electronics</div>
                 <button class="view-btn" data-id="p1">View</button>
             </div>
@@ -266,7 +273,7 @@
         <!-- Product 2 -->
         <article class="product-card" data-category="camping" data-id="p2">
             <div class="product-thumb">
-                <img src="https://picsum.photos/seed/camp1/800/600" alt="Tent">
+                <img src="{%static 'assets/images/products/p2.jpg'%}" alt="Tent">
                 <div class="prod-badge">Camping</div>
                 <button class="view-btn" data-id="p2">View</button>
             </div>
@@ -285,7 +292,7 @@
         <!-- Product 3 -->
         <article class="product-card" data-category="bag" data-id="p3">
             <div class="product-thumb">
-                <img src="https://picsum.photos/seed/bag1/800/600" alt="Backpack">
+                <img src="{%static 'assets/images/products/p3.jpg'%}" alt="Backpack">
                 <div class="prod-badge">Bag Packing</div>
                 <button class="view-btn" data-id="p3">View</button>
             </div>
@@ -304,7 +311,7 @@
         <!-- Product 4 -->
         <article class="product-card" data-category="electronics" data-id="p4">
             <div class="product-thumb">
-                <img src="https://picsum.photos/seed/elec2/800/600" alt="Powerbank">
+                <img src="{%static 'assets/images/products/p4.jpg'%}" alt="Powerbank">
                 <div class="prod-badge">Electronics</div>
                 <button class="view-btn" data-id="p4">View</button>
             </div>
@@ -323,7 +330,7 @@
         <!-- Product 5 -->
         <article class="product-card" data-category="others" data-id="p5">
             <div class="product-thumb">
-                <img src="https://picsum.photos/seed/oth1/800/600" alt="Neck Pillow">
+                <img src="{%static 'assets/images/products/p5.jpg'%}" alt="Neck Pillow">
                 <div class="prod-badge">Others</div>
                 <button class="view-btn" data-id="p5">View</button>
             </div>
@@ -342,7 +349,7 @@
         <!-- Product 6 -->
         <article class="product-card" data-category="camping" data-id="p6">
             <div class="product-thumb">
-                <img src="https://picsum.photos/seed/camp2/800/600" alt="Stove">
+                <img src="{%static 'assets/images/products/p6.jpg'%}" alt="Stove">
                 <div class="prod-badge">Camping</div>
                 <button class="view-btn" data-id="p6">View</button>
             </div>

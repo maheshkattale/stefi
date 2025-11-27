@@ -24,11 +24,15 @@ urlpatterns = [
     path('trips/<int:trip_id>/invoice/view/', views.view_invoice, name='view_invoice'),
     path('itinerary/<int:item_id>/delete/', views.delete_itinerary_item, name='delete_itinerary_item'),
     
+    path('state/<str:state>', views.state_details, name='state_details'),
+
+    path('indian-states', views.indian_states, name='indian_states'),
 
     path('api/search/', api_search_destinations, name='api_search'),
     path('api/states/', api_get_states, name='api_states'),
     path('api/popular-destinations/', api_get_popular_destinations, name='api_popular_destinations'),
     path('api/destination-types/', api_get_destination_types, name='api_destination_types'),
+
 
 
 ]

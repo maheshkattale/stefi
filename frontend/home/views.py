@@ -612,7 +612,19 @@ def admin_dashboard(request):
     return render(request, 'admin/dashboard/admin_dashboard.html', context)
 
 
+def state_details(request,state):
+    
+    context = {
+        'state': state.capitalize(),
+    }
+    
+    return render(request, 'Home/state.html', context)
 
+def indian_states(request,):
+    
+
+    
+    return render(request, 'Home/indian-states.html', {})
 
 
 

@@ -1,0 +1,280 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Stefi - Plan Your Perfect Trip{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+
+<link href="{% static 'assets/css/landing-page.css' %}" rel="stylesheet">
+<style>
+    body {
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    background: #f7f9fb;
+}
+
+
+/* HERO */
+.hero {
+    position: relative;
+    height: 45vh;
+    background: url("https://picsum.photos/id/1018/1200/500") center/cover no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(10, 20, 40, 0.4);
+}
+
+.hero-content {
+    position: relative;
+    text-align: center;
+    color: #fff;
+}
+
+.hero-content h1 {
+    font-size: 48px;
+    margin: 0;
+}
+
+.subtitle {
+    margin-top: 10px;
+    font-size: 18px;
+    opacity: 0.9;
+}
+
+/* DESCRIPTION */
+.description-section {
+    padding: 40px 10%;
+}
+
+.description-section h2 {
+    margin-bottom: 15px;
+    font-size: 28px;
+}
+
+.description {
+    line-height: 1.7;
+    color: #444;
+    margin-bottom: 15px;
+}
+
+.highlighted {
+    padding: 15px;
+    border-left: 4px solid #4a90e2;
+    background: #eef6ff;
+}
+
+/* ATTRACTIONS */
+.attractions {
+    background: #e9f7ff;
+    padding: 40px 10%;
+}
+
+.attractions h2 {
+    margin-bottom: 20px;
+}
+
+.attractions-wrapper {
+    position: relative;
+}
+
+.attractions-carousel {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    gap: 20px;
+    padding-bottom: 10px;
+}
+
+.attraction-card {
+    min-width: 220px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.attraction-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+
+.attraction-card p {
+    margin: 10px;
+    font-weight: 600;
+}
+
+/* SCROLL BUTTONS */
+.scroll-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 32px;
+    border: none;
+    background: #fff;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    opacity: 0.8;
+    transition: 0.3s;
+}
+
+.scroll-btn:hover {
+    opacity: 1;
+}
+
+.left { left: -20px; }
+.right { right: -20px; }
+
+/* MAP */
+.map {
+    padding: 40px 10%;
+}
+
+.map img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+</style>
+{% endblock %}
+
+
+{% block content %}
+
+
+
+<!-- HERO SECTION -->
+<section class="hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <h1 style="text-transform: capitalize;">{{state}}</h1>
+        <p class="subtitle">Explore Popular Cities & Destinations</p>
+    </div>
+</section>
+
+<!-- DESCRIPTION SECTION -->
+<section class="description-section">
+    <h2 class="text-transform:capitalize;">{{state}}</h2>
+
+    <p class="description">
+        {{state}} is located in the western peninsular region of India occupying a substantial portion of the Deccan Plateau.
+        It is the second-most populous state and third-largest by area. Its major cities include Mumbai, Pune, Nagpur, Nashik,
+        Aurangabad, and Solapur. The state is known for its cuisine, cultural heritage, historical sites, and coastal beauty.
+    </p>
+
+    <p class="description highlighted">
+        {{state}} is home to tourist attractions like the Gateway of India, Ajanta & Ellora Caves, Shirdi Sai Temple,
+        Mahabaleshwar, Lonavala, Khandala, Alibag, Matheran, and several wildlife sanctuaries. The diverse landscape includes
+        beaches, mountains, forests, and urban hubs, offering experiences for nature lovers, pilgrims, trekkers, and travelers.
+    </p>
+</section>
+
+<!-- ATTRACTIONS -->
+<section class="attractions">
+    <h2>Attractions of {{state}}</h2>
+
+    <div class="attractions-wrapper">
+        <button class="scroll-btn left" id="scrollLeft">‹</button>
+
+        <div class="attractions-carousel" id="carousel">
+            <div class="attraction-card">
+                <img src="https://picsum.photos/id/1060/300/200" alt="">
+                <p>Hotel – South Mumbai</p>
+            </div>
+
+            <div class="attraction-card">
+                <img src="https://picsum.photos/id/1059/300/200" alt="">
+                <p>Hotel – Powai, Mumbai</p>
+            </div>
+
+            <div class="attraction-card">
+                <img src="https://picsum.photos/id/1039/300/200" alt="">
+                <p>Hotel – Pune</p>
+            </div>
+
+            <div class="attraction-card">
+                <img src="https://picsum.photos/id/1025/300/200" alt="">
+                <p>Hotel – Nashik</p>
+            </div>
+        </div>
+
+        <button class="scroll-btn right" id="scrollRight">›</button>
+    </div>
+</section>
+
+<!-- MAP SECTION -->
+<!-- MAP SECTION -->
+<section class="container my-3">
+    <h2>Map of <span id="stateNameLabel">{{state}}</span></h2>
+    <div id="map" style="height: 450px; border-radius: 12px;"></div>
+</section>
+
+
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+async function loadStateBoundary(state) {
+    debugger
+    const map = L.map('map').setView([20.59, 78.96], 5);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 18
+    }).addTo(map);
+
+    // Fetch India state boundary dynamically
+    const url = `https://nominatim.openstreetmap.org/search?state=${state}&country=India&polygon_geojson=1&format=json`;
+    console.log("url",url)
+    const res = await fetch(url);
+    const data = await res.json();
+
+    if (!data.length) return alert("Boundary not found!");
+
+    const geo = data[0].geojson;
+
+    const layer = L.geoJSON(geo, {
+        style: {
+            color: "#0055CC",
+            weight: 2,
+            fillColor: "#4DA3FF",
+            fillOpacity: 0.3
+        }
+    }).addTo(map);
+
+    map.fitBounds(layer.getBounds());
+}
+
+loadStateBoundary("{{state}}");
+</script>
+
+
+<script>
+    // Scroll buttons for attractions
+const carousel = document.getElementById("carousel");
+const scrollLeft = document.getElementById("scrollLeft");
+const scrollRight = document.getElementById("scrollRight");
+
+scrollLeft.addEventListener("click", () => {
+    carousel.scrollBy({ left: -300, behavior: "smooth" });
+});
+
+scrollRight.addEventListener("click", () => {
+    carousel.scrollBy({ left: 300, behavior: "smooth" });
+});
+
+</script>
+{% endblock %}
