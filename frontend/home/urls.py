@@ -27,6 +27,8 @@ urlpatterns = [
     path('state/<str:state>', views.state_details, name='state_details'),
 
     path('indian-states', views.indian_states, name='indian_states'),
+    path('bag-packing', views.bag_packing, name='bag-packing'),
+    path('user-profile', views.user_profile, name='user-profile'),
 
     path('api/search/', api_search_destinations, name='api_search'),
     path('api/states/', api_get_states, name='api_states'),

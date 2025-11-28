@@ -622,12 +622,63 @@ def state_details(request,state):
 
 def indian_states(request,):
     
+    states = [
+        ("AP", "Andhra Pradesh"),
+        ("AR", "Arunachal Pradesh"),
+        ("AS", "Assam"),
+        ("BR", "Bihar"),
+        ("CG", "Chhattisgarh"),
+        ("GA", "Goa"),
+        ("GJ", "Gujarat"),
+        ("HR", "Haryana"),
+        ("HP", "Himachal Pradesh"),
+        ("JK", "Jammu & Kashmir"),
+        ("JH", "Jharkhand"),
+        ("KA", "Karnataka"),
+        ("KL", "Kerala"),
+        ("MP", "Madhya Pradesh"),
+        ("MH", "Maharashtra"),
+        ("MN", "Manipur"),
+        ("ML", "Meghalaya"),
+        ("MZ", "Mizoram"),
+        ("NL", "Nagaland"),
+        ("OD", "Odisha"),
+        ("PB", "Punjab"),
+        ("RJ", "Rajasthan"),
+        ("SK", "Sikkim"),
+        ("TN", "Tamil Nadu"),
+        ("TS", "Telangana"),
+        ("TR", "Tripura"),
+        ("UP", "Uttar Pradesh"),
+        ("UK", "Uttarakhand"),
+        ("WB", "West Bengal")
+    ]
+
+    context = {"states": states}
+
 
     
-    return render(request, 'Home/indian-states.html', {})
+    return render(request, 'Home/indian-states.html', context)
 
 
 
+def bag_packing(request,):
+
+
+    context = {}
+
+
+    
+    return render(request, 'Home/bag-packing.html', context)
+
+def user_profile(request,):
+
+
+    context = {}
+
+
+    
+    return render(request, 'customer/profile/user-profile.html', context)
 
 
 

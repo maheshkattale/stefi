@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}My Profile — Stefi{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/css/user-profile.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<!-- PROFILE HERO -->
+<section class="profile-hero">
+    <div class="container">
+        <div class="profile-box">
+            <img src="{% static 'assets/images/user/default-user.png' %}" class="profile-photo">
+
+            <div class="profile-details">
+                <h2>{{ user.first_name }} {{ user.last_name }}</h2>
+                <p><i class="fa fa-envelope"></i> {{ user.email }}</p>
+                {% if user.phone %}
+                <p><i class="fa fa-phone"></i> {{ user.phone }}</p>
+                {% endif %}
+            </div>
+
+            <a href="#" class="btn-edit">Edit Profile</a>
+        </div>
+    </div>
+</section>
+
+<!-- TABS -->
+<section class="container profile-container">
+    <nav class="profile-nav">
+    <div class="container">
+        <ul class="profile-tabs">
+            <li class="tab active" data-tab="info">Personal Info</li>
+            <li class="tab" data-tab="trips">Trips</li>
+            <li class="tab" data-tab="saved">Saved</li>
+            <li class="tab" data-tab="settings">Settings</li>
+        </ul>
+    </div>
+</nav>
+
+</section>
+
+<div class="container profile-container">
+
+    <!-- PERSONAL INFO -->
+    <div id="tab-info" class="tab-section active">
+        <div class="info-card glass">
+            <h3>Personal Information</h3>
+
+            <div class="info-item">
+                <span>Name</span>
+                <p>{{ user.first_name }} {{ user.last_name }}</p>
+            </div>
+
+            <div class="info-item">
+                <span>Email</span>
+                <p>{{ user.email }}</p>
+            </div>
+
+            <div class="info-item">
+                <span>Phone</span>
+                <p>{{ user.phone|default:"Not Provided" }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- TRIPS -->
+    <div id="tab-trips" class="tab-section">
+        <h3 class="section-title">Your Trips</h3>
+
+        <div class="trip-grid">
+            {% for trip in trips %}
+            <div class="trip-card">
+                <img src="{{ trip.thumbnail.url }}" alt="">
+                <div class="trip-info">
+                    <h4>{{ trip.title }}</h4>
+                    <p>{{ trip.start_date }} → {{ trip.end_date }}</p>
+                    <a href="/trips/{{ trip.id }}/" class="details-btn">View Trip</a>
+                </div>
+            </div>
+            {% empty %}
+            <p class="no-data">No trips yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- SAVED -->
+    <div id="tab-saved" class="tab-section">
+        <h3 class="section-title">Saved Places</h3>
+
+        <div class="saved-grid">
+            {% for place in saved_places %}
+            <div class="saved-card">
+                <img src="{{ place.image.url }}" alt="">
+                <span>{{ place.name }}</span>
+            </div>
+            {% empty %}
+            <p class="no-data">No saved places.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div id="tab-settings" class="tab-section">
+        <h3 class="section-title">Settings</h3>
+
+        <div class="settings-box">
+            <button class="setting-btn">Change Password</button>
+            <button class="setting-btn">Notification Preferences</button>
+            <button class="delete-btn">Delete Account</button>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const tabs = document.querySelectorAll('.tab');
+    const sections = document.querySelectorAll('.tab-section');
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+
+            sections.forEach(s => s.classList.remove('active'));
+            document.querySelector('#tab-' + tab.dataset.tab).classList.add('active');
+        });
+    });
+</script>
+{% endblock %}

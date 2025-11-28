@@ -13,20 +13,13 @@
         --dark-text: #2c3e50;
     }
 
-    body {
-        background-color: var(--light-bg);
-        color: var(--dark-text);
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+
 
     .navbar {
         background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
     }
 
-    .dashboard-container {
-        max-width: 1400px;
-        margin: 0 auto;
-    }
+
 
     .planning-card {
         background: white;
@@ -206,29 +199,38 @@
             margin-bottom: 15px;
         }
     }
+
+    .page-hero {
+        max-width: 1200px;
+        margin: 80px auto 20px auto;
+        padding: 22px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+    }
+
+    .page-hero h1 {
+        font-size: 28px;
+        font-weight: 800;
+    }
+
+    .page-hero p {
+        color: #555;
+        margin: 0;
+    }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="container dashboard-container pt-5 mt-5">
-    <div class="row mt-5">
+<div class="container dashboard-container mt-5">
+    <div class="page-hero">
+        <h1>AI Trip Planner</h1>
+        <p>Your essential travel items for trekking, camping & long trips.</p>
+    </div>
+    <div class="row">
         <!-- Left Column -->
         <div class="col-lg-8">
             <!-- Header -->
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <div>
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="/">Home</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">AI Trip Planner</li>
-                        </ol>
-                    </nav>
-                    <h2 class="mb-0">AI Trip Planner</h2>
-                </div>
-                <!-- Export button visible only if a plan exists -->
-                <button id="exportPlanBtn" class="big-btn" style="display:none;"><i class="fas fa-download me-2"></i>
-                    Export Plan</button>
-            </div>
 
             <!-- Trip Planning Card (Input Form) -->
             <div class="planning-card">
@@ -265,6 +267,64 @@
                             <label class="form-label">Peoples</label>
                             <input type="number" id="peoples" class="form-control" value="" required min="1">
                         </div>
+                        <!-- NEW – Religion -->
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Religion</label>
+                            <select id="religion" class="form-select">
+                                <option value="">Select</option>
+                                <option value="Hinduism">Hinduism</option>
+                                <option value="Buddhism">Buddhism</option>
+                                <option value="Islam">Islam</option>
+                                <option value="Jainism">Jainism</option>
+                                <option value="Jewish">Jewish</option>
+                                <option value="Christianity">Christianity</option>
+                            </select>
+                        </div>
+
+                        <!-- NEW – Interests -->
+                        <div class="col-md-8 mb-3">
+                            <label class="form-label">Interests</label>
+                            <select id="interests" class="form-select" multiple>
+                                <option value="Nature & Wildlife">Nature & Wildlife</option>
+                                <option value="Adventure">Adventure</option>
+                                <option value="Spiritual">Spiritual</option>
+                                <option value="Shopping & Food">Shopping & Food</option>
+                                <option value="Festival & Event">Festival & Event</option>
+                            </select>
+                            <small class="text-muted">You can select multiple interests</small>
+                        </div>
+
+                        <!-- NEW – Backpacking Option -->
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label fw-bold">Backpacking</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="backpacking">
+                                <label class="form-check-label">
+                                    Auto-generate packing list based on trip details
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- NEW – Stay Options -->
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label fw-bold">Stay Options</label>
+                            <div class="row">
+                                <div class="col-6 col-md-3">
+                                    <input type="checkbox" class="stay-option" value="Hotel"> Hotel
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <input type="checkbox" class="stay-option" value="Homestay"> Homestay
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <input type="checkbox" class="stay-option" value="Dormitory"> Dormitory
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <input type="checkbox" class="stay-option" value="Flat or Home Rent"> Flat / Home
+                                    Rent
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                     <div class="text-center mt-3">
                         <button type="submit" id="generatePlanBtn" class="big-btn">
@@ -319,6 +379,8 @@
                     <!-- Packing list items will be injected here -->
                 </ul>
             </div>
+
+
         </div>
     </div>
 </div>

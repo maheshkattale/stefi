@@ -50,10 +50,10 @@
             <!-- Right Menu -->
             <div class="right-menu">
                 <a href="/indian-states">Explore India</a>
-                <a href="#">Bag Packing</a>
+                <a href="/bag-packing">Bag Packing</a>
                 <a href="#">Stay</a>
                 <a href="/trip_planner/plan_trip/">AI Trip Planner</a>
-                <a href="#">Profile</a>
+                <a href="/user-profile">Profile</a>
             </div>
 
             <!-- <div id="google_translate_element"></div> -->
@@ -340,6 +340,57 @@
 
     <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
     </script>
+    <script>
+// Convert RGB to relative luminance
+function luminance(r, g, b) {
+    const a = [r, g, b].map(v => {
+        v /= 255;
+        return v <= 0.03928
+            ? v / 12.92
+            : Math.pow((v + 0.055) / 1.055, 2.4);
+    });
+    return (0.2126 * a[0]) + (0.7152 * a[1]) + (0.0722 * a[2]);
+}
+
+// Update navbar color based on contrast
+function updateNavbarTextColor() {
+    const nav = document.querySelector(".custom-navbar");
+    if (!nav) return;
+
+    const behind = document.elementFromPoint(window.innerWidth / 2, nav.offsetHeight / 2);
+    if (!behind) return;
+
+    const bg = window.getComputedStyle(behind).backgroundColor;
+    const rgb = bg.match(/\d+/g);
+
+    if (!rgb) return;
+
+    const [r, g, b] = rgb.map(Number);
+
+    const lum = luminance(r, g, b);
+
+    /*
+        lum 0.0 = pure black
+        lum 1.0 = pure white
+
+        Light grey is around 0.7–0.85
+    */
+
+    if (lum > 0.55) { 
+        // Light background → use dark nav text
+        nav.classList.add("nav-dark-text");
+    } else {
+        // Dark background → use white text
+        nav.classList.remove("nav-dark-text");
+    }
+}
+
+// Trigger on page load + scroll + resize
+window.addEventListener("scroll", updateNavbarTextColor);
+window.addEventListener("resize", updateNavbarTextColor);
+document.addEventListener("DOMContentLoaded", updateNavbarTextColor);
+</script>
+
     {% block extra_js %}{% endblock %}
 </body>
 
