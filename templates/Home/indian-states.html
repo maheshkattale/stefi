@@ -1,0 +1,446 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Stefi - Explore India — Explore & Map{% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'assets/css/indian-states.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+<div class="page-wrapper">
+
+  <!-- HERO & TABS -->
+  <div>
+    <div class="hero">
+      <div class="title">Explore India — States & Destinations</div>
+
+      <div class="view-tabs" role="tablist" aria-label="View tabs">
+        <div id="tabGrid" class="tab active" role="tab" aria-selected="true">States List</div>
+        <div id="tabMap" class="tab" role="tab" aria-selected="false">Map View</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTROLS: SEARCH + FILTERS -->
+  <div class="controls">
+    <div class="search" title="Search states">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+        <path d="M21 21l-4.35-4.35" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <circle cx="11" cy="11" r="6" stroke="#9CA3AF" stroke-width="2" />
+      </svg>
+      <input id="searchBox" placeholder="Search states (e.g., Kerala, Goa)" />
+    </div>
+
+    <div class="filters" aria-label="Filters">
+      <div class="chip selected" data-cat="all">All</div>
+      <div class="chip" data-cat="beach">Beaches</div>
+      <div class="chip" data-cat="mountain">Mountains</div>
+      <div class="chip" data-cat="heritage">Heritage</div>
+      <div class="chip" data-cat="nature">Nature</div>
+      <div class="chip" data-cat="spiritual">Spiritual</div>
+      <div class="chip" data-cat="wildlife">Wildlife</div>
+    </div>
+  </div>
+
+  <!-- GRID VIEW -->
+  <div id="gridView" aria-hidden="false">
+    <section class="popular-states-section">
+      <div class="states-row" id="statesRow">
+        {% for code, state in states %}
+        <div class="state-item" data-state="{{ state|escape }}">
+          <div class="km-block"><span>{{ code }}</span></div>
+          <div class="state-name">{{ state }}</div>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+  </div>
+
+  <!-- MAP VIEW -->
+  <div id="mapView" style="display:none;" aria-hidden="true">
+    <div id="mapArea">
+      <div id="indiaMap"></div>
+
+
+
+    </div>
+  </div>
+
+  <!-- Drawer -->
+  <div id="drawer" aria-hidden="true">
+    <button class="close" id="drawerClose" aria-label="Close drawer">✕</button>
+
+    <div class="drawer-head">
+      <div>
+        <h2 id="drawerTitle">Title</h2>
+        <div class="drawer-sub" id="drawerSub">State • category</div>
+      </div>
+    </div>
+
+    <div class="drawer-tabs" role="tablist">
+      <div class="drawer-tab active" data-tab="overview">Overview</div>
+      <div class="drawer-tab" data-tab="weather">Weather</div>
+      <div class="drawer-tab" data-tab="hotels">Hotels</div>
+    </div>
+
+    <div class="drawer-content" id="drawerContent">
+      <!-- Overview -->
+      <div class="drawer-panel" data-panel="overview">
+        <div class="meta">
+          <div class="badge" id="drawerCities">Cities</div>
+          <div class="badge" id="drawerBest">Best Season</div>
+        </div>
+        <div id="drawerSpots">Attractions</div>
+        <div class="drawer-img"><img id="drawerImage" src="" alt="image" /></div>
+        <div style="margin-top:12px;">
+          <button id="planBtn"
+            style="background:#3fc8ff;color:#fff;border:0;padding:10px 12px;border-radius:8px;font-weight:700;cursor:pointer">Plan
+            Trip →</button>
+        </div>
+        <div style="margin-top:12px;">
+          <a id="drawerstateBtn" href=""
+            style="background:#3fc8ff;color:#fff;border:0;padding:10px 12px;border-radius:8px;font-weight:700;cursor:pointer">View
+            State →</a>
+
+        </div>
+      </div>
+
+      <!-- Weather (placeholder) -->
+      <div class="drawer-panel" data-panel="weather" style="display:none">
+        <div style="font-weight:700;margin-bottom:6px">Weather (sample)</div>
+        <div id="drawerWeather">Current weather data unavailable (placeholder)</div>
+      </div>
+
+      <!-- Hotels (placeholder) -->
+      <div class="drawer-panel" data-panel="hotels" style="display:none">
+        <div style="font-weight:700;margin-bottom:6px">Top hotels (sample)</div>
+        <div id="drawerHotels">Hotel info unavailable (placeholder)</div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Highcharts -->
+<script src="https://code.highcharts.com/maps/highmaps.js"></script>
+<script src="https://code.highcharts.com/maps/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/mapdata/countries/in/in-all.js"></script>
+
+<script>
+  /* =========================
+     Data: destinations + categories
+     Add / edit destinations here.
+     category: array of tags (beach/mountain/heritage/nature/spiritual/wildlife)
+     ========================= */
+  const destinations = [
+    { name: "Mumbai", state: "Maharashtra", lat: 19.07, lon: 72.87, cities: "Mumbai, Pune", best: "Oct–Feb", spots: "Gateway of India, Marine Drive", img: "https://source.unsplash.com/900x600/?mumbai", category: ["heritage", "nature"] },
+    { name: "Goa", state: "Goa", lat: 15.49, lon: 73.82, cities: "Panaji, Baga", best: "Nov–Feb", spots: "Beaches, Fort Aguada", img: "https://source.unsplash.com/900x600/?goa,beach", category: ["beach", "nightlife"] },
+    { name: "Kochi", state: "Kerala", lat: 9.93, lon: 76.26, cities: "Kochi, Alleppey", best: "Sep–Feb", spots: "Backwaters, Fort Kochi", img: "https://source.unsplash.com/900x600/?kochi", category: ["beach", "heritage", "nature"] },
+    { name: "Munnar", state: "Kerala", lat: 10.0889, lon: 77.0595, cities: "Munnar", best: "Sep–Feb", spots: "Tea Gardens, Eravikulam", img: "https://source.unsplash.com/900x600/?munnar", category: ["mountain", "nature"] },
+    { name: "Shimla", state: "Himachal Pradesh", lat: 31.1048, lon: 77.1734, cities: "Shimla", best: "Mar–Jun", spots: "Mall Road, Ridge", img: "https://source.unsplash.com/900x600/?shimla", category: ["mountain", "nature"] },
+    { name: "Jaipur", state: "Rajasthan", lat: 26.9124, lon: 75.7873, cities: "Jaipur", best: "Oct–Mar", spots: "Amber Fort, Hawa Mahal", img: "https://source.unsplash.com/900x600/?jaipur", category: ["heritage", "city"] },
+    { name: "Kaziranga", state: "Assam", lat: 26.5775, lon: 93.1711, cities: "Kaziranga", best: "Nov–Apr", spots: "Wildlife Safari (Rhino)", img: "https://source.unsplash.com/900x600/?kaziranga", category: ["wildlife", "nature"] },
+    { name: "Puri", state: "Odisha", lat: 19.8135, lon: 85.8312, cities: "Puri, Bhubaneswar", best: "Oct–Feb", spots: "Jagannath Temple, Beaches", img: "https://source.unsplash.com/900x600/?puri", category: ["spiritual", "beach"] }
+  ];
+
+  /* ---------- Build mappoints with index for pin numbers ---------- */
+  const mappoints = destinations.map((d, idx) => ({
+    name: d.name,
+    lat: d.lat,
+    lon: d.lon,
+    idx: idx + 1,
+    cities: d.cities,
+    best: d.best,
+    spots: d.spots,
+    img: d.img,
+    state: d.state,
+    category: d.category
+  }));
+
+  /* ---------- Pin URL (URL-encoded single-line SVG) ---------- */
+  const pinUrl =
+    "url(data:image/svg+xml;utf8," +
+    "%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='56' viewBox='0 0 40 56'%3E" +
+    "%3Cpath d='M20 56C20 56 2 36.5 2 22.5C2 11.268 11.268 2 22.5 2s20.5 9.268 20.5 20.5c0 14-18 33.5-18 33.5z' fill='%233fc8ff' stroke='%23c05f00' stroke-width='1.5'/%3E" +
+    "%3Ccircle cx='22.5' cy='21.3' r='7.8' fill='%23fff'/%3E" +
+    "%3C/svg%3E)";
+
+  /* ---------- State helpers (map from state->destinations) ---------- */
+  function stateHasDestinations(stateName, activeCats) {
+    // If activeCats contains 'all', treat as all
+    if (!activeCats || activeCats.length === 0 || activeCats.includes('all')) {
+      // any destination with same state
+      return destinations.some(d => d.state.toLowerCase() === stateName.toLowerCase());
+    }
+    return destinations.some(d => d.state.toLowerCase() === stateName.toLowerCase()
+      && d.category.some(c => activeCats.includes(c)));
+  }
+
+  /* ---------- UI: tabs, search, filters ---------- */
+  const tabGrid = document.getElementById('tabGrid');
+  const tabMap = document.getElementById('tabMap');
+  const gridView = document.getElementById('gridView');
+  const mapView = document.getElementById('mapView');
+
+  tabGrid.addEventListener('click', () => {
+    tabGrid.classList.add('active'); tabMap.classList.remove('active');
+    gridView.style.display = 'block'; mapView.style.display = 'none';
+  });
+  tabMap.addEventListener('click', () => {
+    tabMap.classList.add('active'); tabGrid.classList.remove('active');
+    gridView.style.display = 'none'; mapView.style.display = 'block';
+  });
+
+  /* Filters chips */
+  let activeFilters = ['all'];
+  document.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const cat = chip.getAttribute('data-cat');
+      if (cat === 'all') {
+        // clear others
+        activeFilters = ['all'];
+        document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+        chip.classList.add('selected');
+      } else {
+        // remove 'all'
+        activeFilters = activeFilters.filter(x => x !== 'all');
+        chip.classList.toggle('selected');
+        // gather selected
+        const sel = Array.from(document.querySelectorAll('.chip.selected')).map(n => n.getAttribute('data-cat'));
+        activeFilters = sel.length ? sel : ['all'];
+        // ensure 'all' chip toggled
+        document.querySelectorAll('.chip').forEach(c => {
+          if (c.getAttribute('data-cat') === 'all') c.classList.toggle('selected', activeFilters.includes('all'));
+        });
+      }
+      applyFilters();
+    });
+  });
+
+  /* Search box */
+  document.getElementById('searchBox').addEventListener('input', function () {
+    const q = this.value.trim().toLowerCase();
+    document.querySelectorAll('#statesRow .state-item').forEach(el => {
+      const stateName = el.getAttribute('data-state').toLowerCase();
+      el.style.display = stateName.includes(q) ? 'block' : 'none';
+    });
+  });
+
+  /* Apply filters: hide/show KM blocks + update pins on map */
+  function applyFilters() {
+    const selected = activeFilters;
+    // hide/show states in grid
+    document.querySelectorAll('#statesRow .state-item').forEach(el => {
+      const stateName = el.getAttribute('data-state');
+      if (selected.includes('all')) {
+        el.style.display = '';
+      } else {
+        el.style.display = stateHasDestinations(stateName, selected) ? '' : 'none';
+      }
+    });
+
+    // update map: show/hide mappoints by category and optionally state
+    const visiblePoints = mappoints.filter(p => {
+      if (selected.includes('all')) return true;
+      return p.category.some(c => selected.includes(c));
+    });
+
+    // update series[1] data
+    if (chart && chart.series && chart.series.length > 1) {
+      chart.series[1].setData(visiblePoints, true);
+    }
+  }
+
+  /* ========= HIGHCHARTS MAP ========= */
+  let chart = Highcharts.mapChart('indiaMap', {
+    accessibility: { enabled: false },
+    chart: { map: 'countries/in/in-all', animation: { duration: 240 } },
+    title: { text: '' },
+    legend: { enabled: false },
+    credits: { enabled: false },
+    mapNavigation: { enabled: true, buttonOptions: { verticalAlign: 'bottom' } },
+
+    tooltip: {
+      useHTML: true,
+      formatter: function () {
+        const match = mappoints.find(x => x.name === this.point.name);
+        if (match) {
+          return `<strong style="font-size:14px">${this.point.name}</strong><div style="color:#9ca3af">${match.state}</div>`;
+        }
+        return `<strong>${this.point.name}</strong>`;
+      },
+      backgroundColor: 'rgba(0,0,0,0.78)',
+      style: { color: '#fff' }
+    },
+
+    series: [
+      // Basemap
+      {
+        name: 'India',
+        mapData: Highcharts.maps['countries/in/in-all'],
+        nullColor: '#f8fafc',
+        borderColor: '#e6e9ef',
+        borderWidth: 1,
+        enableMouseTracking: true,
+        zIndex: 5,
+        states: {
+          hover: {
+            enabled: true,
+            color: '#fff2e6',
+            borderColor: '#3fc8ff',
+            borderWidth: 2,
+            halo: { size: 18, opacity: 0.32 }
+          },
+          select: { color: '#ffe6cc' }
+        },
+        events: {
+          click: function (e) {
+            const stateName = e.point && e.point.name ? e.point.name : null;
+            if (stateName) {
+              // Open drawer aggregated for state
+              openDrawerForState(stateName);
+              // try to find a destination in that state to center on
+              const match = mappoints.find(m => m.state.toLowerCase() === stateName.toLowerCase());
+              if (match && chart.mapView) {
+                chart.mapView.setView([match.lon, match.lat], 5.2);
+              }
+            }
+          }
+        }
+      },
+
+      // Mappoints (pins)
+      {
+        type: 'mappoint',
+        name: 'Destinations',
+        color: '#3fc8ff',
+        marker: { symbol: pinUrl, width: 34, height: 46 },
+        dataLabels: {
+          enabled: true,
+          useHTML: true,
+          formatter: function () {
+            // this.point.idx exists
+            return '<div class="pin-num">' + (this.point.idx || '') + '</div>';
+          },
+          allowOverlap: true,
+          verticalAlign: 'middle',
+          crop: false,
+          overflow: 'allow'
+        },
+        data: mappoints,
+        cursor: 'pointer',
+        point: {
+          events: {
+            click: function () {
+              openDrawerForPoint(this);
+              if (chart && chart.mapView) {
+                chart.mapView.setView([this.lon, this.lat], 6.2);
+              }
+            }
+          }
+        }
+      }
+    ]
+  });
+
+  /* ============= Drawer functionality ============= */
+  const drawer = document.getElementById('drawer');
+  const drawerClose = document.getElementById('drawerClose');
+  const drawerTitle = document.getElementById('drawerTitle');
+  const drawerSub = document.getElementById('drawerSub');
+  const drawerCities = document.getElementById('drawerCities');
+  const drawerBest = document.getElementById('drawerBest');
+  const drawerSpots = document.getElementById('drawerSpots');
+  const drawerImage = document.getElementById('drawerImage');
+  const drawerstateBtn = document.getElementById('drawerstateBtn');
+
+  drawerClose.addEventListener('click', () => { drawer.classList.remove('open'); drawer.setAttribute('aria-hidden', 'true'); });
+
+  document.querySelectorAll('.drawer-tab').forEach(tab => {
+    tab.addEventListener('click', function () {
+      document.querySelectorAll('.drawer-tab').forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+      const sel = this.getAttribute('data-tab');
+      document.querySelectorAll('.drawer-panel').forEach(p => p.style.display = (p.getAttribute('data-panel') === sel) ? '' : 'none');
+    });
+  });
+
+  /* open drawer for a map point */
+  function openDrawerForPoint(pt) {
+    drawerTitle.innerText = pt.name;
+    drawerSub.innerText = pt.state;
+    drawerCities.innerText = 'Cities: ' + (pt.cities || '—');
+    drawerBest.innerText = 'Best Season: ' + (pt.best || '—');
+    drawerSpots.innerText = 'Top Spots: ' + (pt.spots || '—');
+    drawerImage.src = pt.img || 'https://source.unsplash.com/900x600/?india,travel';
+    drawerstateBtn.href = '/state/' + pt.state;
+    drawer.classList.add('open'); drawer.setAttribute('aria-hidden', 'false');
+    // show overview tab
+    document.querySelectorAll('.drawer-tab').forEach(t => t.classList.remove('active'));
+    document.querySelector('.drawer-tab[data-tab="overview"]').classList.add('active');
+    document.querySelectorAll('.drawer-panel').forEach(p => p.style.display = p.getAttribute('data-panel') === 'overview' ? '' : 'none');
+  }
+
+  /* open drawer aggregated for state */
+  function openDrawerForState(stateName) {
+    const list = destinations.filter(x => x.state.toLowerCase() === stateName.toLowerCase());
+    const preview = list[0] || {};
+    drawerTitle.innerText = stateName;
+    drawerSub.innerText = stateName;
+    drawerCities.innerText = 'Top: ' + (list.slice(0, 4).map(x => x.name).join(', ') || '—');
+    drawerBest.innerText = 'Best Season: ' + (preview.best || '—');
+    drawerSpots.innerText = 'Top Spots: ' + (list.slice(0, 4).map(x => x.spots).join(' • ') || '—');
+    drawerImage.src = preview.img || 'https://source.unsplash.com/900x600/?' + encodeURIComponent(stateName + ',travel');
+    drawerstateBtn.href = '/state/' + stateName;
+
+    drawer.classList.add('open'); drawer.setAttribute('aria-hidden', 'false');
+    document.querySelectorAll('.drawer-tab').forEach(t => t.classList.remove('active'));
+    document.querySelector('.drawer-tab[data-tab="overview"]').classList.add('active');
+    document.querySelectorAll('.drawer-panel').forEach(p => p.style.display = p.getAttribute('data-panel') === 'overview' ? '' : 'none');
+  }
+
+  /* Plan trip button (placeholder) */
+  document.getElementById('planBtn').addEventListener('click', () => {
+    const dest = drawerTitle.innerText;
+    alert('Plan trip to ' + dest + ' — connect to planner or booking flow.');
+  });
+
+  /* ============= Clickable KM blocks -> open map ============= */
+  document.querySelectorAll('#statesRow .state-item').forEach(el => {
+    el.addEventListener('click', function () {
+      const stateName = this.getAttribute('data-state');
+      openDrawerForState(stateName);
+
+      // switch to map
+      // tabMap.click();
+      // try to zoom to a matched destination in that state
+      // const match = mappoints.find(m => m.state.toLowerCase() === stateName.toLowerCase());
+      // if (match && chart.mapView) {
+      //   chart.mapView.setView([match.lon, match.lat], 5.2);
+      //   // open drawer aggregated for state
+      //   setTimeout(() => openDrawerForState(stateName), 260);
+      // } else {
+      //   // fallback: open state drawer without zoom
+      //   setTimeout(() => openDrawerForState(stateName), 260);
+      // }
+    });
+  });
+
+  /* ============= Filters initially applied (show all) ============= */
+  applyFilters();
+
+  /* ============= Extra: pin label show on hover (CSS handles appearance via tooltip) ============= */
+  /* Nothing more needed — Highcharts tooltip + dataLabels handle pin label */
+
+  /* ============= Notes =============
+  - To add destinations: edit the 'destinations' array above.
+  - Filter logic: chips are multi-select; 'All' resets filters.
+  - State grid items hide when no destinations match selected filters (B + C behavior).
+  - Drawer has tabs: Overview (real content), Weather & Hotels show placeholders (you can plug APIs).
+  - Numbered pins are shown via dataLabels (pin number inside circle).
+  =================================== */
+</script>
+{% endblock %}
