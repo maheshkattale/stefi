@@ -19,9 +19,12 @@
     <link href="{% static 'assets/css/base-page.css' %}" rel="stylesheet">
 
     <!-- Custom CSS -->
-
+     
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&display=swap" rel="stylesheet">
     {% block extra_css %}{% endblock %}
 </head>
 
@@ -30,24 +33,23 @@
 
 
     <div class="custom-navbar">
+        <div class="page-wrapper floating-search-container">
 
-        <div class="floating-search-container">
+            <div class="floating-search-row">
+                <div class="floating-search-box">
+                    <a class="left-logo" href="/">
+                        <img src="{% static 'assets/logo/logo-symbol.jpeg' %}" alt="">
+                    </a>
 
-            <!-- Search Box -->
-            <div class="floating-search-box">
-                <a class="left-logo" href="/">
-                    <img src="{% static 'assets/logo/logo-symbol.jpeg' %}" alt="">
-                </a>
+                    <input type="text" class="floating-search-input" placeholder="Plan your trip with AI...">
+                    <span class="search-icon"><i class="fas fa-search"></i></span>
+                </div>
 
-                <input type="text" id="globalSearch" class="floating-search-input"
-                    placeholder="Plan your trip with AI...">
-
-                <span class="search-icon">
-                    <i class="fas fa-search"></i>
-                </span>
+                <div class="hamburger-menu" onclick="toggleMenu()">
+                    <i class="fa fa-bars"></i>
+                </div>
             </div>
 
-            <!-- Right Menu -->
             <div class="right-menu">
                 <a href="/indian-states">Explore India</a>
                 <a href="/bag-packing">Bag Packing</a>
@@ -56,11 +58,9 @@
                 <a href="/user-profile">Profile</a>
             </div>
 
-            <!-- <div id="google_translate_element"></div> -->
         </div>
-
-        <div id="searchResults" class="search-results"></div>
     </div>
+
 
     {% if messages %}
     <div class="container mt-3">
@@ -78,56 +78,8 @@
         {% block content %}
         {% endblock %}
     </main>
-
-    <!-- Footer -->
-    <!-- <footer class="footer">
-        <div class="container">
-            <div class="row footer-content text-center text-md-start">
-                <div class="col-12 col-md-6 col-lg-4 mb-4 px-0">
-                    <h5 class="mb-3">
-                        <img src="{% static 'assets/logo/transparent-logo.png'%}" alt="Stefi Logo"
-                            style="width: 150px;">
-                    </h5>
-                    <p>Plan your perfect trips with ease. Create itineraries, manage budgets, and generate invoices all
-                        in one place.</p>
-                </div>
-                <div class="col-6 col-md-3 col-lg-2 mb-4 px-0">
-                    <h6 class="footer-heading">Quick Links</h6>
-                    <ul class="list-unstyled">
-                        <li><a href="{% url 'home:landing_page' %}">Home</a></li>
-                        <li><a href="#features">Features</a></li>
-                        <li><a href="#about">About</a></li>
-                        <li><a href="#">Contact</a></li>
-                    </ul>
-                </div>
-                <div class="col-6 col-md-3 col-lg-2 mb-4 px-0">
-                    <h6 class="footer-heading">Features</h6>
-                    <ul class="list-unstyled">
-                        <li><a href="#">Trip Planning</a></li>
-                        <li><a href="#">Itinerary</a></li>
-                        <li><a href="#">Budget Management</a></li>
-                        <li><a href="#">Invoice Generation</a></li>
-                    </ul>
-                </div>
-                <div class="col-12 col-md-12 col-lg-4 mb-4 px-0">
-                    <h6 class="footer-heading">Connect With Us</h6>
-                    <div class="d-flex justify-content-center justify-content-lg-start gap-3 mt-3">
-                        <a href="#"><i class="fab fa-facebook fa-2x"></i></a>
-                        <a href="#"><i class="fab fa-twitter fa-2x"></i></a>
-                        <a href="#"><i class="fab fa-instagram fa-2x"></i></a>
-                        <a href="#"><i class="fab fa-linkedin fa-2x"></i></a>
-                    </div>
-                </div>
-            </div>
-
-            <hr class="my-4 bg-light">
-            <div class="text-center">
-                <p class="mb-0">&copy; 2025 Stefi Travel. All rights reserved.</p>
-            </div>
-        </div>
-    </footer> -->
     <footer class="custom-footer">
-        <div class="container">
+        <div class="page-wrapper">
 
             <div class="footer-top">
                 <!-- Logo -->
@@ -200,8 +152,7 @@
                 class="whatsapp-float" target="_blank">
                 <i class="fa fa-whatsapp whatsapp-float-icon"></i>
             </a>
-            <a href="/trip_planner/plan_trip/"
-                class="ai-trip-float" target="_blank">
+            <a href="/trip_planner/plan_trip/" class="ai-trip-float" target="_blank">
                 <i class="fa fa-robot ai-trip-float-icon"></i>
             </a>
         </div>
@@ -212,9 +163,15 @@
 
     <!-- jQuery (optional) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <!-- Custom JS -->
     <script>
+        function toggleMenu() {
+            document.querySelector(".right-menu").classList.toggle("show");
+        }
+
+
         // CSRF token setup for AJAX requests
         function getCookie(name) {
             let cookieValue = null;
@@ -341,56 +298,70 @@
     <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
     </script>
     <script>
-// Convert RGB to relative luminance
-function luminance(r, g, b) {
-    const a = [r, g, b].map(v => {
-        v /= 255;
-        return v <= 0.03928
-            ? v / 12.92
-            : Math.pow((v + 0.055) / 1.055, 2.4);
+        // Convert RGB to relative luminance
+        function luminance(r, g, b) {
+            const a = [r, g, b].map(v => {
+                v /= 255;
+                return v <= 0.03928
+                    ? v / 12.92
+                    : Math.pow((v + 0.055) / 1.055, 2.4);
+            });
+            return (0.2126 * a[0]) + (0.7152 * a[1]) + (0.0722 * a[2]);
+        }
+
+        // Update navbar color based on contrast
+        function updateNavbarTextColor() {
+            const nav = document.querySelector(".custom-navbar");
+            if (!nav) return;
+
+            const behind = document.elementFromPoint(window.innerWidth / 2, nav.offsetHeight / 2);
+            if (!behind) return;
+
+            const bg = window.getComputedStyle(behind).backgroundColor;
+            const rgb = bg.match(/\d+/g);
+
+            if (!rgb) return;
+
+            const [r, g, b] = rgb.map(Number);
+
+            const lum = luminance(r, g, b);
+
+            /*
+                lum 0.0 = pure black
+                lum 1.0 = pure white
+        
+                Light grey is around 0.7–0.85
+            */
+
+            if (lum > 0.55) {
+                // Light background → use dark nav text
+                nav.classList.add("nav-dark-text");
+            } else {
+                // Dark background → use white text
+                nav.classList.remove("nav-dark-text");
+            }
+        }
+
+        // Trigger on page load + scroll + resize
+        window.addEventListener("scroll", updateNavbarTextColor);
+        window.addEventListener("resize", updateNavbarTextColor);
+        document.addEventListener("DOMContentLoaded", updateNavbarTextColor);
+    </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Initialize Select2
+      $('.select2-init').select2({
+        // placeholder: "Select Parent Service",
+        allowClear: true,
+        width: '100%' // makes it responsive
+      });
+
+      // Optional: Fix for Bootstrap floating labels
+      $('.select2-init').on('select2:open', function () {
+        $(this).parent().find('label').addClass('active');
+      });
     });
-    return (0.2126 * a[0]) + (0.7152 * a[1]) + (0.0722 * a[2]);
-}
-
-// Update navbar color based on contrast
-function updateNavbarTextColor() {
-    const nav = document.querySelector(".custom-navbar");
-    if (!nav) return;
-
-    const behind = document.elementFromPoint(window.innerWidth / 2, nav.offsetHeight / 2);
-    if (!behind) return;
-
-    const bg = window.getComputedStyle(behind).backgroundColor;
-    const rgb = bg.match(/\d+/g);
-
-    if (!rgb) return;
-
-    const [r, g, b] = rgb.map(Number);
-
-    const lum = luminance(r, g, b);
-
-    /*
-        lum 0.0 = pure black
-        lum 1.0 = pure white
-
-        Light grey is around 0.7–0.85
-    */
-
-    if (lum > 0.55) { 
-        // Light background → use dark nav text
-        nav.classList.add("nav-dark-text");
-    } else {
-        // Dark background → use white text
-        nav.classList.remove("nav-dark-text");
-    }
-}
-
-// Trigger on page load + scroll + resize
-window.addEventListener("scroll", updateNavbarTextColor);
-window.addEventListener("resize", updateNavbarTextColor);
-document.addEventListener("DOMContentLoaded", updateNavbarTextColor);
-</script>
-
+  </script>
     {% block extra_js %}{% endblock %}
 </body>
 

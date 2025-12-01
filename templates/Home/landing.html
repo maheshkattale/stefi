@@ -4,12 +4,11 @@
 {% block title %}Stefi - Plan Your Perfect Trip{% endblock %}
 
 {% block extra_css %}
-
 <link href="{% static 'assets/css/landing-page.css' %}" rel="stylesheet">
 <style>
     .achivement-path-vector {
         background:url({% static 'assets/images/achivement-vector-bg.png' %}) no-repeat center center;
-        background-size: contain
+        background-size: contain;
     }
 
     .stefi-different-section {
@@ -34,21 +33,21 @@
         background:url("{% static 'assets/images/hero-bg.jpg' %}") no-repeat center center/cover;
 
     }
-    .card{
+
+    .card {
         text-decoration: none;
         color: white;
+        border: none;
     }
-    a.card:hover{
-        color: #4ac9f5;
+
+    a.card:hover {
+        color: #e0e0e0;
+
+
     }
 </style>
 {% endblock %}
-
-
 {% block content %}
-
-
-
 <section class="hero-section">
 
     <div class="hero-overlay"></div>
@@ -107,7 +106,7 @@
 
 </section>
 
-<section class="places-section container my-3">
+<section class="places-section page-wrapper py-3">
     <div class="places-left">
         <p class="places-subtitle">Enjoy With Your Love Ones</p>
         <h2 class="places-title">Places to Travel</h2>
@@ -160,7 +159,7 @@
     </div>
 </section>
 
-<section class="nearest-hotel-section container">
+<section class="nearest-hotel-section page-wrapper">
 
     <div class="nh-location-wrapper">
         <div id="locationPicker" class="nh-location">
@@ -225,7 +224,7 @@
     </div>
 </section>
 
-<section class="prod-section container my-2">
+<section class="prod-section page-wrapper my-2">
     <div class="prod-header">
         <div>
             <p class="prod-sub">Shop Travel Accessories</p>
@@ -368,7 +367,7 @@
 
     <!-- Modal container (hidden) -->
     <div id="modalRoot"></div>
-    
+
 </section>
 
 <!-- Trip Selection Modal -->
