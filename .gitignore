@@ -16,8 +16,7 @@ db.sqlite3
 *.log
 
 # Static / media
-static/
-staticfiles/
+
 media/
 
 # Cache

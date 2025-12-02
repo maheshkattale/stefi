@@ -1,0 +1,229 @@
+:root {
+    --primary-color: #057b93;
+    --secondary-color: #11ccf1;
+    --accent-color: #ff6b6b;
+    --light-bg: #f8fafc;
+    --dark-text: #2c3e50;
+}
+
+
+
+.navbar {
+    background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+}
+
+
+
+.planning-card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    padding: 25px;
+    margin-bottom: 25px;
+    transition: transform 0.3s ease;
+}
+
+.planning-card:hover {
+    transform: none;
+    /* Removed hover effect for consistency when dynamic content is loaded */
+}
+
+.section-title {
+    color: #3fc8ff;
+    font-weight: 700;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.budget-card {
+    background: linear-gradient(135deg, #10c6ea 0%, #068099 100%);
+    color: white;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.day-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+}
+
+.transport-card {
+    text-align: center;
+    padding: 15px;
+    border-radius: 12px;
+    background: white;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.transport-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.ai-suggestion {
+    background: #f1f9ff;
+    border-left: 4px solid var(--secondary-color);
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+}
+
+.packing-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.packing-list li {
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.packing-list li:before {
+    content: "\f005";
+    color: var(--secondary-color);
+    font-weight: bold;
+    display: inline-block;
+    width: 1em;
+    margin-left: -1em;
+}
+
+.cost-breakdown {
+    width: 100%;
+    margin-top: 15px;
+}
+
+.cost-breakdown tr {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.cost-breakdown tr:last-child {
+    border-bottom: none;
+    font-weight: bold;
+}
+
+.big-btn {
+    background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+    border: none;
+    border-radius: 12px;
+    padding: 12px 25px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(59, 113, 254, 0.3);
+    color: white;
+}
+
+.big-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(59, 113, 254, 0.4);
+}
+
+.form-control,
+.form-select,.select2-container {
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    padding:  5px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+.select2-container--default .select2-selection--single,
+.select2-container--default .select2-selection--multiple{
+    border: none;
+    outline: none;
+}
+.select2-container--default .select2-selection--single:focus,
+.select2-container--default .select2-selection--multiple:focus{
+    border: none;
+    outline: none;
+}
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 26px;
+    position: absolute;
+    top: 5px;
+    right: 1px;
+    width: 20px;
+}
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 0.2rem rgba(17, 204, 241, 0.15);
+}
+
+.date-badge {
+    background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+    color: white;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+/* Skeleton Loader Styles */
+.skeleton {
+    animation: pulse 1.5s infinite ease-in-out;
+    background: linear-gradient(-90deg, #f0f0f0 0%, #f8f8f8 50%, #f0f0f0 100%);
+    background-size: 400% 400%;
+    border-radius: 8px;
+}
+
+.skeleton-text {
+    height: 12px;
+    margin: 5px 0;
+}
+
+.skeleton-row {
+    height: 40px;
+    margin-bottom: 10px;
+}
+
+.skeleton-suggestion {
+    height: 50px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+}
+
+@keyframes pulse {
+    0% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.placeholder-output {
+    opacity: 0.7;
+}
+
+@media (max-width: 768px) {
+    .transport-card {
+        margin-bottom: 15px;
+    }
+}
+
+.page-hero {
+    max-width: 1200px;
+    margin: 80px 0 20px 0;
+    padding: 22px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.page-hero h1 {
+    font-size: 28px;
+    font-weight: 800;
+}
+
+.page-hero p {
+    color: #555;
+    margin: 0;
+}

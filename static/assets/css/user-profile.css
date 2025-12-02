@@ -1,0 +1,214 @@
+/* ===========================
+   HERO PROFILE HEADER
+=========================== */
+.profile-hero {
+    padding-top: 140px;
+    padding-bottom: 30px;
+}
+
+.profile-box {
+    background: #fff;
+    border-radius: 20px;
+    padding: 25px;
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+}
+
+.profile-photo {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.profile-details h2 {
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.profile-details p {
+    margin: 5px 0;
+    color: #555;
+}
+
+.btn-edit {
+    margin-left: auto;
+    background: #3fc8ff;
+    padding: 10px 20px;
+    border-radius: 10px;
+    color: white;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+/* ===========================
+   NAV TABS
+=========================== */
+.profile-nav {
+    background: white;
+    border-bottom: 1px solid #eee;
+}
+
+.profile-tabs {
+    display: flex;
+    gap: 25px;
+    padding: 15px 0;
+    list-style: none;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.tab {
+    padding: 10px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    color: #333;
+}
+
+.tab.active {
+    background: #3fc8ff;
+    color: white;
+}
+
+/* ===========================
+   TAB CONTENT
+=========================== */
+.profile-container {
+    padding-top: 30px;
+}
+
+.tab-section {
+    display: none;
+}
+
+.tab-section.active {
+    display: block;
+}
+
+/* ===========================
+   PERSONAL INFO CARD
+=========================== */
+.glass {
+    background: #fff;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.07);
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.info-item span {
+    font-weight: 600;
+    color: #333;
+}
+
+/* ===========================
+   TRIPS
+=========================== */
+.trip-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 24px;
+}
+
+.trip-card {
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 5px 18px rgba(0,0,0,0.1);
+}
+
+.trip-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+
+.trip-info {
+    padding: 15px;
+}
+
+.details-btn {
+    color: #3fc8ff;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+/* ===========================
+   SAVED PLACES
+=========================== */
+.saved-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 20px;
+}
+
+.saved-card {
+    height: 180px;
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+}
+
+.saved-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.saved-card span {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    background: rgba(0,0,0,0.6);
+    padding: 6px 10px;
+    color: white;
+    border-radius: 8px;
+}
+
+/* ===========================
+   SETTINGS
+=========================== */
+.settings-box {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.setting-btn {
+    padding: 14px;
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.delete-btn {
+    padding: 14px;
+    background: #ff4d4d;
+    color: white;
+    border-radius: 12px;
+    font-weight: 600;
+}
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+@media(max-width: 768px) {
+    .profile-box {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .btn-edit {
+        margin-left: 0;
+    }
+}
