@@ -203,7 +203,7 @@ from rest_framework.response import Response
 
 # --- API Key Configuration ---
 # CRITICAL: API key MUST be empty for the execution environment to inject the secure token.
-GEMINI_API_KEY = "AIzaSyBSnrrXtTcEx5ioD5xmAa8Z3l2rbcD7_t8" 
+GEMINI_API_KEY = "AIzaSyAFRSVeDZVLAUUYaYwlMY2i7E4OYILwlMs" 
 
 # --- Constants for Retry Logic ---
 MAX_RETRIES = 5
