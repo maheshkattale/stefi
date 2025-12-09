@@ -31,16 +31,17 @@ def login(request):
 
         login_request = requests.post(login_url, data=data)
         login_response = login_request.json()
-        print("login_response",login_response)
         if login_response['response']['n'] == 1:
             token = login_response['data']['token']
+            print("token",token)
+
             request.session['token'] = token 
             request.session['role_id'] = login_response['data']['role'] 
             request.session['role_name'] = login_response['data']['role_name']  
             request.session['user_name'] = login_response['data']['username']   
             return HttpResponse(json.dumps(login_response),content_type='application/json')
         else:
-            # messages.error(request, login_response['response']['msg'])
+            messages.error(request, login_response['response']['msg'])
             return HttpResponse(json.dumps(login_response),content_type='application/json')
     else:
         return render(request, 'admin/Authentication/auth_login_basic.html')
@@ -78,4 +79,11 @@ def forgot_password(request):
             return HttpResponse(json.dumps(forgot_password_response),content_type='application/json')
     else:
         return render(request, 'admin/Authentication/auth_forgot_password_basic.html')
+def users_list(request):
+    token = request.session.get('token',False)
+    if token:
 
+        return render(request, 'admin/user/users_list.html')
+    else:
+        messages.error(request, 'Session expired. Please log in again.')
+        return redirect('Frontend_User:login') # change this.

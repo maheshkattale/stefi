@@ -19,12 +19,14 @@
     <link href="{% static 'assets/css/base-page.css' %}" rel="stylesheet">
 
     <!-- Custom CSS -->
-     
-  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&display=swap"
+        rel="stylesheet">
     {% block extra_css %}{% endblock %}
 </head>
 
@@ -163,7 +165,7 @@
 
     <!-- jQuery (optional) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <!-- Custom JS -->
     <script>
@@ -297,71 +299,171 @@
 
     <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
     </script>
-    <script>
-        // Convert RGB to relative luminance
-        function luminance(r, g, b) {
-            const a = [r, g, b].map(v => {
-                v /= 255;
-                return v <= 0.03928
-                    ? v / 12.92
-                    : Math.pow((v + 0.055) / 1.055, 2.4);
-            });
-            return (0.2126 * a[0]) + (0.7152 * a[1]) + (0.0722 * a[2]);
-        }
+<script>
+(function () {
+  // Returns navbar element and its height
+  function getNav() {
+    return document.querySelector('.custom-navbar');
+  }
 
-        // Update navbar color based on contrast
-        function updateNavbarTextColor() {
-            const nav = document.querySelector(".custom-navbar");
-            if (!nav) return;
+  function setNavTheme(isLight) {
+    const nav = getNav();
+    if (!nav) return;
+    if (isLight) nav.classList.add('nav-dark-text');
+    else nav.classList.remove('nav-dark-text');
+  }
 
-            const behind = document.elementFromPoint(window.innerWidth / 2, nav.offsetHeight / 2);
-            if (!behind) return;
+  // Find all section elements that declare theme
+  function getThemedSections() {
+    return Array.from(document.querySelectorAll('[data-nav-theme]'));
+  }
 
-            const bg = window.getComputedStyle(behind).backgroundColor;
-            const rgb = bg.match(/\d+/g);
-
-            if (!rgb) return;
-
-            const [r, g, b] = rgb.map(Number);
-
-            const lum = luminance(r, g, b);
-
-            /*
-                lum 0.0 = pure black
-                lum 1.0 = pure white
-        
-                Light grey is around 0.7–0.85
-            */
-
-            if (lum > 0.55) {
-                // Light background → use dark nav text
-                nav.classList.add("nav-dark-text");
-            } else {
-                // Dark background → use white text
-                nav.classList.remove("nav-dark-text");
+  // If there's no themed sections, fallback to elementFromPoint method
+  function fallbackSetup() {
+    // improved elementFromPoint approach (checks several sample points)
+    function sampleAndDecide() {
+      const nav = getNav();
+      if (!nav) return;
+      const sampleY = nav.offsetHeight + 5;
+      const sampleXs = [window.innerWidth/2, window.innerWidth*0.25, window.innerWidth*0.75];
+      let lightVotes = 0, darkVotes = 0;
+      sampleXs.forEach(x => {
+        const el = document.elementFromPoint(x, sampleY);
+        if (!el) return;
+        const bg = window.getComputedStyle(el).backgroundColor || '';
+        if (bg && bg.includes('rgb')) {
+          const nums = bg.match(/\d+/g);
+          if (!nums) return;
+          const r = +nums[0], g = +nums[1], b = +nums[2];
+          // compute luminance
+          const a = [r,g,b].map(v => {
+            v /= 255; return v <= 0.03928 ? v/12.92 : Math.pow((v+0.055)/1.055, 2.4);
+          });
+          const lum = 0.2126*a[0] + 0.7152*a[1] + 0.0722*a[2];
+          (lum > 0.55) ? lightVotes++ : darkVotes++;
+        } else {
+          // if bg not rgb (transparent) try checking ancestor backgrounds
+          let ancestor = el;
+          while (ancestor && ancestor !== document.body) {
+            const bg2 = window.getComputedStyle(ancestor).backgroundColor || '';
+            if (bg2 && bg2.includes('rgb')) {
+              const nums = bg2.match(/\d+/g);
+              if (!nums) break;
+              const r = +nums[0], g = +nums[1], b = +nums[2];
+              const a = [r,g,b].map(v => {
+                v /= 255; return v <= 0.03928 ? v/12.92 : Math.pow((v+0.055)/1.055, 2.4);
+              });
+              const lum2 = 0.2126*a[0] + 0.7152*a[1] + 0.0722*a[2];
+              (lum2 > 0.55) ? lightVotes++ : darkVotes++;
+              break;
             }
+            ancestor = ancestor.parentElement;
+          }
         }
+      });
 
-        // Trigger on page load + scroll + resize
-        window.addEventListener("scroll", updateNavbarTextColor);
-        window.addEventListener("resize", updateNavbarTextColor);
-        document.addEventListener("DOMContentLoaded", updateNavbarTextColor);
+      setNavTheme(lightVotes > darkVotes);
+    }
+
+    window.addEventListener('scroll', throttle(sampleAndDecide, 120));
+    window.addEventListener('resize', throttle(sampleAndDecide, 120));
+    document.addEventListener('DOMContentLoaded', sampleAndDecide);
+    // run immediately
+    sampleAndDecide();
+  }
+
+  // Simple throttle util
+  function throttle(fn, wait) {
+    let last = 0;
+    return function() {
+      const now = Date.now();
+      if (now - last >= wait) {
+        last = now;
+        fn.apply(this, arguments);
+      }
+    };
+  }
+
+  // Main: use IntersectionObserver if themed sections exist
+  function init() {
+    const nav = getNav();
+    if (!nav) return;
+
+    const sections = getThemedSections();
+    if (!sections.length) {
+      // no themed sections — fallback
+      fallbackSetup();
+      return;
+    }
+
+    // Create observer: rootMargin places the observation line at navbar bottom
+    const observerOptions = {
+      root: null,
+      rootMargin: `-${nav.offsetHeight - 1}px 0px 0px 0px`, // observe when element's top crosses just below navbar
+      threshold: [0, 0.1, 0.5, 1]
+    };
+
+    let currentTheme = null;
+
+    const io = new IntersectionObserver((entries) => {
+      // pick the entry that is currently intersecting and closest to top (highest intersectionRatio)
+      const visible = entries
+        .filter(e => e.isIntersecting)
+        .sort((a,b) => b.intersectionRatio - a.intersectionRatio);
+
+      if (visible.length) {
+        const topVisible = visible[0].target;
+        const theme = topVisible.getAttribute('data-nav-theme') === 'light';
+        if (theme !== currentTheme) {
+          currentTheme = theme;
+          setNavTheme(theme);
+        }
+      } else {
+        // if nothing visible, keep as is (or reset)
+      }
+    }, observerOptions);
+
+    sections.forEach(s => io.observe(s));
+
+    // Recompute observer when window resized (navbar height may change)
+    window.addEventListener('resize', throttle(() => {
+      io.disconnect();
+      // re-create with new nav height
+      sections.forEach(s => io.observe(s));
+    }, 200));
+
+    // initial check
+    // small timeout to allow layout paint
+    setTimeout(() => {
+      // force a synthetic check by scrolling by 0
+      window.dispatchEvent(new Event('scroll'));
+    }, 60);
+  }
+
+  // init on dom ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize Select2
+            $('.select2-init').select2({
+                // placeholder: "Select Parent Service",
+                allowClear: true,
+                width: '100%' // makes it responsive
+            });
+
+            // Optional: Fix for Bootstrap floating labels
+            $('.select2-init').on('select2:open', function () {
+                $(this).parent().find('label').addClass('active');
+            });
+        });
     </script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      // Initialize Select2
-      $('.select2-init').select2({
-        // placeholder: "Select Parent Service",
-        allowClear: true,
-        width: '100%' // makes it responsive
-      });
-
-      // Optional: Fix for Bootstrap floating labels
-      $('.select2-init').on('select2:open', function () {
-        $(this).parent().find('label').addClass('active');
-      });
-    });
-  </script>
     {% block extra_js %}{% endblock %}
 </body>
 

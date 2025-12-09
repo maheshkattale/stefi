@@ -3,133 +3,155 @@
 
 {% block title %}Admin Dashboard - Stefi Travel{% endblock %}
 
-{% block extra_css %}
+{% block layout %}
 
-{% endblock %}
+<!-- Stats -->
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="stats-card text-center">
+            <div class="stats-icon bg-primary text-white"><i class="fas fa-suitcase"></i></div>
+            <div class="stats-number text-primary">128</div>
+            <div class="stats-label">Total Trips</div>
+        </div>
+    </div>
 
-{% block content %}
+    <div class="col-md-3">
+        <div class="stats-card text-center">
+            <div class="stats-icon bg-success text-white"><i class="fas fa-users"></i></div>
+            <div class="stats-number text-success">542</div>
+            <div class="stats-label">Registered Users</div>
+        </div>
+    </div>
 
+    <div class="col-md-3">
+        <div class="stats-card text-center">
+            <div class="stats-icon bg-info text-white"><i class="fas fa-rupee-sign"></i></div>
+            <div class="stats-number text-info">₹12,85,000</div>
+            <div class="stats-label">Total Revenue</div>
+        </div>
+    </div>
 
-        <!-- Stats -->
-        <div class="row g-4 mb-4">
-            <div class="col-md-3">
-                <div class="stats-card text-center">
-                    <div class="stats-icon bg-primary text-white"><i class="fas fa-suitcase"></i></div>
-                    <div class="stats-number text-primary">{{ total_trips }}</div>
-                    <div class="stats-label">Total Trips</div>
+    <div class="col-md-3">
+        <div class="stats-card text-center">
+            <div class="stats-icon bg-warning text-white"><i class="fas fa-map-marker-alt"></i></div>
+            <div class="stats-number text-warning">14</div>
+            <div class="stats-label">Active Destinations</div>
+        </div>
+    </div>
+    
+</div>
+
+<!-- Charts + Popular Destinations -->
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="chart-container">
+            <div class="chart-header">
+                <h5>Revenue Overview</h5>
+                <span class="badge bg-primary">₹12,85,000</span>
+            </div>
+            <div class="text-center py-5 bg-light rounded">
+                <i class="fas fa-chart-line fa-3x text-primary mb-3"></i>
+                <p class="text-muted mb-0">Revenue growth looks strong this month</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="chart-container">
+            <h5>Popular Destinations</h5>
+
+            <div class="mt-3">
+                <div class="d-flex justify-content-between">
+                    <span>Goa</span>
+                    <span class="badge bg-primary">45 trips</span>
+                </div>
+                <div class="progress mt-2" style="height: 6px;">
+                    <div class="progress-bar bg-primary" style="width: 85%"></div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="stats-card text-center">
-                    <div class="stats-icon bg-success text-white"><i class="fas fa-users"></i></div>
-                    <div class="stats-number text-success">{{ total_users }}</div>
-                    <div class="stats-label">Registered Users</div>
+
+            <div class="mt-3">
+                <div class="d-flex justify-content-between">
+                    <span>Manali</span>
+                    <span class="badge bg-primary">32 trips</span>
+                </div>
+                <div class="progress mt-2" style="height: 6px;">
+                    <div class="progress-bar bg-primary" style="width: 65%"></div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="stats-card text-center">
-                    <div class="stats-icon bg-info text-white"><i class="fas fa-rupee-sign"></i></div>
-                    <div class="stats-number text-info">₹{{ total_revenue|floatformat:0 }}</div>
-                    <div class="stats-label">Total Revenue</div>
+
+            <div class="mt-3">
+                <div class="d-flex justify-content-between">
+                    <span>Dubai</span>
+                    <span class="badge bg-primary">18 trips</span>
                 </div>
-            </div>
-            <div class="col-md-3">
-                <div class="stats-card text-center">
-                    <div class="stats-icon bg-warning text-white"><i class="fas fa-map-marker-alt"></i></div>
-                    <div class="stats-number text-warning">{{ popular_destinations|length }}</div>
-                    <div class="stats-label">Active Destinations</div>
+                <div class="progress mt-2" style="height: 6px;">
+                    <div class="progress-bar bg-primary" style="width: 40%"></div>
                 </div>
             </div>
         </div>
+    </div>
+</div>
 
-        <!-- Charts + Recent -->
-        <div class="row g-4">
-            <div class="col-lg-8">
-                <div class="chart-container">
-                    <div class="chart-header">
-                        <h5>Revenue Overview</h5>
-                        <span class="badge bg-primary">₹{{ total_revenue|floatformat:0 }}</span>
-                    </div>
-                    <div class="text-center py-5 bg-light rounded">
-                        <i class="fas fa-chart-line fa-3x text-primary mb-3"></i>
-                        <p class="text-muted mb-0">Chart.js integration placeholder</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-4">
-                <div class="chart-container">
-                    <h5>Popular Destinations</h5>
-                    {% for dest in popular_destinations %}
-                    <div class="mt-3">
-                        <div class="d-flex justify-content-between">
-                            <span>{{ dest.destination }}</span>
-                            <span class="badge bg-primary">{{ dest.trip_count }} trips</span>
-                        </div>
-                        <div class="progress mt-2" style="height: 6px;">
-                            <div class="progress-bar bg-primary" style="width: {{ dest.trip_count }}%"></div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
+<!-- Recent Trips + Quick Actions -->
+<div class="row g-4 mt-4">
+    <div class="col-lg-4">
+        <div class="chart-container">
+            <h5>Quick Actions</h5>
+            <div class="d-grid gap-2 mt-3 quick-actions">
+                <a href="#" class="btn btn-primary"><i class="fas fa-plus me-2"></i> New Trip</a>
+                <a href="#" class="btn btn-success"><i class="fas fa-map-marker-alt me-2"></i> Add Destination</a>
+                <a href="#" class="btn btn-info"><i class="fas fa-user-plus me-2"></i> Add User</a>
+                <a href="#" class="btn btn-warning"><i class="fas fa-file-invoice me-2"></i> New Invoice</a>
+                <a href="#" class="btn btn-secondary"><i class="fas fa-download me-2"></i> Reports</a>
             </div>
         </div>
+    </div>
 
-        <!-- Recent Trips + Quick Actions -->
-        <div class="row g-4 mt-4">
-            <div class="col-lg-4">
-                <div class="chart-container">
-                    <h5>Quick Actions</h5>
-                    <div class="d-grid gap-2 mt-3 quick-actions">
-                        <a href="trips/tripplan/add/" class="btn btn-primary"><i class="fas fa-plus me-2"></i> New Trip</a>
-                        <a href="masters/destination/add/" class="btn btn-success"><i class="fas fa-map-marker-alt me-2"></i> Add Destination</a>
-                        <a href="auth/user/add/" class="btn btn-info"><i class="fas fa-user-plus me-2"></i> Add User</a>
-                        <a href="trips/tripinvoice/add/" class="btn btn-warning"><i class="fas fa-file-invoice me-2"></i> New Invoice</a>
-                        <a href="reports/" class="btn btn-secondary"><i class="fas fa-download me-2"></i> Reports</a>
-                    </div>
-                </div>
-            </div>
+    <div class="col-lg-8">
+        <div class="chart-container admin-table">
+            <h5>Recent Trip Activities</h5>
+            <div class="table-responsive mt-3">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Trip</th>
+                            <th>User</th>
+                            <th>Destination</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Goa Beach Holiday</strong></td>
+                            <td>rahul_23</td>
+                            <td>Goa</td>
+                            <td>Dec 05, 2025</td>
+                            <td><span class="badge bg-success">Completed</span></td>
+                        </tr>
 
-            <div class="col-lg-8">
-                <div class="chart-container admin-table">
-                    <h5>Recent Trip Activities</h5>
-                    <div class="table-responsive mt-3">
-                        <table class="table table-hover align-middle">
-                            <thead>
-                                <tr>
-                                    <th>Trip</th>
-                                    <th>User</th>
-                                    <th>Destination</th>
-                                    <th>Date</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for trip in recent_activities %}
-                                <tr>
-                                    <td><strong>{{ trip.title|truncatewords:3 }}</strong></td>
-                                    <td>{{ trip.user.username }}</td>
-                                    <td>{{ trip.destination }}</td>
-                                    <td>{{ trip.created_at|date:"M d, Y" }}</td>
-                                    <td>
-                                        <span class="badge bg-{% if trip.status == 'completed' %}success{% elif trip.status == 'planned' %}info{% else %}warning{% endif %}">
-                                            {{ trip.get_status_display }}
-                                        </span>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                        <tr>
+                            <td><strong>Manali Snow Trip</strong></td>
+                            <td>priya_travels</td>
+                            <td>Manali</td>
+                            <td>Dec 07, 2025</td>
+                            <td><span class="badge bg-info">Planned</span></td>
+                        </tr>
+
+                        <tr>
+                            <td><strong>Dubai Shopping Tour</strong></td>
+                            <td>arjun98</td>
+                            <td>Dubai</td>
+                            <td>Dec 09, 2025</td>
+                            <td><span class="badge bg-warning">Ongoing</span></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
-
-
-
-
-
-
+    </div>
+</div>
 
 {% endblock %}
 

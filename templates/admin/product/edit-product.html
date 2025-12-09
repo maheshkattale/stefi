@@ -8,31 +8,144 @@
 {% block layout %}
 <!-- Basic Layout -->
 <div class="row">
-    <div class="col-xl">
-      <div class="card mb-12">
-        <div class="card-header d-flex justify-content-between align-items-center">
-          <h5 class="mb-0">Edit Product</h5> <small class="text-body float-end"></small>
-        </div>
-        <div class="card-body">
-          <form>
-            {% csrf_token %}
-            <div class="row">
-              <div class="form-floating form-floating-outline mb-6 col-12">
-                <input type="text" class="form-control" id="Name" placeholder="Name" value="{{product.name}}"/>
-                <label for="Name">Name</label>
-              </div>
+  <div class="col-xl">
+    <div class="card mb-12">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Edit Product</h5> <small class="text-body float-end"></small>
+      </div>
+      <div class="card-body">
+        <form>
 
+          {% csrf_token %}
+          <div class="row">
 
-              
+            <div class="form-floating mb-3 col-6">
+              <input type="text" id="Name" class="form-control" placeholder="Product Name" value="{{product.name}}">
+              <label>Name</label>
             </div>
 
-            <div class="btn btn-primary" onclick="return validation()">Submit</div>
-            <div class="btn btn-danger">Cancel</div>
-          </form>
-        </div>
+            <div class="form-floating mb-3 col-6">
+              <input type="number" step="0.01" id="Price" class="form-control" placeholder="Price"
+                value="{{product.price}}">
+              <label>Price</label>
+            </div>
+
+            <div class="form-floating mb-3 col-6">
+              <select id="Category" class="form-control" onchange="get_sub_category_list(this.value)">
+                <option value="">Select Category</option>
+                {% for c in category_list %}
+                  {% if c.id|stringformat:"s" == product.category|stringformat:"s" %}
+                    <option value="{{ c.id }}" selected>{{ c.name }}</option>
+                  {%else%}
+                    <option value="{{ c.id }}">{{ c.name }}</option>
+                  {% endif %}
+                {% endfor %}
+              </select>
+              <label>Category</label>
+            </div>
+
+            <div class="form-floating mb-3 col-6">
+              <select id="SubCategory" class="form-control">
+                <option value="">Select Subcategory</option>
+                {% for c in subcategory_list %}
+                  {% if c.id|stringformat:"s" == product.subcategory|stringformat:"s" %}
+                    <option value="{{ c.id }}" selected>{{ c.name }}</option>
+                  {%else%}
+                    <option value="{{ c.id }}">{{ c.name }}</option>
+                  {% endif %}
+                {% endfor %}
+              </select>
+              <label>Subcategory</label>
+            </div>
+
+            <div class="form-floating mb-3 col-6">
+              <select id="Brand" class="form-control">
+                <option value="">Select Brand</option>
+                {% for b in brand_list %}
+                  {% if b.id|stringformat:"s" == product.brand|stringformat:"s" %}
+                    <option value="{{ b.id }}" selected>{{ b.name }}</option>
+                  {%else%}
+                    <option value="{{ b.id }}">{{ b.name }}</option>
+                  {% endif %}
+
+                {% endfor %}
+              </select>
+              <label>Brand</label>
+            </div>
+
+            <div class="form-floating mb-3 col-6">
+              <select id="Color" class="form-control">
+                <option value="">Select Color</option>
+                {% for c in color_list %}
+                  {% if c.id|stringformat:"s" == product.color|stringformat:"s" %}
+                    <option value="{{ c.id }}" selected>{{ c.name }}</option>
+                  {%else%}
+                    <option value="{{ c.id }}">{{ c.name }}</option>
+                  {% endif %}
+
+                {% endfor %}
+              </select>
+              <label>Color</label>
+            </div>
+
+            <div class="form-floating mb-3 col-6">
+              <select id="SizeUnit" class="form-control">
+                <option value="">Select Size Unit</option>
+                {% for s in size_units %}
+
+                  {% if s.id|stringformat:"s" == product.size_unit|stringformat:"s" %}
+                    <option value="{{ s.id }}" selected>{{ s.name }}</option>
+                  {%else%}
+                    <option value="{{ s.id }}">{{ s.name }}</option>
+                  {% endif %}
+
+                {% endfor %}
+              </select>
+              <label>Size Unit</label>
+            </div>
+            <div class="form-floating mb-3 col-6">
+              <select id="Vendor" class="form-control">
+                <option value="">Select Vendor</option>
+                {% for s in vendors %}
+                  {% if s.id|stringformat:"s" == product.vendor|stringformat:"s" %}
+                    <option value="{{ s.id }}" selected>{{ s.name }}</option>
+                  {%else%}
+                    <option value="{{ s.id }}">{{ s.name }}</option>
+                  {% endif %}
+                
+                {% endfor %}
+              </select>
+              <label>Size Unit</label>
+            </div>
+            <div class="form-floating mb-3 col-6">
+              <input type="text" id="RedirectUrl" class="form-control" placeholder="Product Redirect Url"
+                value="{{product.redirect_url}}">
+              <label>Redirect-Url</label>
+            </div>
+            <div class="form-floating mb-3 col-12">
+              <textarea id="Description" class="form-control"
+                placeholder="Description">{{product.description}}</textarea>
+              <label>Description</label>
+            </div>
+
+            <div class="form-floating mb-3 col-12">
+              <input type="file" id="ProductImage" class="form-control" accept="image/*">
+              <label>Product Image</label>
+            </div>
+            <div class="form-floating mb-3 col-12">
+            <img src="{{product.product_image_url}}" width="200" height="200"/>
+
+            </div>
+            
+          </div>
+
+          <div class="btn btn-primary" onclick="return validation()">Submit</div>
+          <div class="btn btn-danger">Cancel</div>
+        </form>
       </div>
     </div>
-    <!-- Merged -->
+  </div>
+  <!-- Merged -->
 
 </div>
 {% endblock layout %}
@@ -41,27 +154,120 @@
 {{block.super}}
 
 <script>
-  
+
   function validation() {
     var Name = $("#Name").val().trim();
+    var Price = $("#Price").val().trim();
+    var Category = $("#Category").val();
+    var SubCategory = $("#SubCategory").val();
+    var Brand = $("#Brand").val();
+    var SizeUnit = $("#SizeUnit").val();
+    var Color = $("#Color").val();
+    var Description = $("#Description").val().trim();
+    var RedirectUrl = $("#RedirectUrl").val().trim();
+    var Vendor = $("#Vendor").val();
 
 
     if (IsValid(Name)) {
       swal({
-            icon: "error",
-            title: "",
-            text: "Please enter valid Name",
+        icon: "error",
+        title: "",
+        text: "Please enter valid Name",
 
-          });
-          
+      });
+
       $("#Name").focus();
       return false;
+    }else if (IsValid(Price)) {
+      swal({
+        icon: "error",
+        title: "",
+        text: "Please enter valid Price",
+
+      });
+
+      $("#Price").focus();
+      return false;
+    }else if (IsValid(Category)) {
+      swal({
+        icon: "error",
+        title: "",
+        text: "Please select valid category",
+
+      });
+
+      $("#Category").focus();
+      return false;
+    }else if (IsValid(SubCategory)) {
+      swal({
+        icon: "error",
+        title: "",
+        text: "Please select valid sub category",
+
+      });
+
+      $("#SubCategory").focus();
+      return false;
+    }else if (IsValid(Brand)) {
+      swal({
+        icon: "error",
+        title: "",
+        text: "Please select valid brand",
+
+      });
+
+      $("#Brand").focus();
+      return false;
+    }else if (IsValid(Color)) {
+      swal({
+        icon: "error",
+        title: "",
+        text: "Please select valid color",
+
+      });
+
+      $("#Color").focus();
+      return false;
+    }else if (IsValid(SizeUnit)) {
+      swal({
+        icon: "error",
+        title: "",
+        text: "Please select valid size-unit",
+
+      });
+
+      $("#SizeUnit").focus();
+      return false;
+    }else if (IsValid(Vendor)) {
+      swal({
+        icon: "error",
+        title: "",
+        text: "Please select valid vendor",
+
+      });
+
+      $("#Vendor").focus();
+      return false;
     }
-    
+
     else {
       var formData = new FormData();
       formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
       formData.append('name', Name);
+      formData.append('price', Price);
+      formData.append('category', Category);
+      formData.append('subcategory', SubCategory);
+      formData.append('brand', Brand);
+      formData.append('size_unit', SizeUnit);
+      formData.append('color', Color);
+      formData.append('description', Description);
+      formData.append('vendor', Vendor);
+      formData.append('redirect_url', RedirectUrl);
+
+      if($('#ProductImage')[0].files.length>0){
+        formData.append('product_image', $('#ProductImage')[0].files[0]);
+      }
+
       formData.append('id', '{{product.id}}');
 
 
@@ -90,8 +296,8 @@
               text: response.response.msg,
               button: "Close",
             }).then(() => {
-                window.location.href = hosturl + '/stefi-admin-product/product-list';
-              });
+              window.location.href = hosturl + '/stefi-admin-product/product-list';
+            });
 
 
           }
@@ -112,6 +318,28 @@
 
 
   }
-
+function get_sub_category_list(parent_category_id) {
+    if (parent_category_id) {
+      $.ajax({
+        url: hosturl + "/api/product/product_subcategory_list",
+        type: 'POST',
+        data: {
+          'category_id': parent_category_id,
+          'csrfmiddlewaretoken': '{{ csrf_token }}'
+        },
+        dataType: 'json',
+        success: function (response) {
+          var SubCategory = $("#SubCategory");
+          SubCategory.empty();
+          SubCategory.append('<option value="">Select Sub-Category</option>');
+          $.each(response.data, function (index, category) {
+            SubCategory.append('<option value="' + category.id + '">' + category.name + '</option>');
+          });
+        }
+      });
+    } else {
+      $("#SubCategory").empty().append('<option value="">Select Sub-Category</option>');
+    }
+  }
 </script>
 {%endblock page_js %}

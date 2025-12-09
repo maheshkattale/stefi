@@ -46,6 +46,95 @@
 
     }
 </style>
+<style>
+/* ===== Explore By Experience (Fixed Premium Design) ===== */
+
+.experience-section {
+  padding: 70px 0;
+  background: #f9fbfd;
+}
+
+.experience-header {
+  margin-bottom: 45px;
+}
+
+.experience-header span {
+  font-size: 14px;
+  color: #4f7cff;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.experience-header h2 {
+  font-size: 34px;
+  font-weight: 800;
+  color: #0f172a;
+  margin-top: 6px;
+}
+
+.experience-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 15px;
+  margin: auto;
+}
+
+.experience-card {
+  background: #fff;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  transition: 0.35s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.experience-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 45px rgba(0,0,0,0.15);
+}
+
+.experience-img {
+  height: 200px;
+  overflow: hidden;
+}
+
+.experience-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.experience-body {
+  padding: 18px;
+}
+
+.experience-body h4 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: #0f172a;
+}
+
+.experience-body p {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0;
+}
+
+.experience-icon {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: #4f7cff;
+  color: #fff;
+  font-size: 16px;
+  padding: 10px;
+  border-radius: 50%;
+  box-shadow: 0 8px 20px rgba(79,124,255,0.4);
+}
+</style>
+
 {% endblock %}
 {% block content %}
 <section class="hero-section">
@@ -369,6 +458,222 @@
     <div id="modalRoot"></div>
 
 </section>
+
+
+
+<section class="prod-section page-wrapper my-2">
+    <div class="prod-header">
+        <div>
+            <p class="prod-sub">Travel By our Interest</p>
+            <h3 class="prod-title">Explore By Interest</h3>
+        </div>
+
+
+    </div>
+
+    <!-- grid -->
+    <div class="prod-grid" id="prodGrid">
+        <!-- Sample product cards. You can render these from backend or JS -->
+        <!-- Product 1: uses uploaded file path as example image -->
+        <article class="product-card" data-category="electronics" data-id="p1">
+            <div class="product-thumb">
+                <img src="{%static 'assets/images/products/p1.jpg'%}" alt="Camera Kit">
+                <div class="prod-badge">Electronics</div>
+                <button class="view-btn" data-id="p1">View</button>
+            </div>
+
+            <div class="product-meta">
+                <div class="product-info">
+                    <div class="product-title">Pro Camera Kit</div>
+                    <div class="product-cat">Mirrorless + Lenses</div>
+                    <div class="price-row">
+                        <div>
+                            <span class="prod-price">₹1,499</span>
+                            <span class="prod-old">₹2,199</span>
+                        </div>
+                        <div class="rating">★ 4.8 <span> (124)</span></div>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <!-- Product 2 -->
+        <article class="product-card" data-category="camping" data-id="p2">
+            <div class="product-thumb">
+                <img src="{%static 'assets/images/products/p2.jpg'%}" alt="Tent">
+                <div class="prod-badge">Camping</div>
+                <button class="view-btn" data-id="p2">View</button>
+            </div>
+            <div class="product-meta">
+                <div class="product-info">
+                    <div class="product-title">Lightweight 2P Tent</div>
+                    <div class="product-cat">4-season, waterproof</div>
+                    <div class="price-row">
+                        <div><span class="prod-price">₹499</span> <span class="prod-old">₹799</span></div>
+                        <div class="rating">★ 4.6 <span> (89)</span></div>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <!-- Product 3 -->
+        <article class="product-card" data-category="bag" data-id="p3">
+            <div class="product-thumb">
+                <img src="{%static 'assets/images/products/p3.jpg'%}" alt="Backpack">
+                <div class="prod-badge">Bag Packing</div>
+                <button class="view-btn" data-id="p3">View</button>
+            </div>
+            <div class="product-meta">
+                <div class="product-info">
+                    <div class="product-title">Carry-On Travel Backpack</div>
+                    <div class="product-cat">35L, anti-theft</div>
+                    <div class="price-row">
+                        <div><span class="prod-price">₹899</span> <span class="prod-old">₹1,399</span></div>
+                        <div class="rating">★ 4.7 <span> (203)</span></div>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <!-- Product 4 -->
+        <article class="product-card" data-category="electronics" data-id="p4">
+            <div class="product-thumb">
+                <img src="{%static 'assets/images/products/p4.jpg'%}" alt="Powerbank">
+                <div class="prod-badge">Electronics</div>
+                <button class="view-btn" data-id="p4">View</button>
+            </div>
+            <div class="product-meta">
+                <div class="product-info">
+                    <div class="product-title">High-Capacity Powerbank</div>
+                    <div class="product-cat">20000mAh</div>
+                    <div class="price-row">
+                        <div><span class="prod-price">₹299</span> <span class="prod-old">₹499</span></div>
+                        <div class="rating">★ 4.5 <span> (512)</span></div>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <!-- Product 5 -->
+        <article class="product-card" data-category="others" data-id="p5">
+            <div class="product-thumb">
+                <img src="{%static 'assets/images/products/p5.jpg'%}" alt="Neck Pillow">
+                <div class="prod-badge">Others</div>
+                <button class="view-btn" data-id="p5">View</button>
+            </div>
+            <div class="product-meta">
+                <div class="product-info">
+                    <div class="product-title">Ergonomic Neck Pillow</div>
+                    <div class="product-cat">Memory foam</div>
+                    <div class="price-row">
+                        <div><span class="prod-price">₹149</span> <span class="prod-old">₹249</span></div>
+                        <div class="rating">★ 4.4 <span> (78)</span></div>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <!-- Product 6 -->
+        <article class="product-card" data-category="camping" data-id="p6">
+            <div class="product-thumb">
+                <img src="{%static 'assets/images/products/p6.jpg'%}" alt="Stove">
+                <div class="prod-badge">Camping</div>
+                <button class="view-btn" data-id="p6">View</button>
+            </div>
+            <div class="product-meta">
+                <div class="product-info">
+                    <div class="product-title">Portable Camping Stove</div>
+                    <div class="product-cat">Lightweight, foldable</div>
+                    <div class="price-row">
+                        <div><span class="prod-price">₹249</span> <span class="prod-old">₹399</span></div>
+                        <div class="rating">★ 4.3 <span> (45)</span></div>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </div>
+
+    <!-- Modal container (hidden) -->
+    <div id="modalRoot"></div>
+
+</section>
+
+
+
+
+<section class="experience-section page-wrapper my-2">
+  <div class="experience-header">
+    <span>Travel By Our Interest</span>
+    <h2>Explore By Experience</h2>
+  </div>
+
+  <div class="experience-grid">
+
+    <!-- Adventure -->
+    <div class="experience-card">
+      <div class="experience-icon"><i class="fas fa-mountain"></i></div>
+      <div class="experience-img">
+        <img src="{% static 'assets/img/interests/adventure.jpg' %}">
+      </div>
+      <div class="experience-body">
+        <h4>Adventure Trips</h4>
+        <p>Trekking • Rafting • Camping</p>
+      </div>
+    </div>
+
+    <!-- Beach -->
+    <div class="experience-card">
+      <div class="experience-icon"><i class="fas fa-umbrella-beach"></i></div>
+      <div class="experience-img">
+        <img src="{% static 'assets/img/interests/beach.jpg' %}">
+      </div>
+      <div class="experience-body">
+        <h4>Beach Holidays</h4>
+        <p>Goa • Andaman • Maldives</p>
+      </div>
+    </div>
+
+    <!-- Honeymoon -->
+    <div class="experience-card">
+      <div class="experience-icon"><i class="fas fa-heart"></i></div>
+      <div class="experience-img">
+        <img src="{% static 'assets/img/interests/honeymoon.jpg' %}">
+      </div>
+      <div class="experience-body">
+        <h4>Honeymoon</h4>
+        <p>Luxury • Romantic • Resorts</p>
+      </div>
+    </div>
+
+    <!-- Wildlife -->
+    <div class="experience-card">
+      <div class="experience-icon"><i class="fas fa-paw"></i></div>
+      <div class="experience-img">
+        <img src="{% static 'assets/img/interests/wildlife.jpg' %}">
+      </div>
+      <div class="experience-body">
+        <h4>Wildlife & Safari</h4>
+        <p>Jungle • National Parks</p>
+      </div>
+    </div>
+
+    <!-- Spiritual -->
+    <div class="experience-card">
+      <div class="experience-icon"><i class="fas fa-praying-hands"></i></div>
+      <div class="experience-img">
+        <img src="{% static 'assets/img/interests/religious.jpg' %}">
+      </div>
+      <div class="experience-body">
+        <h4>Spiritual Tours</h4>
+        <p>Temples • Ashrams • Yatra</p>
+      </div>
+    </div>
+
+
+
+  </div>
+</section>
+
 
 <!-- Trip Selection Modal -->
 <div class="modal fade" id="tripSelectionModal" tabindex="-1" aria-hidden="true">

@@ -4,6 +4,9 @@ from product.views import *
 urlpatterns = [
     path('product_list', product_list, name='api_product_list'),
     path('product_list_pagination', product_list_pagination.as_view(), name='api_product_list_pagination'),
+    path('delete_product', delete_product, name='api_delete_product'),
+    path('product_by_id', product_by_id, name='api_product_by_id'),
+    path('update_product', update_product, name='api_update_product'),
     
 
     # path('')
@@ -28,6 +31,8 @@ urlpatterns = [
 
 
     path('product_brand_list', product_brand_list, name='api_product_brand_list'),
+    path('product_brand_list_pagination', product_brand_list_pagination.as_view(), name='api_product_brand_list_pagination'),
+
     path('add_product_brand', add_product_brand, name='api_add_product_brand'),
     path('update_product_brand', update_product_brand, name='api_update_product_brand'),
     path('delete_product_brand', delete_product_brand, name='api_delete_product_brand'),

@@ -22,7 +22,8 @@ def get_session(request):
 
 
    
-    return {'token':token,
+    return {
+            'token':token,
             'hosturl':hosturl,
             'role_id':role_id,
             'role_name':role_name,

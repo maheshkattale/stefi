@@ -35,7 +35,7 @@ class product_list_pagination(GenericAPIView):
         products_obj = Product.objects.filter(isActive=True).order_by('name')
         if products_obj.exists():
             page4 = self.paginate_queryset(products_obj)
-            serializer=ProductSerializers(page4,many=True)
+            serializer=CustomProductSerializers(page4,many=True)
             return self.get_paginated_response(serializer.data)
         else:
             return self.get_paginated_response([])
@@ -56,7 +56,7 @@ def product_list(request):
 def add_product(request):
     data = request.data.copy()
     data['isActive']=True
-
+    print("data",data)
     alredy_exists = Product.objects.filter(Q(name__iexact=data.get('name')) & Q(isActive=True))
     if alredy_exists.exists():
         return Response({"response":{"n":0,"msg":"Product  with this name already exists","status":"error"}})
@@ -65,8 +65,9 @@ def add_product(request):
         serializer.save()
         return Response({"response":{"n":1,"msg":"Product added successfully","status":"success"},"data":serializer.data})
     else:
-        return Response({"response":{"n":0,"msg":"Invalid data","status":"error"},"errors":serializer.errors})
-    
+        first_key, first_value = next(iter(serializer.errors.items()))
+        return Response({"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"},"errors":serializer.errors})
+            
 
 @api_view(['POST'])
 def update_product(request):
@@ -112,7 +113,7 @@ def product_by_id(request):
     except Product.DoesNotExist:
         return Response({"response":{"n":0,"msg":"Product product not found","status":"error"}})
     
-    serializer=ProductSerializers(product_obj)
+    serializer=CustomProductSerializers(product_obj)
     return Response({"response":{"n":1,"msg":"Product product fetched successfully","status":"success"},"data":serializer.data})
 
 
@@ -215,9 +216,13 @@ class product_sub_category_list_pagination(GenericAPIView):
             return self.get_paginated_response([])
 
 
-@api_view(['GET'])
+@api_view(['GET','POST'])
 def product_subcategory_list(request):  
     subcategories_obj = ProductSubCategory.objects.filter(isActive=True).order_by('name')
+    category_id=request.data.get('category_id')
+    if category_id is not None and category_id !='':
+        subcategories_obj=subcategories_obj.filter(category_id=category_id)
+        
     if subcategories_obj.exists():
         serializer=ProductSubCategorySerializers(subcategories_obj,many=True)
         return Response({"response":{"n":1,"msg":"Product subcategory list fetched successfully","status":"success"},"data":serializer.data})
@@ -304,6 +309,16 @@ def product_brand_list(request):
     else:
         return Response({"response":{"n":1,"msg":"No product brands found","status":"success"},"data":[]})
     
+class product_brand_list_pagination(GenericAPIView):
+    pagination_class = CustomPagination
+    def post(self, request):
+        brands_obj = ProductBrand.objects.filter(isActive=True).order_by('name')
+        if brands_obj.exists():
+            page4 = self.paginate_queryset(brands_obj)
+            serializer=ProductBrandSerializers(page4,many=True)
+            return self.get_paginated_response(serializer.data)
+        else:
+            return self.get_paginated_response([])
 
 @api_view(['POST'])
 def add_product_brand(request):

@@ -100,8 +100,26 @@
                             
                                                 
                                     <tr>
-                                        <td><span>${o.name || ''}</span></td>
-                                        <td>${o.phone || ''}</td>
+                                        <td>
+                                            <div class="d-flex">
+                                                <div>
+                                                    <img src="${o.product_image_url || ''}" alt="product image" class="table-image-preview"/>
+                                                </div>
+                                                <div>
+                                                    <div><span class="text-label">Name : </span><span>${o.name || ''}</span></div>
+                                                    <div><span class="text-label">Brand : </span><span>${o.brand_name || ''}</span></div>
+                                                    <div><span class="text-label">Color : </span><span>${o.color_name || ''}</span></div>
+                                                    <div><span class="text-label">Size/Units : </span><span>${o.size_unit_name || ''}</span></div>
+                                                </div>    
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div><span class="text-label">Price : </span><span>${o.price || ''}</span></div>
+                                            <div><span class="text-label">Category : </span><span>${o.category_name || ''}</span></div>
+                                            <div><span class="text-label">SubCategory : </span><span>${o.subcategory_name || ''}</span></div>
+                                            <div><span class="text-label">Vendor : </span><span>${o.vendor_name || ''}</span></div>
+                                            <div><span class="text-label">Description : </span><span>${o.description || ''}</span></div>
+                                        </td>
     
                                         <td>
                                             <div class="dropdown">
