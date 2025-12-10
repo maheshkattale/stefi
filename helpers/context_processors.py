@@ -7,6 +7,7 @@ def get_session(request):
     role_name = request.session.get('role_name')
     user_name = request.session.get('user_name')
     user_id = request.session.get('user_id')
+    
     # Designation = request.session.get('Designation')
     # userID = request.session.get('userID')
     # userEmployeeId=request.session.get('userEmployeeId')
@@ -21,7 +22,8 @@ def get_session(request):
 
 
    
-    return {'token':token,
+    return {
+            'token':token,
             'hosturl':hosturl,
             'role_id':role_id,
             'role_name':role_name,

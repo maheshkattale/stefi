@@ -129,6 +129,58 @@ def edit_product_sub_category(request,id):
         return redirect('Frontend_User:login') # change this.
     
 
+# Create your views here.
+def product_brand_list(request):
+    token = request.session.get('token',False)
+    if token:
+
+        return render(request, 'admin/product_brand/product-brand-list.html')
+    else:
+        messages.error(request, 'Session expired. Please log in again.')
+        return redirect('Frontend_User:login') # change this.
+    
+def add_product_brand(request):
+    token = request.session.get('token',False)
+    if token:
+        headers = {'Authorization': f'Bearer {token}'}
+        if request.method == 'POST':
+            print("jii")
+            data=request.POST.copy()
+            add_product_brand_url=hosturl+"/api/product/add_product_brand"
+
+            add_product_brand_request = requests.post(add_product_brand_url, data=data,headers=headers,files=request.FILES)
+            add_product_brand_response = add_product_brand_request.json()
+            return HttpResponse(json.dumps(add_product_brand_response),content_type='application/json')
+        else:
+            return render(request, 'admin/product_brand/add-product-brand.html')
+    else:
+        messages.error(request, 'Session expired. Please log in again.')
+        return redirect('Frontend_User:login') # change this.
+    
+def edit_product_brand(request,id):
+    token = request.session.get('token',False)
+    if token:
+        headers = {'Authorization': f'Bearer {token}'}
+        if request.method == 'POST':
+
+            data=request.POST.copy()
+
+            edit_product_brand_url=hosturl+"/api/product/update_product_brand"
+            edit_product_brand_request = requests.post(edit_product_brand_url, data=data,headers=headers,files=request.FILES)
+            edit_product_brand_response = edit_product_brand_request.json()
+            return HttpResponse(json.dumps(edit_product_brand_response),content_type='application/json')
+        else:
+            data={'id':id}
+            get_product_brand_details_url=hosturl+"/api/product/product_brand_by_id"
+            get_product_brand_details_request = requests.post(get_product_brand_details_url, data=data,headers=headers)
+            get_product_brand_details_response = get_product_brand_details_request.json()
+            print("get_product_brand_details_response",get_product_brand_details_response)
+            return render(request, 'admin/product_brand/edit-product-brand.html',{'product_brand':get_product_brand_details_response['data']})
+    else:
+        messages.error(request, 'Session expired. Please log in again.')
+        return redirect('Frontend_User:login') # change this.
+    
+
 
 
 def product_size_list(request):
@@ -253,8 +305,39 @@ def add_product(request):
             add_product_response = add_product_request.json()
             return HttpResponse(json.dumps(add_product_response),content_type='application/json')
         else:
-            
-            return render(request, 'admin/product/add-product.html')
+            data={}
+            get_product_category_list_url=hosturl+"/api/product/product_category_list"
+            get_product_category_list_request = requests.get(get_product_category_list_url, data=data,headers=headers)
+            get_product_category_list_response = get_product_category_list_request.json()
+
+            # print("get_product_category_list_response",get_product_category_list_response['data'])
+            get_product_brand_list_url=hosturl+"/api/product/product_brand_list"
+            get_product_brand_list_request = requests.get(get_product_brand_list_url, data=data,headers=headers)
+            get_product_brand_list_response = get_product_brand_list_request.json()
+            # print("get_product_brand_list_response",get_product_brand_list_response)
+
+            get_product_color_list_url=hosturl+"/api/product/product_color_list"
+            get_product_color_list_request = requests.get(get_product_color_list_url, data=data,headers=headers)
+            get_product_color_list_response = get_product_color_list_request.json()
+            # print("get_product_color_list_response",get_product_color_list_response)
+
+            get_product_size_unit_list_url=hosturl+"/api/product/product_size_unit_list"
+            get_product_size_unit_list_request = requests.get(get_product_size_unit_list_url, data=data,headers=headers)
+            get_product_size_unit_list_response = get_product_size_unit_list_request.json()
+
+            # print("get_product_size_unit_list_response",get_product_size_unit_list_response)
+            get_vendors_list_url=hosturl+"/api/vendor/vendor_list"
+            get_vendors_list_request = requests.get(get_vendors_list_url, data=data,headers=headers)
+            get_vendors_list_response = get_vendors_list_request.json()
+
+
+            return render(request, 'admin/product/add-product.html',{
+                                                                    'category_list':get_product_category_list_response['data'],
+                                                                     'brand_list':get_product_brand_list_response['data'],
+                                                                     'color_list':get_product_color_list_response['data'],
+                                                                     'size_units':get_product_size_unit_list_response['data'],
+                                                                     'vendors':get_vendors_list_response['data'],
+                                                                    })
     else:
         messages.error(request, 'Session expired. Please log in again.')
         return redirect('Frontend_User:login') # change this.
@@ -275,7 +358,53 @@ def edit_product(request,id):
             get_product_details_request = requests.post(get_product_details_url, data=data,headers=headers)
             get_product_details_response = get_product_details_request.json()
             print("get_product_details_response",get_product_details_response)
-            return render(request, 'admin/product/edit-product.html',{'product':get_product_details_response['data']})
+
+            get_product_category_list_url=hosturl+"/api/product/product_category_list"
+            get_product_category_list_request = requests.get(get_product_category_list_url, data=data,headers=headers)
+            get_product_category_list_response = get_product_category_list_request.json()
+
+            get_product_subcategory_list_url=hosturl+"/api/product/product_subcategory_list"
+            get_product_subcategory_list_request = requests.get(get_product_subcategory_list_url, data=data,headers=headers)
+            get_product_subcategory_list_response = get_product_subcategory_list_request.json()
+
+            # print("get_product_category_list_response",get_product_category_list_response['data'])
+            get_product_brand_list_url=hosturl+"/api/product/product_brand_list"
+            get_product_brand_list_request = requests.get(get_product_brand_list_url, data=data,headers=headers)
+            get_product_brand_list_response = get_product_brand_list_request.json()
+            # print("get_product_brand_list_response",get_product_brand_list_response)
+
+            get_product_color_list_url=hosturl+"/api/product/product_color_list"
+            get_product_color_list_request = requests.get(get_product_color_list_url, data=data,headers=headers)
+            get_product_color_list_response = get_product_color_list_request.json()
+            # print("get_product_color_list_response",get_product_color_list_response)
+
+            get_product_size_unit_list_url=hosturl+"/api/product/product_size_unit_list"
+            get_product_size_unit_list_request = requests.get(get_product_size_unit_list_url, data=data,headers=headers)
+            get_product_size_unit_list_response = get_product_size_unit_list_request.json()
+
+            # print("get_product_size_unit_list_response",get_product_size_unit_list_response)
+            get_vendors_list_url=hosturl+"/api/vendor/vendor_list"
+            get_vendors_list_request = requests.get(get_vendors_list_url, data=data,headers=headers)
+            get_vendors_list_response = get_vendors_list_request.json()
+
+
+
+
+
+
+
+
+
+            return render(request, 'admin/product/edit-product.html',{
+                                                                    'product':get_product_details_response['data'],
+                                                                    'category_list':get_product_category_list_response['data'],
+                                                                    'brand_list':get_product_brand_list_response['data'],
+                                                                    'color_list':get_product_color_list_response['data'],
+                                                                    'size_units':get_product_size_unit_list_response['data'],
+                                                                    'vendors':get_vendors_list_response['data'],
+                                                                    'subcategory_list':get_product_subcategory_list_response['data'],
+
+                })
     else:
         messages.error(request, 'Session expired. Please log in again.')
         return redirect('Frontend_User:login') # change this.

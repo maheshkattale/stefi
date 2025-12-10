@@ -869,7 +869,6 @@ a.card:hover {
    ========================= */
 .prod-section {
     background: var(--bg);
-    font-family: Inter, Segoe UI, Roboto, system-ui, -apple-system, sans-serif;
     color: #182026;
 }
 

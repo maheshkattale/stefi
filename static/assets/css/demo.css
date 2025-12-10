@@ -156,3 +156,14 @@
 .card,.card-group {
   height: 100%;
 }
+.text-label{
+    font-weight: 700;
+}
+.table-image-preview{
+  width: 100px;
+  height: 100px;
+  padding: 3px;
+  border: 1px solid grey;
+  border-radius: 5px;
+  margin: 0 5px;
+}

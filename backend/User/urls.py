@@ -29,7 +29,9 @@ urlpatterns = [
 
     #user
     path('createuser', createuser.as_view(), name = 'createuser'),
-    # path('user_list_pagination_api', user_list_pagination_api.as_view(), name = 'user_list_pagination_api'),
+    path('user_list_pagination_api', user_list_pagination_api.as_view(), name = 'user_list_pagination_api'),
+    path('change_user_status', change_user_status.as_view(), name = 'change_user_status'),
+
     # path('userlist', userlist.as_view(), name = 'userlist'),
     # path('userupdate', userupdate.as_view(), name = 'userupdate'),
     # path('userdelete', userdelete.as_view(), name = 'userdelete'),

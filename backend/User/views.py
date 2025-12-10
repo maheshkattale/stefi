@@ -471,10 +471,13 @@ class user_list_pagination_api(GenericAPIView):
     pagination_class = CustomPagination
     def post(self,request):
         searchtext = request.data.get("searchtext")
+        print('jii')
         if searchtext is not None and searchtext != '':
             UserMaster_objs = User.objects.filter(Q(Username__icontains=searchtext,isActive=True)| Q(mobileNumber__icontains =searchtext,isActive=True)).order_by('Username')
+            print("1",UserMaster_objs)
         else:
             UserMaster_objs = User.objects.filter(isActive=True).order_by('Username')
+            print("2",UserMaster_objs)
         activation_status=request.data.get('activation_status')
         if activation_status is not None and activation_status !='':
             if activation_status == 'true':
@@ -489,6 +492,37 @@ class user_list_pagination_api(GenericAPIView):
         page4 = self.paginate_queryset(UserMaster_objs)
         serializer = CustomUserSerializer(page4,many=True)
         return self.get_paginated_response(serializer.data)
+class change_user_status(GenericAPIView):
+    authentication_classes=[userJWTAuthentication]
+    permission_classes = (permissions.IsAuthenticated,)
+    def post(self,request):
+        data={}
+        
+        data['id']=str(request.data.get('id'))
+        if data['id'] is None or data['id'] =='':
+            return Response({ "data":{},"response":{"n":0,"msg":"Please provide User id", "status":"error"}})
+        
+        user_obj = User.objects.filter(isActive=True, id=data['id']).first()
+        if user_obj is None:
+            return Response({"data":'',"response": {"n": 0, "msg": "User not found", "status": "error"}})
+        
+        if user_obj is not None:
+            if user_obj.status:
+                data['status'] = False
+                msg="User Deactivated Successfully."
+            else:
+                data['status'] = True
+                msg="User Activated Successfully."
+
+            serializer =UserSerializer(user_obj,data=data,partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({"data":serializer.data,"response": {"n": 1, "msg": msg,"status":"success"}})
+            else:
+                first_key, first_value = next(iter(serializer.errors.items()))
+                return Response({"data" : serializer.errors,"response":{"n":0,"msg":first_key+' : '+ first_value[0],"status":"error"}})  
+        else:
+            return Response({"data":{},"response": {"n": 0, "msg": 'User not found ',"status":"error"}})
 
 class userbyid(GenericAPIView):
     authentication_classes=[userJWTAuthentication]

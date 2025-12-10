@@ -3,14 +3,14 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}Product - Forms{% endblock %}
+{% block title %}Product Brand - Forms{% endblock %}
 
 {% block layout %}
 <!-- Basic Layout -->
 <div class="card">
     <div class="d-flex justify-content-between align-items-center">
         <div>
-            <h5 class="card-header">Product</h5>
+            <h5 class="card-header">Product Brand</h5>
         </div>
         <div class="d-flex justify-content-end">
             <div class="d-flex align-items-center">
@@ -18,19 +18,19 @@
                 <input type="text" id="search" class="form-control border-0 shadow-none bg-body" placeholder="Search..."
                     aria-label="Search..." onkeyup="Pagination()" />
             </div>
-            <a class="btn btn-primary waves-effect waves-light m-4" href="/stefi-admin-product/add-product">Add Product</a>
+            <a class="btn btn-primary waves-effect waves-light m-4" href="/stefi-admin-product/add-product-brand">Add Product Brand</a>
         </div>
     </div>
     <div class="table-responsive text-nowrap">
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th> Name</th>
+                    <th>Brand Name</th>
                     <th>Description</th>
                     <th>Actions</th>
                 </tr>
             </thead>
-            <tbody class="table-border-bottom-0" id="product_table_body">
+            <tbody class="table-border-bottom-0" id="product_brand_table_body">
 
 
 
@@ -71,7 +71,7 @@
         fd.append('p', p)
         fd.append('csrfmiddlewaretoken', '{{csrf_token}}')
         $.ajax({
-            url: hosturl + "/api/product/product_list_pagination",
+            url: hosturl + "/api/product/product_brand_list_pagination",
             data: fd,
             headers: { "Authorization": "Bearer {{token}}" },
 
@@ -100,35 +100,17 @@
                             
                                                 
                                     <tr>
-                                        <td>
-                                            <div class="d-flex">
-                                                <div>
-                                                    <img src="${o.product_image_url || ''}" alt="product image" class="table-image-preview"/>
-                                                </div>
-                                                <div>
-                                                    <div><span class="text-label">Name : </span><span>${o.name || ''}</span></div>
-                                                    <div><span class="text-label">Brand : </span><span>${o.brand_name || ''}</span></div>
-                                                    <div><span class="text-label">Color : </span><span>${o.color_name || ''}</span></div>
-                                                    <div><span class="text-label">Size/Units : </span><span>${o.size_unit_name || ''}</span></div>
-                                                </div>    
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div><span class="text-label">Price : </span><span>${o.price || ''}</span></div>
-                                            <div><span class="text-label">Category : </span><span>${o.category_name || ''}</span></div>
-                                            <div><span class="text-label">SubCategory : </span><span>${o.subcategory_name || ''}</span></div>
-                                            <div><span class="text-label">Vendor : </span><span>${o.vendor_name || ''}</span></div>
-                                            <div><span class="text-label">Description : </span><span>${o.description || ''}</span></div>
-                                        </td>
+                                        <td><span>${o.name || ''}</span></td>
+                                        <td>${o.phone || ''}</td>
     
                                         <td>
                                             <div class="dropdown">
                                                 <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
                                                     data-bs-toggle="dropdown"><i class="ri-more-2-line"></i></button>
                                                 <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="/stefi-admin-product/edit-product/${o.id}"><i class="ri-pencil-line me-1"></i>
+                                                    <a class="dropdown-item" href="/stefi-admin-product/edit-product-brand/${o.id}"><i class="ri-pencil-line me-1"></i>
                                                         Edit</a>
-                                                    <a class="dropdown-item" href="javascript:void(0);" onclick="delete_product(${o.id})"><i
+                                                    <a class="dropdown-item" href="javascript:void(0);" onclick="delete_product_brand(${o.id})"><i
                                                             class="ri-delete-bin-6-line me-1"></i> Delete</a>
                                                 </div>
                                             </div>
@@ -142,7 +124,7 @@
 
                         counter += 1
                     });
-                    $('#product_table_body').html(infohtml);
+                    $('#product_brand_table_body').html(infohtml);
                     var totalfilter = Math.ceil(parseInt(response.count) / 10);
                     $('#pagination-demo2').twbsPagination({
                         totalPages: totalfilter,
@@ -175,7 +157,7 @@
                                     <td colspan="3">No Data found</td>
                                 </tr>
                     `
-                    $('#product_table_body').html(infohtml);
+                    $('#product_brand_table_body').html(infohtml);
 
                     swal({
                         icon: "error",
@@ -190,7 +172,7 @@
 
     }
 
-    function delete_product(id) {
+    function delete_product_brand(id) {
         swal({
             title: "Are you sure?",
             text: "you want to delete it .",
@@ -201,7 +183,7 @@
             .then((willDelete) => {
                 if (willDelete) {
                     $.ajax({
-                        url: hosturl + "/api/product/delete_product",
+                        url: hosturl + "/api/product/delete_product_brand",
                         type: 'POST',
                         headers: {
                             'Authorization': 'Bearer {{token}}'
@@ -268,7 +250,7 @@
             .then((willDelete) => {
                 if (willDelete) {
                     $.ajax({
-                        url: hosturl + "/api/product/change_product_status",
+                        url: hosturl + "/api/product/change_product_brand_status",
                         type: 'POST',
                         headers: {
                             'Authorization': 'Bearer {{token}}'
