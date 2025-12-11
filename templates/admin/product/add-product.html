@@ -3,302 +3,233 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}Product - Forms{% endblock %}
+{% block title %}Add Product{% endblock %}
 
 {% block layout %}
-<!-- Basic Layout -->
 <div class="row">
   <div class="col-xl">
     <div class="card mb-12">
       <div class="card-header d-flex justify-content-between align-items-center">
-        <h5 class="mb-0">Add Product</h5> <small class="text-body float-end"></small>
+        <h5 class="mb-0">Add Product</h5>
       </div>
+
       <div class="card-body">
-        <form>
+        <form id="addProductForm">
           {% csrf_token %}
+
           <div class="row">
 
+            <!-- Product Name -->
             <div class="form-floating mb-3 col-6">
               <input type="text" id="Name" class="form-control" placeholder="Product Name">
-              <label>Name</label>
+              <label for="Name">Product Name *</label>
             </div>
 
+            <!-- Price -->
             <div class="form-floating mb-3 col-6">
               <input type="number" step="0.01" id="Price" class="form-control" placeholder="Price">
-              <label>Price</label>
+              <label for="Price">Price *</label>
             </div>
 
+            <!-- Category -->
             <div class="form-floating mb-3 col-6">
-              <select id="Category" class="form-control" onchange="get_sub_category_list(this.value)">
+              <select id="Category" class="form-select" onchange="get_sub_category_list(this.value)">
                 <option value="">Select Category</option>
                 {% for c in category_list %}
                 <option value="{{ c.id }}">{{ c.name }}</option>
                 {% endfor %}
               </select>
-              <label>Category</label>
+              <label for="Category">Category *</label>
             </div>
 
+            <!-- SubCategory -->
             <div class="form-floating mb-3 col-6">
-              <select id="SubCategory" class="form-control">
+              <select id="SubCategory" class="form-select">
                 <option value="">Select Subcategory</option>
               </select>
-              <label>Subcategory</label>
+              <label for="SubCategory">Subcategory *</label>
             </div>
 
+            <!-- Brand -->
             <div class="form-floating mb-3 col-6">
-              <select id="Brand" class="form-control">
+              <select id="Brand" class="form-select">
                 <option value="">Select Brand</option>
                 {% for b in brand_list %}
                 <option value="{{ b.id }}">{{ b.name }}</option>
                 {% endfor %}
               </select>
-              <label>Brand</label>
+              <label for="Brand">Brand *</label>
             </div>
 
+            <!-- Color -->
             <div class="form-floating mb-3 col-6">
-              <select id="Color" class="form-control">
+              <select id="Color" class="form-select">
                 <option value="">Select Color</option>
                 {% for c in color_list %}
                 <option value="{{ c.id }}">{{ c.name }}</option>
                 {% endfor %}
               </select>
-              <label>Color</label>
+              <label for="Color">Color *</label>
             </div>
 
+            <!-- Size Unit -->
             <div class="form-floating mb-3 col-6">
-              <select id="SizeUnit" class="form-control">
+              <select id="SizeUnit" class="form-select">
                 <option value="">Select Size Unit</option>
                 {% for s in size_units %}
                 <option value="{{ s.id }}">{{ s.name }}</option>
                 {% endfor %}
               </select>
-              <label>Size Unit</label>
+              <label for="SizeUnit">Size Unit *</label>
             </div>
+
+            <!-- Vendor -->
             <div class="form-floating mb-3 col-6">
-              <select id="Vendor" class="form-control">
+              <select id="Vendor" class="form-select">
                 <option value="">Select Vendor</option>
-                {% for s in vendors %}
-                <option value="{{ s.id }}">{{ s.name }}</option>
+                {% for v in vendors %}
+                <option value="{{ v.id }}">{{ v.name }}</option>
                 {% endfor %}
               </select>
-              <label>Size Unit</label>
+              <label for="Vendor">Vendor *</label>
             </div>
+
+            <!-- Redirect URL -->
             <div class="form-floating mb-3 col-6">
               <input type="text" id="RedirectUrl" class="form-control" placeholder="Product Redirect Url">
-              <label>Redirect-Url</label>
+              <label for="RedirectUrl">Redirect URL</label>
             </div>
+
+            <!-- Description -->
             <div class="form-floating mb-3 col-12">
               <textarea id="Description" class="form-control" placeholder="Description"></textarea>
-              <label>Description</label>
+              <label for="Description">Description</label>
             </div>
 
+            <!-- Product Image -->
             <div class="form-floating mb-3 col-12">
               <input type="file" id="ProductImage" class="form-control" accept="image/*">
-              <label>Product Image</label>
+              <label for="ProductImage">Product Image *</label>
             </div>
+
           </div>
 
-
           <div class="btn btn-primary" onclick="return validation()">Submit</div>
-          <div class="btn btn-danger">Cancel</div>
+          <a href="/stefi-admin-product/product-list" class="btn btn-danger">Cancel</a>
         </form>
       </div>
     </div>
   </div>
-  <!-- Merged -->
-
 </div>
 {% endblock layout %}
 
 {% block page_js %}
-{{block.super}}
+{{ block.super }}
 
 <script>
 
-  function validation() {
-    debugger
+function validation() {
+
     var Name = $("#Name").val().trim();
     var Price = $("#Price").val().trim();
     var Category = $("#Category").val();
     var SubCategory = $("#SubCategory").val();
     var Brand = $("#Brand").val();
-    var SizeUnit = $("#SizeUnit").val();
     var Color = $("#Color").val();
+    var SizeUnit = $("#SizeUnit").val();
+    var Vendor = $("#Vendor").val();
     var Description = $("#Description").val().trim();
     var RedirectUrl = $("#RedirectUrl").val().trim();
-    var Vendor = $("#Vendor").val();
 
+    // Basic Validation
+    if (!Name) return showError("Please enter product name", "#Name");
+    if (!Price || Price <= 0) return showError("Please enter a valid price", "#Price");
+    if (!Category) return showError("Please select a category", "#Category");
+    if (!SubCategory) return showError("Please select a subcategory", "#SubCategory");
+    if (!Brand) return showError("Please select a brand", "#Brand");
+    if (!Color) return showError("Please select a color", "#Color");
+    if (!SizeUnit) return showError("Please select a size unit", "#SizeUnit");
+    if (!Vendor) return showError("Please select a vendor", "#Vendor");
 
-    if (IsValid(Name)) {
-      swal({
-        icon: "error",
-        title: "",
-        text: "Please enter valid Name",
+    var formData = new FormData();
+    formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+    formData.append('name', Name);
+    formData.append('price', Price);
+    formData.append('category', Category);
+    formData.append('subcategory', SubCategory);
+    formData.append('brand', Brand);
+    formData.append('size_unit', SizeUnit);
+    formData.append('color', Color);
+    formData.append('vendor', Vendor);
+    formData.append('description', Description);
+    formData.append('redirect_url', RedirectUrl);
 
-      });
-
-      $("#Name").focus();
-      return false;
-    }else if (IsValid(Price)) {
-      swal({
-        icon: "error",
-        title: "",
-        text: "Please enter valid Price",
-
-      });
-
-      $("#Price").focus();
-      return false;
-    }else if (IsValid(Category)) {
-      swal({
-        icon: "error",
-        title: "",
-        text: "Please select valid category",
-
-      });
-
-      $("#Category").focus();
-      return false;
-    }else if (IsValid(SubCategory)) {
-      swal({
-        icon: "error",
-        title: "",
-        text: "Please select valid sub category",
-
-      });
-
-      $("#SubCategory").focus();
-      return false;
-    }else if (IsValid(Brand)) {
-      swal({
-        icon: "error",
-        title: "",
-        text: "Please select valid brand",
-
-      });
-
-      $("#Brand").focus();
-      return false;
-    }else if (IsValid(Color)) {
-      swal({
-        icon: "error",
-        title: "",
-        text: "Please select valid color",
-
-      });
-
-      $("#Color").focus();
-      return false;
-    }else if (IsValid(SizeUnit)) {
-      swal({
-        icon: "error",
-        title: "",
-        text: "Please select valid size-unit",
-
-      });
-
-      $("#SizeUnit").focus();
-      return false;
-    }else if (IsValid(Vendor)) {
-      swal({
-        icon: "error",
-        title: "",
-        text: "Please select valid vendor",
-
-      });
-
-      $("#Vendor").focus();
-      return false;
+    if ($('#ProductImage')[0].files.length > 0) {
+        formData.append('product_image', $('#ProductImage')[0].files[0]);
     }
 
-    else {
-      var formData = new FormData();
-      formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
-      formData.append('name', Name);
-      formData.append('price', Price);
-      formData.append('category', Category);
-      formData.append('subcategory', SubCategory);
-      formData.append('brand', Brand);
-      formData.append('size_unit', SizeUnit);
-      formData.append('color', Color);
-      formData.append('description', Description);
-      formData.append('vendor', Vendor);
-      formData.append('redirect_url', RedirectUrl);
-
-      if($('#ProductImage')[0].files.length>0){
-        formData.append('product_image', $('#ProductImage')[0].files[0]);
-      }
-
-
-      $.ajax({
+    $.ajax({
         url: hosturl + "/stefi-admin-product/add-product",
-        type: 'POST',
+        type: "POST",
         data: formData,
         processData: false,
         contentType: false,
-        dataType: 'json',
+
         beforeSend: function () {
-          swal({
-            icon: "info",
-            title: "",
-            text: "Loading...",
-            buttons: false,
-
-          });
+            swal({ icon: "info", text: "Saving Product...", buttons: false });
         },
+
         success: function (response) {
-          // console.log("----", response)
-          if (response.response.n == 1) {
-            swal({
-              icon: response.response.status,
-              title: "",
-              text: response.response.msg,
-              button: "Close",
-            }).then(() => {
-              window.location.href = hosturl + '/stefi-admin-product/product-list';
-            });
-
-
-          }
-          else {
-            swal({
-              icon: response.response.status,
-              title: "",
-              text: response.response.msg,
-              button: "Close",
-            });
-          }
-
-
+            if (response.response.n === 1) {
+                swal({
+                    icon: "success",
+                    text: response.response.msg,
+                }).then(() => {
+                    window.location.href = hosturl + "/stefi-admin-product/product-list";
+                });
+            } else {
+                swal({ icon: "error", text: response.response.msg });
+            }
         }
-      });
+    });
+}
 
+
+// Show error helper
+function showError(msg, field) {
+    swal({ icon: "error", text: msg });
+    $(field).focus();
+    return false;
+}
+
+
+// Load Subcategory List dynamically
+function get_sub_category_list(category_id) {
+
+    if (!category_id) {
+        $("#SubCategory").html('<option value="">Select Subcategory</option>');
+        return;
     }
 
-
-  }
-  function get_sub_category_list(parent_category_id) {
-    if (parent_category_id) {
-      $.ajax({
+    $.ajax({
         url: hosturl + "/api/product/product_subcategory_list",
-        type: 'POST',
+        type: "POST",
         data: {
-          'category_id': parent_category_id,
-          'csrfmiddlewaretoken': '{{ csrf_token }}'
+            category_id: category_id,
+            csrfmiddlewaretoken: "{{ csrf_token }}"
         },
-        dataType: 'json',
         success: function (response) {
-          var SubCategory = $("#SubCategory");
-          SubCategory.empty();
-          SubCategory.append('<option value="">Select Sub-Category</option>');
-          $.each(response.data, function (index, category) {
-            SubCategory.append('<option value="' + category.id + '">' + category.name + '</option>');
-          });
+            var SubCategory = $("#SubCategory");
+            SubCategory.empty();
+            SubCategory.append('<option value="">Select Subcategory</option>');
+
+            $.each(response.data, function (i, item) {
+                SubCategory.append(`<option value="${item.id}">${item.name}</option>`);
+            });
         }
-      });
-    } else {
-      $("#SubCategory").empty().append('<option value="">Select Sub-Category</option>');
-    }
-  }
+    });
+}
+
 </script>
-{%endblock page_js %}
+
+{% endblock page_js %}

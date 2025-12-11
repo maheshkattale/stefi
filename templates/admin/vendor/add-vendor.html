@@ -8,43 +8,176 @@
 {% block layout %}
 <!-- Basic Layout -->
 <div class="row">
-    <div class="col-xl">
-      <div class="card mb-12">
-        <div class="card-header d-flex justify-content-between align-items-center">
-          <h5 class="mb-0">Add Vendor</h5> <small class="text-body float-end"></small>
-        </div>
-        <div class="card-body">
-          <form>
-            {% csrf_token %}
-            <div class="row">
-              <div class="form-floating form-floating-outline mb-6 col-12">
-                <input type="text" class="form-control" id="Name" placeholder="Name" />
-                <label for="Name">Name</label>
-              </div>
+  <div class="col-xl">
+    <div class="card mb-12">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Add Vendor</h5> <small class="text-body float-end"></small>
+      </div>
+      <div class="card-body">
+        <form>
+          {% csrf_token %}
 
+          <div class="row">
 
-              <div class="form-floating form-floating-outline mb-6 col-6">
-                <input type="text" class="form-control" id="phone" placeholder="phone" onkeyup="IsValidNumberInput(this)" maxlength="10"/>
-                <label for="phone">Phone</label>
-              </div>
-              <div class="form-floating form-floating-outline mb-6 col-6">
-                                <input type="text" class="form-control" id="email" placeholder="email"/>
+            <!-- Basic Details -->
+            <h5 class="text-primary mt-3 mb-3">Basic Details</h5>
 
-                <label for="email">Email</label>
-              </div>
-              <div class="form-floating form-floating-outline mb-6 col-12">
-                <textarea id="address" class="form-control" placeholder="Please enter address." style="height: 60px;"></textarea>
-                <label for="address">address</label>
-              </div>
+            <div class="form-floating form-floating-outline mb-6 col-6">
+              <input type="text" class="form-control" id="name" placeholder="Name" />
+              <label for="name">Name *</label>
             </div>
 
-            <div class="btn btn-primary" onclick="return validation()">Submit</div>
-            <div class="btn btn-danger">Cancel</div>
-          </form>
-        </div>
+            <div class="form-floating form-floating-outline mb-6 col-6">
+              <input type="text" class="form-control" id="legal_name" placeholder="Legal Name" />
+              <label for="legal_name">Legal Name</label>
+            </div>
+
+            <div class="form-floating form-floating-outline mb-6 col-6">
+              <input type="text" class="form-control" id="vendor_code" placeholder="Vendor Code" />
+              <label for="vendor_code">Vendor Code</label>
+            </div>
+
+            <!-- Contact Info -->
+            <h5 class="text-primary mt-4 mb-3">Contact Information</h5>
+
+            <div class="form-floating form-floating-outline mb-6 col-6">
+              <input type="text" class="form-control" id="phone" maxlength="10" placeholder="Phone"
+                onkeyup="IsValidNumberInput(this)" />
+              <label for="phone">Phone *</label>
+            </div>
+
+            <div class="form-floating form-floating-outline mb-6 col-6">
+              <input type="text" class="form-control" id="alternate_phone" maxlength="10" placeholder="Alternate Phone"
+                onkeyup="IsValidNumberInput(this)" />
+              <label for="alternate_phone">Alternate Phone</label>
+            </div>
+
+            <div class="form-floating form-floating-outline mb-6 col-6">
+              <input type="text" class="form-control" id="email" placeholder="Email" />
+              <label for="email">Email *</label>
+            </div>
+
+            <div class="form-floating form-floating-outline mb-6 col-6">
+              <input type="text" class="form-control" id="alternate_email" placeholder="Alternate Email" />
+              <label for="alternate_email">Alternate Email</label>
+            </div>
+
+            <div class="form-floating form-floating-outline mb-6 col-6">
+              <input type="text" class="form-control" id="website" placeholder="Website" />
+              <label for="website">Website</label>
+            </div>
+
+            <!-- Address Info -->
+            <h5 class="text-primary mt-4 mb-3">Address</h5>
+
+            <div class="form-floating form-floating-outline mb-6 col-12">
+              <textarea id="address" class="form-control" placeholder="Address" style="height: 60px;"></textarea>
+              <label for="address">Address *</label>
+            </div>
+
+            <div class="form-floating form-floating-outline mb-6 col-4">
+              <input type="text" class="form-control" id="city" placeholder="City" />
+              <label for="city">City</label>
+            </div>
+
+            <div class="form-floating form-floating-outline mb-6 col-4">
+              <input type="text" class="form-control" id="state" placeholder="State" />
+              <label for="state">State</label>
+            </div>
+
+            <div class="form-floating form-floating-outline mb-6 col-4">
+              <input type="text" class="form-control" id="country" placeholder="Country" />
+              <label for="country">Country</label>
+            </div>
+
+            <div class="form-floating form-floating-outline mb-6 col-4">
+              <input type="text" class="form-control" id="pincode" placeholder="Pincode" />
+              <label for="pincode">Pincode</label>
+            </div>
+
+            <!-- Tax Details -->
+            <h5 class="text-primary mt-4 mb-3">Business & Tax Details</h5>
+
+            <div class="form-floating form-floating-outline mb-6 col-4">
+              <input type="text" class="form-control" id="gst_number" placeholder="GST Number" />
+              <label for="gst_number">GST Number</label>
+            </div>
+
+            <div class="form-floating form-floating-outline mb-6 col-4">
+              <input type="text" class="form-control" id="pan_number" placeholder="PAN Number" />
+              <label for="pan_number">PAN Number</label>
+            </div>
+
+            <div class="form-floating form-floating-outline mb-6 col-4">
+              <input type="text" class="form-control" id="registration_number" placeholder="Registration No." />
+              <label for="registration_number">Registration Number</label>
+            </div>
+
+            <!-- Banking -->
+            <h5 class="text-primary mt-4 mb-3">Banking Details</h5>
+
+            <div class="form-floating form-floating-outline mb-6 col-6">
+              <input type="text" class="form-control" id="bank_name" placeholder="Bank Name" />
+              <label for="bank_name">Bank Name</label>
+            </div>
+
+            <div class="form-floating form-floating-outline mb-6 col-6">
+              <input type="text" class="form-control" id="account_number" placeholder="Account Number" />
+              <label for="account_number">Account Number</label>
+            </div>
+
+            <div class="form-floating form-floating-outline mb-6 col-6">
+              <input type="text" class="form-control" id="ifsc_code" placeholder="IFSC Code" />
+              <label for="ifsc_code">IFSC Code</label>
+            </div>
+
+            <div class="form-floating form-floating-outline mb-6 col-6">
+              <input type="text" class="form-control" id="branch_name" placeholder="Branch Name" />
+              <label for="branch_name">Branch Name</label>
+            </div>
+
+            <div class="form-floating form-floating-outline mb-6 col-6">
+              <input type="text" class="form-control" id="upi_id" placeholder="UPI ID" />
+              <label for="upi_id">UPI ID</label>
+            </div>
+
+            <!-- Vendor Type -->
+            <h5 class="text-primary mt-4 mb-3">Vendor Type & Categories</h5>
+
+            <div class="form-floating form-floating-outline mb-6 col-6">
+              <select id="vendor_type" class="form-control">
+                <option value="">Select Type</option>
+                <option value="manufacturer">Manufacturer</option>
+                <option value="wholesaler">Wholesaler</option>
+                <option value="service_provider">Service Provider</option>
+                <option value="dealer">Dealer</option>
+                <option value="retailer">Retailer</option>
+              </select>
+              <label for="vendor_type">Vendor Type</label>
+            </div>
+
+            <div class="form-floating form-floating-outline mb-6 col-6">
+              <input type="text" class="form-control" id="category" placeholder="Category" />
+              <label for="category">Category</label>
+            </div>
+
+            <!-- Notes -->
+            <div class="form-floating form-floating-outline mb-6 col-12">
+              <textarea id="notes" class="form-control" style="height:60px" placeholder="Notes"></textarea>
+              <label for="notes">Notes</label>
+            </div>
+
+          </div>
+
+          <div class="btn btn-primary" onclick="return validation()">Submit</div>
+          <div class="btn btn-danger">Cancel</div>
+
+        </form>
+
       </div>
     </div>
-    <!-- Merged -->
+  </div>
+  <!-- Merged -->
 
 </div>
 {% endblock layout %}
@@ -53,102 +186,80 @@
 {{block.super}}
 
 <script>
-  
+
   function validation() {
-    var Name = $("#Name").val().trim();
-    var phone = $("#phone").val().trim();
-    var address = $("#address").val().trim();
-    var email = $("#email").val().trim();
 
+    let requiredFields = [
+      { id: "name", label: "Name" },
+      { id: "phone", label: "Phone" },
+      { id: "email", label: "Email" },
+      { id: "address", label: "Address" }
+    ];
 
-    if (IsValid(Name)) {
-      swal({
-            icon: "error",
-            title: "",
-            text: "Please enter valid Name",
-
-          });
-          
-      $("#Name").focus();
-      return false;
+    // Validate required fields
+    for (let f of requiredFields) {
+      if ($("#" + f.id).val().trim() === "") {
+        swal({ icon: "error", text: `Please enter ${f.label}` });
+        $("#" + f.id).focus();
+        return false;
+      }
     }
-    if (IsValid(phone)) {
-      // console.log("phone count is required")
-      swal({
-            icon: "error",
-            title: "",
-            text: "Please enter valid phone number",
-
-          });
+    if ($("#phone").val().trim().length !== 10) {
+      swal({ icon: "error", text: "Phone number must be 10 digits" });
       $("#phone").focus();
       return false;
     }
-    if (IsValid(email)) {
-      swal({
-            icon: "error",
-            title: "",
-            text: "Please enter valid email",
 
-          });
-          
+    if (!isValidEmail($("#email").val().trim())) {
+      swal({ icon: "error", text: "Please enter a valid email" });
       $("#email").focus();
       return false;
     }
-    else {
-      var formData = new FormData();
-      formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
-      formData.append('name', Name);
-      formData.append('email', email);
-      formData.append('phone', phone);
-      formData.append('address', address);
 
+    let formData = new FormData();
+    formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
 
-      $.ajax({
-        url: hosturl + "/stefi-admin-vendor/add-vendor",
-        type: 'POST',
-        data: formData,
-        processData: false,
-        contentType: false,
-        dataType: 'json',
-        beforeSend: function () {
+    // Attach all fields
+    let fields = [
+      "name", "legal_name", "vendor_code", "phone", "alternate_phone",
+      "email", "alternate_email", "website", "address", "city",
+      "state", "country", "pincode", "gst_number", "pan_number",
+      "registration_number", "bank_name", "account_number", "ifsc_code",
+      "branch_name", "upi_id", "vendor_type", "category", "notes"
+    ];
+
+    fields.forEach(id => {
+      formData.append(id, $("#" + id).val());
+    });
+
+    $.ajax({
+      url: hosturl + "/stefi-admin-vendor/add-vendor",
+      type: "POST",
+      data: formData,
+      processData: false,
+      contentType: false,
+
+      beforeSend: function () {
+        swal({ icon: "info", text: "Processing...", buttons: false });
+      },
+
+      success: function (response) {
+        if (response.response.n === 1) {
           swal({
-            icon: "info",
-            title: "",
-            text: "Loading...",
-            buttons: false,
-
+            icon: "success",
+            text: response.response.msg
+          }).then(() => {
+            window.location.href = hosturl + "/stefi-admin-vendor/vendor-list";
           });
-        },
-        success: function (response) {
-          // console.log("----", response)
-          if (response.response.n == 1) {
-            swal({
-              icon: response.response.status,
-              title: "",
-              text: response.response.msg,
-              button: "Close",
-            }).then(() => {
-                window.location.href = hosturl + '/stefi-admin-vendor/vendor-list';
-              });
-
-
-          }
-          else {
-            swal({
-              icon: response.response.status,
-              title: "",
-              text: response.response.msg,
-              button: "Close",
-            });
-          }
-
-
+        } else {
+          swal({ icon: "error", text: response.response.msg });
         }
-      });
+      }
+    });
 
-    }
-
-
+  }
+  function isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   }
 
 </script>

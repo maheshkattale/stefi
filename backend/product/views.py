@@ -575,7 +575,174 @@ def product_color_by_id(request):
 
 
 
+import openpyxl
+from io import BytesIO
+from vendor.models import Vendor
 
+@api_view(['POST'])
+def bulk_upload_products_by_name(request):
+    """
+    Accepts an .xlsx file in form field 'file'.
+    Excel must contain headers (first row) matching:
+    name, price, category, subcategory, brand, color, size_unit, vendor, description, redirect_url
+    All names are matched case-insensitive by .strip().lower()
+    """
+
+    uploaded_file = request.FILES.get('file')
+    if not uploaded_file:
+        return Response({"response": {"n": 0, "msg": "No file uploaded"}}, status=400)
+
+    # Basic file extension check
+    if not uploaded_file.name.lower().endswith(('.xlsx', '.xlsm', '.xltx', '.xltm')):
+        return Response({"response": {"n": 0, "msg": "Unsupported file type. Please upload .xlsx file"}}, status=400)
+
+    try:
+        wb = openpyxl.load_workbook(filename=BytesIO(uploaded_file.read()), data_only=True)
+    except Exception as e:
+        return Response({"response": {"n": 0, "msg": f"Failed to read Excel file: {str(e)}"}}, status=400)
+
+    sheet = wb.active
+
+    # Read header row and map column indices
+    headers = {}
+    first_row = next(sheet.iter_rows(min_row=1, max_row=1, values_only=True))
+    for idx, cell_value in enumerate(first_row):
+        if cell_value is None:
+            continue
+        headers[str(cell_value).strip().lower()] = idx  # zero-based index
+
+    # required header names
+    expected_headers = ["name", "price", "category", "subcategory", "brand", "color", "size_unit", "vendor", "description", "redirect_url"]
+    # Allow missing optional headers (description, redirect_url). But require name & price & category & brand & color & size_unit & vendor & subcategory
+    missing_required = []
+    for h in ["name", "price", "category", "subcategory", "brand", "color", "size_unit", "vendor"]:
+        if h not in headers:
+            missing_required.append(h)
+    if missing_required:
+        return Response({"response": {"n": 0, "msg": f"Missing required columns: {', '.join(missing_required)}. Headers must be: {', '.join(expected_headers)}"}}, status=400)
+
+    # Helper to lookup by name (case-insensitive)
+    def get_obj_by_name(model, name_value, extra_filter=None):
+        if name_value is None:
+            return None
+        nm = str(name_value).strip()
+        if nm == "":
+            return None
+        qs = model.objects.filter(name__iexact=nm)
+        if extra_filter:
+            qs = qs.filter(**extra_filter)
+        return qs.first()
+
+    created = 0
+    errors = []
+    rows_processed = 0
+
+    # Start transaction: create all or only commit successful creates? We'll create all valid rows and report errors for invalid ones.
+    # So we won't rollback all on single error — we create per-row if valid.
+    for row_idx, row in enumerate(sheet.iter_rows(min_row=2, values_only=True), start=2):
+        rows_processed += 1
+        # read fields by header mapping (use .get to avoid KeyError)
+        def val(h):
+            idx = headers.get(h)
+            if idx is None:
+                return None
+            return row[idx] if idx < len(row) else None
+
+        row_name = val("name")
+        row_price = val("price")
+        row_category = val("category")
+        row_subcategory = val("subcategory")
+        row_brand = val("brand")
+        row_color = val("color")
+        row_size_unit = val("size_unit")
+        row_vendor = val("vendor")
+        row_description = val("description") if "description" in headers else None
+        row_redirect = val("redirect_url") if "redirect_url" in headers else None
+
+        # Basic validation
+        row_errors = []
+
+        if not row_name or str(row_name).strip() == "":
+            row_errors.append("Missing product name")
+        if row_price is None:
+            row_errors.append("Missing price")
+        else:
+            try:
+                # allow numeric strings too
+                price_val = float(row_price)
+                if price_val < 0:
+                    row_errors.append("Price cannot be negative")
+            except Exception:
+                row_errors.append("Invalid price")
+
+        # Resolve foreign keys by name
+        category_obj = get_obj_by_name(ProductCategory, row_category)
+        if not category_obj:
+            row_errors.append(f"Category '{row_category}' not found")
+
+        # Subcategory must be within category
+        subcategory_obj = None
+        if row_subcategory:
+            # try to match subcategory name under that category if category_obj exists
+            if category_obj:
+                subcategory_obj = ProductSubCategory.objects.filter(category=category_obj, name__iexact=str(row_subcategory).strip()).first()
+            if not subcategory_obj:
+                # try global match if not found under category
+                subcategory_obj = ProductSubCategory.objects.filter(name__iexact=str(row_subcategory).strip()).first()
+            if not subcategory_obj:
+                row_errors.append(f"Subcategory '{row_subcategory}' not found")
+
+        brand_obj = get_obj_by_name(ProductBrand, row_brand)
+        if not brand_obj:
+            row_errors.append(f"Brand '{row_brand}' not found")
+
+        color_obj = get_obj_by_name(ProductColor, row_color)
+        if not color_obj:
+            row_errors.append(f"Color '{row_color}' not found")
+
+        size_obj = get_obj_by_name(ProductSizeUnit, row_size_unit)
+        if not size_obj:
+            row_errors.append(f"Size unit '{row_size_unit}' not found")
+
+        vendor_obj = get_obj_by_name(Vendor, row_vendor)
+        if not vendor_obj:
+            row_errors.append(f"Vendor '{row_vendor}' not found")
+
+        if row_errors:
+            errors.append({"row": row_idx, "errors": row_errors})
+            continue
+
+        # All validations passed -> create product
+        try:
+            # Use atomic block per row to avoid partial DB state if something unexpected fails
+            with transaction.atomic():
+                product = Product.objects.create(
+                    name=str(row_name).strip(),
+                    price=float(row_price),
+                    category=category_obj,
+                    subcategory=subcategory_obj,
+                    brand=brand_obj,
+                    size_unit=size_obj,
+                    color=color_obj,
+                    vendor=vendor_obj,
+                    description=str(row_description).strip() if row_description else None,
+                    redirect_url=str(row_redirect).strip() if row_redirect else None
+                )
+                created += 1
+        except Exception as e:
+            errors.append({"row": row_idx, "errors": [f"DB error: {str(e)}"]})
+            continue
+
+    result = {
+        "response": {"n": 1 if created>0 else 0, "msg": "Bulk upload finished"},
+        "data": {
+            "rows_processed": rows_processed,
+            "created": created,
+            "failed": len(errors),
+            "errors": errors
+        }
+    }
+    return Response(result)
 
 
 

@@ -54,5 +54,7 @@ urlpatterns = [
     path('delete_product_color', delete_product_color, name='api_delete_product_color'),
     path('product_color_by_id', product_color_by_id, name='api_product_color_by_id'),
 
+    path('api/product/bulk-upload-by-name', bulk_upload_products_by_name, name='product_bulk_upload_by_name'),
+
 
 ]

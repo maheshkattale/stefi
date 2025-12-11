@@ -3,154 +3,246 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}Vendors - Forms{% endblock %}
+{% block title %}Edit Vendor{% endblock %}
 
 {% block layout %}
-<!-- Basic Layout -->
 <div class="row">
-    <div class="col-xl">
-      <div class="card mb-12">
-        <div class="card-header d-flex justify-content-between align-items-center">
-          <h5 class="mb-0">Edit Vendor</h5> <small class="text-body float-end"></small>
-        </div>
-        <div class="card-body">
-          <form>
-            {% csrf_token %}
-            <div class="row">
-              <div class="form-floating form-floating-outline mb-6 col-12">
-                <input type="text" class="form-control" id="Name" placeholder="Name" value="{{vendor.name}}"/>
-                <label for="Name">Name</label>
-              </div>
+  <div class="col-xl">
+    <div class="card mb-12">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Edit Vendor</h5>
+      </div>
 
+      <div class="card-body">
+        <form id="editVendorForm">
+          {% csrf_token %}
 
-              <div class="form-floating form-floating-outline mb-6 col-6">
-                <input type="text" class="form-control" id="phone" placeholder="phone" onkeyup="IsValidNumberInput(this)" maxlength="10"  value="{{vendor.phone}}"/>
-                <label for="phone">Phone</label>
-              </div>
-              <div class="form-floating form-floating-outline mb-6 col-6">
-                                <input type="text" class="form-control" id="email" placeholder="email"  value="{{vendor.email}}"/>
+          <div class="row">
 
-                <label for="email">Email</label>
-              </div>
-              <div class="form-floating form-floating-outline mb-6 col-12">
-                <textarea id="address" class="form-control" placeholder="Please enter address." style="height: 60px;"> {{vendor.address}}</textarea>
-                <label for="address">address</label>
-              </div>
+            <!-- Basic Details -->
+            <h5 class="text-primary mt-3 mb-3">Basic Details</h5>
+
+            <div class="form-floating form-floating-outline mb-6 col-6">
+              <input type="text" class="form-control" id="name" value="{{vendor.name}}" />
+              <label for="name">Name *</label>
             </div>
 
-            <div class="btn btn-primary" onclick="return validation()">Submit</div>
-            <div class="btn btn-danger">Cancel</div>
-          </form>
-        </div>
+            <div class="form-floating form-floating-outline mb-6 col-6">
+              <input type="text" class="form-control" id="legal_name" value="{{vendor.legal_name}}" />
+              <label for="legal_name">Legal Name</label>
+            </div>
+
+            <div class="form-floating form-floating-outline mb-6 col-6">
+              <input type="text" class="form-control" id="vendor_code" value="{{vendor.vendor_code}}" />
+              <label for="vendor_code">Vendor Code</label>
+            </div>
+
+            <!-- Contact Info -->
+            <h5 class="text-primary mt-4 mb-3">Contact Information</h5>
+
+            <div class="form-floating form-floating-outline mb-6 col-6">
+              <input type="text" maxlength="10" class="form-control" id="phone" value="{{vendor.phone}}" />
+              <label for="phone">Phone *</label>
+            </div>
+
+            <div class="form-floating form-floating-outline mb-6 col-6">
+              <input type="text" maxlength="10" class="form-control" id="alternate_phone" value="{{vendor.alternate_phone}}" />
+              <label for="alternate_phone">Alternate Phone</label>
+            </div>
+
+            <div class="form-floating form-floating-outline mb-6 col-6">
+              <input type="text" class="form-control" id="email" value="{{vendor.email}}" />
+              <label for="email">Email *</label>
+            </div>
+
+            <div class="form-floating form-floating-outline mb-6 col-6">
+              <input type="text" class="form-control" id="alternate_email" value="{{vendor.alternate_email}}" />
+              <label for="alternate_email">Alternate Email</label>
+            </div>
+
+            <div class="form-floating form-floating-outline mb-6 col-6">
+              <input type="text" class="form-control" id="website" value="{{vendor.website}}" />
+              <label for="website">Website</label>
+            </div>
+
+            <!-- Address -->
+            <h5 class="text-primary mt-4 mb-3">Address</h5>
+
+            <div class="form-floating form-floating-outline mb-6 col-12">
+              <textarea id="address" class="form-control" style="height: 60px;">{{vendor.address}}</textarea>
+              <label for="address">Address *</label>
+            </div>
+
+            <div class="form-floating form-floating-outline mb-6 col-4">
+              <input type="text" class="form-control" id="city" value="{{vendor.city}}" />
+              <label for="city">City</label>
+            </div>
+
+            <div class="form-floating form-floating-outline mb-6 col-4">
+              <input type="text" class="form-control" id="state" value="{{vendor.state}}" />
+              <label for="state">State</label>
+            </div>
+
+            <div class="form-floating form-floating-outline mb-6 col-4">
+              <input type="text" class="form-control" id="country" value="{{vendor.country}}" />
+              <label for="country">Country</label>
+            </div>
+
+            <div class="form-floating form-floating-outline mb-6 col-4">
+              <input type="text" class="form-control" id="pincode" value="{{vendor.pincode}}" />
+              <label for="pincode">Pincode</label>
+            </div>
+
+            <!-- Tax Details -->
+            <h5 class="text-primary mt-4 mb-3">Business & Tax Details</h5>
+
+            <div class="form-floating form-floating-outline mb-6 col-4">
+              <input type="text" class="form-control" id="gst_number" value="{{vendor.gst_number}}" />
+              <label for="gst_number">GST Number</label>
+            </div>
+
+            <div class="form-floating form-floating-outline mb-6 col-4">
+              <input type="text" class="form-control" id="pan_number" value="{{vendor.pan_number}}" />
+              <label for="pan_number">PAN Number</label>
+            </div>
+
+            <div class="form-floating form-floating-outline mb-6 col-4">
+              <input type="text" class="form-control" id="registration_number" value="{{vendor.registration_number}}" />
+              <label for="registration_number">Registration Number</label>
+            </div>
+
+            <!-- Banking -->
+            <h5 class="text-primary mt-4 mb-3">Banking Details</h5>
+
+            <div class="form-floating form-floating-outline mb-6 col-6">
+              <input type="text" class="form-control" id="bank_name" value="{{vendor.bank_name}}" />
+              <label for="bank_name">Bank Name</label>
+            </div>
+
+            <div class="form-floating form-floating-outline mb-6 col-6">
+              <input type="text" class="form-control" id="account_number" value="{{vendor.account_number}}" />
+              <label for="account_number">Account Number</label>
+            </div>
+
+            <div class="form-floating form-floating-outline mb-6 col-6">
+              <input type="text" class="form-control" id="ifsc_code" value="{{vendor.ifsc_code}}" />
+              <label for="ifsc_code">IFSC Code</label>
+            </div>
+
+            <div class="form-floating form-floating-outline mb-6 col-6">
+              <input type="text" class="form-control" id="branch_name" value="{{vendor.branch_name}}" />
+              <label for="branch_name">Branch Name</label>
+            </div>
+
+            <div class="form-floating form-floating-outline mb-6 col-6">
+              <input type="text" class="form-control" id="upi_id" value="{{vendor.upi_id}}" />
+              <label for="upi_id">UPI ID</label>
+            </div>
+
+            <!-- Vendor Type -->
+            <h5 class="text-primary mt-4 mb-3">Vendor Type & Category</h5>
+
+            <div class="form-floating form-floating-outline mb-6 col-6">
+              <select id="vendor_type" class="form-control">
+                <option value="">Select Type</option>
+                <option value="manufacturer" {% if vendor.vendor_type == 'manufacturer' %}selected{% endif %}>Manufacturer</option>
+                <option value="wholesaler" {% if vendor.vendor_type == 'wholesaler' %}selected{% endif %}>Wholesaler</option>
+                <option value="service_provider" {% if vendor.vendor_type == 'service_provider' %}selected{% endif %}>Service Provider</option>
+                <option value="dealer" {% if vendor.vendor_type == 'dealer' %}selected{% endif %}>Dealer</option>
+                <option value="retailer" {% if vendor.vendor_type == 'retailer' %}selected{% endif %}>Retailer</option>
+              </select>
+              <label for="vendor_type">Vendor Type</label>
+            </div>
+
+            <div class="form-floating form-floating-outline mb-6 col-6">
+              <input type="text" class="form-control" id="category" value="{{vendor.category}}" />
+              <label for="category">Category</label>
+            </div>
+
+            <!-- Notes -->
+            <div class="form-floating form-floating-outline mb-6 col-12">
+              <textarea id="notes" class="form-control" style="height:60px">{{vendor.notes}}</textarea>
+              <label for="notes">Notes</label>
+            </div>
+
+          </div>
+
+          <div class="btn btn-primary" onclick="return updateVendor()">Update</div>
+          <div class="btn btn-danger">Cancel</div>
+
+        </form>
       </div>
     </div>
-    <!-- Merged -->
-
+  </div>
 </div>
-{% endblock layout %}
+{% endblock %}
 
 {% block page_js %}
-{{block.super}}
+{{ block.super }}
 
 <script>
-  
-  function validation() {
-    var Name = $("#Name").val().trim();
-    var phone = $("#phone").val().trim();
-    var address = $("#address").val().trim();
-    var email = $("#email").val().trim();
+function updateVendor() {
 
+  let required = ["name", "phone", "email", "address"];
 
-    if (IsValid(Name)) {
-      swal({
-            icon: "error",
-            title: "",
-            text: "Please enter valid Name",
-
-          });
-          
-      $("#Name").focus();
+  for (let id of required) {
+    if ($("#" + id).val().trim() === "") {
+      swal({ icon: "error", text: `Please enter ${id}` });
+      $("#" + id).focus();
       return false;
     }
-    if (IsValid(phone)) {
-      // console.log("phone count is required")
-      swal({
-            icon: "error",
-            title: "",
-            text: "Please enter valid phone number",
-
-          });
-      $("#phone").focus();
-      return false;
-    }
-    if (IsValid(email)) {
-      swal({
-            icon: "error",
-            title: "",
-            text: "Please enter valid email",
-
-          });
-          
-      $("#email").focus();
-      return false;
-    }
-    else {
-      var formData = new FormData();
-      formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
-      formData.append('name', Name);
-      formData.append('email', email);
-      formData.append('phone', phone);
-      formData.append('address', address);
-      formData.append('id', '{{vendor.id}}');
-
-
-      $.ajax({
-        url: hosturl + "/stefi-admin-vendor/edit-vendor/{{vendor.id}}",
-        type: 'POST',
-        data: formData,
-        processData: false,
-        contentType: false,
-        dataType: 'json',
-        beforeSend: function () {
-          swal({
-            icon: "info",
-            title: "",
-            text: "Loading...",
-            buttons: false,
-
-          });
-        },
-        success: function (response) {
-          // console.log("----", response)
-          if (response.response.n == 1) {
-            swal({
-              icon: response.response.status,
-              title: "",
-              text: response.response.msg,
-              button: "Close",
-            }).then(() => {
-                window.location.href = hosturl + '/stefi-admin-vendor/vendor-list';
-              });
-
-
-          }
-          else {
-            swal({
-              icon: response.response.status,
-              title: "",
-              text: response.response.msg,
-              button: "Close",
-            });
-          }
-
-
-        }
-      });
-
-    }
-
-
   }
 
+  if ($("#phone").val().length !== 10) {
+    swal({ icon: "error", text: "Phone must be 10 digits" });
+    return false;
+  }
+
+  let email = $("#email").val().trim();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    swal({ icon: "error", text: "Invalid email format" });
+    return false;
+  }
+
+  let formData = new FormData();
+  formData.append("csrfmiddlewaretoken", "{{ csrf_token }}");
+  formData.append("id", "{{vendor.id}}");
+
+  let fields = [
+    "name", "legal_name", "vendor_code", "phone", "alternate_phone",
+    "email", "alternate_email", "website", "address", "city",
+    "state", "country", "pincode", "gst_number", "pan_number",
+    "registration_number", "bank_name", "account_number", "ifsc_code",
+    "branch_name", "upi_id", "vendor_type", "category", "notes"
+  ];
+
+  fields.forEach(f => formData.append(f, $("#" + f).val()));
+
+  $.ajax({
+    url: hosturl + "/stefi-admin-vendor/edit-vendor/{{vendor.id}}",
+    type: "POST",
+    processData: false,
+    contentType: false,
+    data: formData,
+
+    beforeSend: function () {
+      swal({ icon: "info", text: "Updating...", buttons: false });
+    },
+
+    success: function (response) {
+      if (response.response.n === 1) {
+        swal({
+          icon: "success",
+          text: response.response.msg,
+        }).then(() => {
+          window.location.href = hosturl + "/stefi-admin-vendor/vendor-list";
+        });
+      } else {
+        swal({ icon: "error", text: response.response.msg });
+      }
+    }
+  });
+}
 </script>
-{%endblock page_js %}
+
+{% endblock %}

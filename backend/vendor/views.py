@@ -52,45 +52,71 @@ def vendor_list(request):
         
 
 
-
 @api_view(['POST'])
 def add_vendor(request):
     data = request.data.copy()
-    alredy_exists = Vendor.objects.filter(Q(name__iexact=data.get('name')) & Q(isActive=True))
-    if alredy_exists.exists():
+
+    # Check duplicate name
+    if Vendor.objects.filter(name__iexact=data.get('name'), isActive=True).exists():
         return Response({"response":{"n":0,"msg":"Vendor with this name already exists","status":"error"}})
-    data['isActive']=True
+
+    # Check duplicate email (since it's unique)
+    if Vendor.objects.filter(email__iexact=data.get('email')).exists():
+        return Response({"response":{"n":0,"msg":"Vendor with this email already exists","status":"error"}})
+
+    # Check duplicate vendor_code only if provided
+    if data.get("vendor_code"):
+        if Vendor.objects.filter(vendor_code__iexact=data.get("vendor_code")).exists():
+            return Response({"response":{"n":0,"msg":"Vendor code already exists","status":"error"}})
+
+    data['isActive'] = True
     serializer = VendorSerializers(data=data)
+
     if serializer.is_valid():
         serializer.save()
         return Response({"response":{"n":1,"msg":"Vendor added successfully","status":"success"},"data":serializer.data})
-    else:
-        first_key, first_value = next(iter(serializer.errors.items()))
-        msg = first_key.upper() + ": " + str(first_value[0])
-        return Response({"response":{"n":0,"msg":msg,"status":"error"},"errors":serializer.errors})
+    
+    # error format
+    first_key, first_value = next(iter(serializer.errors.items()))
+    msg = first_key.upper() + ": " + str(first_value[0])
+    return Response({"response":{"n":0,"msg":msg,"status":"error"},"errors":serializer.errors})
+
+
 
 @api_view(['POST'])
 def update_vendor(request):
     data = request.data.copy()
     vendor_id = data.get('id')
+
     try:
-        vendor_obj = Vendor.objects.get(id=vendor_id, isActive=True)
+        vendor = Vendor.objects.get(id=vendor_id, isActive=True)
     except Vendor.DoesNotExist:
         return Response({"response":{"n":0,"msg":"Vendor not found","status":"error"}})
-    
-    alredy_exists = Vendor.objects.filter(Q(name__iexact=data.get('name')) & Q(isActive=True)).exclude(id=vendor_id)
-    if alredy_exists.exists():
+
+    # Name duplicate check
+    if Vendor.objects.filter(name__iexact=data.get('name'), isActive=True).exclude(id=vendor_id).exists():
         return Response({"response":{"n":0,"msg":"Vendor with this name already exists","status":"error"}})
-    
-    serializer = VendorSerializers(vendor_obj, data=data, partial=True)
+
+    # Email duplicate check
+    if data.get("email"):
+        if Vendor.objects.filter(email__iexact=data.get('email')).exclude(id=vendor_id).exists():
+            return Response({"response":{"n":0,"msg":"Vendor with this email already exists","status":"error"}})
+
+    # Vendor code duplicate check
+    if data.get("vendor_code"):
+        if Vendor.objects.filter(vendor_code__iexact=data.get("vendor_code")).exclude(id=vendor_id).exists():
+            return Response({"response":{"n":0,"msg":"Vendor code already exists","status":"error"}})
+
+    serializer = VendorSerializers(vendor, data=data, partial=True)
+
     if serializer.is_valid():
         serializer.save()
         return Response({"response":{"n":1,"msg":"Vendor updated successfully","status":"success"},"data":serializer.data})
-    else:
-        first_key, first_value = next(iter(serializer.errors.items()))
-        msg = first_key.upper() + ": " + str(first_value[0])
-        return Response({"response":{"n":0,"msg":msg,"status":"error"},"errors":serializer.errors})
-    
+
+    first_key, first_value = next(iter(serializer.errors.items()))
+    msg = first_key.upper() + ": " + str(first_value[0])
+    return Response({"response":{"n":0,"msg":msg,"status":"error"},"errors":serializer.errors})
+   
 
 @api_view(['POST'])
 def delete_vendor(request):

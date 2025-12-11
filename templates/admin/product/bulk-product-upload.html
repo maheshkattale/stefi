@@ -1,0 +1,112 @@
+{% extends "admin-base.html" %}
+{% load static %}
+{% block title %}Bulk Upload Products{% endblock %}
+
+{% block layout %}
+<div class="row">
+  <div class="col-xl-8">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="card-title">Bulk Upload Products (Using Names)</h5>
+      </div>
+      <div class="card-body">
+        <p>
+          Download the sample template, fill rows and upload. Column headers (first row) must match:
+        </p>
+        <pre>name,price,category,subcategory,brand,color,size_unit,vendor,description,redirect_url</pre>
+        <a href="#" id="download-template" class="btn btn-outline-primary mb-3">Download Template (.xlsx)</a>
+
+        <div class="mb-3">
+          <label for="bulkFile" class="form-label">Select Excel (.xlsx)</label>
+          <input class="form-control" type="file" id="bulkFile" accept=".xlsx" />
+        </div>
+
+        <button class="btn btn-primary" id="uploadBtn">Upload</button>
+        <a href="/stefi-admin-product/product-list" class="btn btn-secondary">Cancel</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block page_js %}
+{{ block.super }}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+  // Generate a minimal .xlsx template client-side so user can download without backend
+  document.getElementById('download-template').addEventListener('click', function(e) {
+    e.preventDefault();
+    // build CSV data rows (we will create xlsx via SheetJS)
+    const headers = ["name","price","category","subcategory","brand","color","size_unit","vendor","description","redirect_url"];
+    const example = ["Office Chair","1299.00","Furniture","Office Chairs","Ikea","Black","Unit","Acme Supplies","Comfortable chair","https://example.com/p/office-chair"];
+    const ws_data = [headers, example];
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet(ws_data);
+    XLSX.utils.book_append_sheet(wb, ws, "Products");
+    XLSX.writeFile(wb, "product_bulk_template.xlsx");
+  });
+
+  document.getElementById('uploadBtn').addEventListener('click', function() {
+    const input = document.getElementById('bulkFile');
+    if (!input.files || input.files.length === 0) {
+      swal({icon: "error", text: "Please select an Excel file to upload"});
+      return;
+    }
+
+    const file = input.files[0];
+    if (!file.name.toLowerCase().endsWith('.xlsx')) {
+      swal({icon: "error", text: "Only .xlsx files are supported"});
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    $.ajax({
+      url: hosturl + "/api/product/bulk-upload-by-name",
+      type: "POST",
+      data: formData,
+      processData: false,
+      contentType: false,
+      beforeSend: function() {
+        swal({icon: "info", text: "Uploading...", buttons: false});
+      },
+      success: function(resp) {
+        swal.close();
+        // Build a summary message
+        let rows_processed = resp.data.rows_processed || 0;
+        let created = resp.data.created || 0;
+        let failed = resp.data.failed || 0;
+        let msg = `Rows processed: ${rows_processed}\nCreated: ${created}\nFailed: ${failed}`;
+
+        if (failed > 0 && resp.data.errors && resp.data.errors.length > 0) {
+          // Build readable error list (first 10)
+          let errors = resp.data.errors;
+          let errorText = errors.slice(0, 20).map(e => `Row ${e.row}: ${e.errors.join('; ')}`).join('\n');
+          // show larger modal with details
+          swal({
+            icon: "warning",
+            title: "Upload Completed with errors",
+            content: {
+              element: "textarea",
+              attributes: {
+                placeholder: "Errors",
+                value: msg + "\n\n" + errorText,
+                rows: 10,
+                cols: 60
+              }
+            }
+          });
+        } else {
+          swal({icon:"success", text: "Upload successful!\n" + msg}).then(() => {
+            window.location.href = hosturl + "/stefi-admin-product/product-list";
+          });
+        }
+      },
+      error: function(xhr) {
+        swal({icon:"error", text: xhr.responseJSON?.response?.msg || "Upload failed"});
+      }
+    });
+  });
+</script>
+{% endblock %}

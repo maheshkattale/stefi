@@ -3,334 +3,222 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}Product - Forms{% endblock %}
+{% block title %}Product - List{% endblock %}
 
 {% block layout %}
-<!-- Basic Layout -->
+
+<style>
+    .table-image-preview {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 6px;
+        margin-right: 12px;
+        border: 1px solid #ddd;
+    }
+    .text-label {
+        font-weight: 600;
+        font-size: 13px;
+    }
+</style>
+
 <div class="card">
+
     <div class="d-flex justify-content-between align-items-center">
-        <div>
-            <h5 class="card-header">Product</h5>
-        </div>
+        <h5 class="card-header">Products</h5>
+
         <div class="d-flex justify-content-end">
             <div class="d-flex align-items-center">
                 <i class="ri-search-line ri-22px me-2"></i>
-                <input type="text" id="search" class="form-control border-0 shadow-none bg-body" placeholder="Search..."
-                    aria-label="Search..." onkeyup="Pagination()" />
+                <input type="text" id="search" class="form-control border-0 shadow-none bg-body"
+                    placeholder="Search..." onkeyup="Pagination()" />
             </div>
-            <a class="btn btn-primary waves-effect waves-light m-4" href="/stefi-admin-product/add-product">Add Product</a>
+            <a class="btn btn-primary m-4" href="/stefi-admin-product/add-product">Add Product</a>
         </div>
     </div>
+
     <div class="table-responsive text-nowrap">
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th> Name</th>
-                    <th>Description</th>
+                    <th>Product Details</th>
+                    <th>More Info</th>
                     <th>Actions</th>
                 </tr>
             </thead>
-            <tbody class="table-border-bottom-0" id="product_table_body">
 
+            <tbody id="product_table_body"></tbody>
 
-
-
-
-            </tbody>
         </table>
-        <div class=" d-flex justify-content-end m-3" id="secondpagination-demo2">
+
+        <div class="d-flex justify-content-end m-3" id="secondpagination-demo2">
             <ul id="pagination-demo2" class="pagination-sm"></ul>
         </div>
+
     </div>
 </div>
-{% endblock layout %}
 
+{% endblock layout %}
 
 {% block page_js %}
 {{block.super}}
 
 <script>
-    $(document).ready(function () {
 
-        Pagination()
-    });
-    function Pagination() {
-        var testflag = true;
-        $('#secondpagination-demo2').html('<ul id="pagination-demo2" class="pagination-sm"></ul>');
-        get_table_data(1);
+$(document).ready(function () {
+    Pagination()
+});
 
-    }
 
-    function get_table_data(p) {
-        var search = $('#search').val()
-        if (search == undefined) {
-            search = ''
-        }
-        var fd = new FormData()
-        fd.append('search', search)
-        fd.append('p', p)
-        fd.append('csrfmiddlewaretoken', '{{csrf_token}}')
-        $.ajax({
-            url: hosturl + "/api/product/product_list_pagination",
-            data: fd,
-            headers: { "Authorization": "Bearer {{token}}" },
+function Pagination() {
+    $('#secondpagination-demo2').html('<ul id="pagination-demo2" class="pagination-sm"></ul>');
+    get_table_data(1);
+}
 
-            type: 'POST',
-            processData: false,
-            contentType: false,
-            beforeSend: function () {
-                swal({
-                    icon: "info",
-                    title: "",
-                    text: "Loading...",
-                    buttons: false,
 
+function get_table_data(p) {
+
+    var search = $('#search').val() || '';
+
+    var fd = new FormData();
+    fd.append('search', search);
+    fd.append('p', p);
+    fd.append('csrfmiddlewaretoken', '{{csrf_token}}');
+
+    $.ajax({
+        url: hosturl + "/api/product/product_list_pagination",
+        type: 'POST',
+        data: fd,
+        processData: false,
+        contentType: false,
+
+        beforeSend: function () {
+            swal({ icon: "info", text: "Loading...", buttons: false });
+        },
+
+        success: function (response) {
+
+            swal.close();
+
+            let html = "";
+
+            if (response.count > 0) {
+
+                $.each(response.data, function (i, o) {
+
+                    const img = o.product_image_url || "/static/assets/defaults/no-image.png";
+
+                    html += `
+                    <tr>
+
+                        <td>
+                            <div class="d-flex">
+                                <img src="${img}" class="table-image-preview" />
+
+                                <div>
+                                    <div><span class="text-label">Name: </span>${o.name || ''}</div>
+                                    <div><span class="text-label">Brand: </span>${o.brand_name || ''}</div>
+                                    <div><span class="text-label">Color: </span>${o.color_name || ''}</div>
+                                    <div><span class="text-label">Size Unit: </span>${o.size_unit_name || ''}</div>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td>
+                            <div><span class="text-label">Price: </span>${o.price || ''}</div>
+                            <div><span class="text-label">Category: </span>${o.category_name || ''}</div>
+                            <div><span class="text-label">Subcategory: </span>${o.subcategory_name || ''}</div>
+                            <div><span class="text-label">Vendor: </span>${o.vendor_name || ''}</div>
+                            <div><span class="text-label">Description: </span>${o.description || ''}</div>
+                        </td>
+
+                        <td>
+                            <div class="dropdown">
+                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
+                                    data-bs-toggle="dropdown">
+                                    <i class="ri-more-2-line"></i>
+                                </button>
+
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="/stefi-admin-product/edit-product/${o.id}">
+                                        <i class="ri-pencil-line me-1"></i>Edit
+                                    </a>
+
+                                    <a class="dropdown-item text-danger" href="javascript:void(0);"
+                                        onclick="delete_product(${o.id})">
+                                        <i class="ri-delete-bin-6-line me-1"></i>Delete
+                                    </a>
+                                </div>
+                            </div>
+                        </td>
+
+                    </tr>`;
                 });
-            },
-            success: function (response) {
-                var infohtml = ''
-                swal.close()
-                console.log('response d', response)
-                if (response.count != 0) {
-                    var counter = parseInt(p + "1") - parseInt(10)
 
-                    $.each(response.data, function (i, o) {
-                        // console.log("o", o)
-                        infohtml += `
-                            
-                                                
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex">
-                                                <div>
-                                                    <img src="${o.product_image_url || ''}" alt="product image" class="table-image-preview"/>
-                                                </div>
-                                                <div>
-                                                    <div><span class="text-label">Name : </span><span>${o.name || ''}</span></div>
-                                                    <div><span class="text-label">Brand : </span><span>${o.brand_name || ''}</span></div>
-                                                    <div><span class="text-label">Color : </span><span>${o.color_name || ''}</span></div>
-                                                    <div><span class="text-label">Size/Units : </span><span>${o.size_unit_name || ''}</span></div>
-                                                </div>    
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div><span class="text-label">Price : </span><span>${o.price || ''}</span></div>
-                                            <div><span class="text-label">Category : </span><span>${o.category_name || ''}</span></div>
-                                            <div><span class="text-label">SubCategory : </span><span>${o.subcategory_name || ''}</span></div>
-                                            <div><span class="text-label">Vendor : </span><span>${o.vendor_name || ''}</span></div>
-                                            <div><span class="text-label">Description : </span><span>${o.description || ''}</span></div>
-                                        </td>
-    
-                                        <td>
-                                            <div class="dropdown">
-                                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
-                                                    data-bs-toggle="dropdown"><i class="ri-more-2-line"></i></button>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="/stefi-admin-product/edit-product/${o.id}"><i class="ri-pencil-line me-1"></i>
-                                                        Edit</a>
-                                                    <a class="dropdown-item" href="javascript:void(0);" onclick="delete_product(${o.id})"><i
-                                                            class="ri-delete-bin-6-line me-1"></i> Delete</a>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                            
-                            
-                            
-           
-                      `
+                $("#product_table_body").html(html);
 
-                        counter += 1
-                    });
-                    $('#product_table_body').html(infohtml);
-                    var totalfilter = Math.ceil(parseInt(response.count) / 10);
-                    $('#pagination-demo2').twbsPagination({
-                        totalPages: totalfilter,
-                        visiblePages: 3,
-                        next: 'Next',
-                        prev: 'Prev',
-                        onPageClick: function (event, page) {
-                            var testflag = true;
-                            //fetch content and render here
-                            filternamepageno = page
-                            if (testflag == true) {
-                                testflag = false;
-                                get_table_data(page)
-                            }
-                            $('#page-content').text('Page ' + page) + ' content here';
-                        }
-                    })
+                let totalPages = Math.ceil(response.count / 10);
 
-
-
-                    // swal({
-                    //     icon: "success",
-                    //     title: "",
-                    //     text: "Data fetched successfully !",
-                    //     button: "Close",
-                    // });
-                } else {
-                    infohtml = `
-                                <tr class="border-bottom text-center">
-                                    <td colspan="3">No Data found</td>
-                                </tr>
-                    `
-                    $('#product_table_body').html(infohtml);
-
-                    swal({
-                        icon: "error",
-                        title: "",
-                        text: "No Data Found !",
-                        button: "Close",
-                    });
-                }
-
-            }
-        })
-
-    }
-
-    function delete_product(id) {
-        swal({
-            title: "Are you sure?",
-            text: "you want to delete it .",
-            icon: "warning",
-            buttons: true,
-            dangerMode: true
-        })
-            .then((willDelete) => {
-                if (willDelete) {
-                    $.ajax({
-                        url: hosturl + "/api/product/delete_product",
-                        type: 'POST',
-                        headers: {
-                            'Authorization': 'Bearer {{token}}'
-                        },
-                        data: {
-                            csrfmiddlewaretoken: '{{ csrf_token }}',
-                            'id': id
-                        },
-                        dataType: 'json',
-                        beforeSend: function () {
-
-
-
-                        },
-                        success: function (response) {
-                            // Pagination()
-                            if (response['response']['n'] == 1) {
-                                swal({
-                                    icon: "success",
-                                    title: "",
-                                    text: response['response']['msg'],
-                                    button: "Close",
-                                }).then(() => {
-                                    // Code to execute after the user closes the SweetAlert dialog
-                                    Pagination(); // Reload the page
-                                });
-
-
-
-                            }
-                            else {
-                                swal({
-                                    icon: "error",
-                                    title: "",
-                                    text: response['response']['msg'],
-                                    button: "Close",
-                                }).then(() => {
-                                    // Code to execute after the user closes the SweetAlert dialog
-                                    location.reload(); // Reload the page
-                                });
-                            }
-
-
-
-
-                        }
-                    });
-
-                }
-            })
-    }
-
-
-    function change_status(id, input) {
-
-
-        swal({
-            title: "Are you sure?",
-            text: "you want to change status.",
-            icon: "warning",
-            buttons: true,
-            dangerMode: true
-        })
-            .then((willDelete) => {
-                if (willDelete) {
-                    $.ajax({
-                        url: hosturl + "/api/product/change_product_status",
-                        type: 'POST',
-                        headers: {
-                            'Authorization': 'Bearer {{token}}'
-                        },
-                        data: {
-                            csrfmiddlewaretoken: '{{ csrf_token }}',
-                            'id': id
-                        },
-                        dataType: 'json',
-                        beforeSend: function () {
-
-
-
-                        },
-                        success: function (response) {
-                            if (response['response']['n'] == 1) {
-                                $('#status' + id).prop('checked', response['data']['status'])
-                                const label = $(`label[for="status${id}"]`);
-                                if (response['data']['status']) {
-                                    label.text('Yes');
-                                } else {
-                                    label.text('No');
-                                }
-                                swal({
-                                    icon: "success",
-                                    title: "",
-                                    text: response['response']['msg'],
-                                    button: "Close",
-                                })
-                            }
-                            else {
-                                swal({
-                                    icon: "error",
-                                    title: "",
-                                    text: response['response']['msg'],
-                                    button: "Close",
-                                }).then(() => {
-                                    // Code to execute after the user closes the SweetAlert dialog
-                                    location.reload(); // Reload the page
-                                });
-                            }
-
-
-
-
-                        }
-                    });
-
-                } else {
-                    if (input.checked) {
-                        $('#status' + id).prop('checked', false)
-                    } else {
-                        $('#status' + id).prop('checked', true)
-
+                $('#pagination-demo2').twbsPagination({
+                    totalPages: totalPages,
+                    visiblePages: 3,
+                    next: 'Next',
+                    prev: 'Prev',
+                    onPageClick: function (event, page) {
+                        get_table_data(page);
                     }
+                });
 
+            } else {
+                $("#product_table_body").html(`
+                    <tr>
+                        <td colspan="3" class="text-center">No Products Found</td>
+                    </tr>
+                `);
+
+                swal({ icon: "error", text: "No Data Found!", button: "Close" });
+            }
+        }
+    });
+}
+
+
+
+// Delete Product
+function delete_product(id) {
+
+    swal({
+        title: "Are you sure?",
+        text: "This product will be deleted!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true
+    })
+    .then((yes) => {
+        if (yes) {
+            $.ajax({
+                url: hosturl + "/api/product/delete_product",
+                type: "POST",
+                data: {
+                    csrfmiddlewaretoken: "{{csrf_token}}",
+                    id: id
+                },
+
+                success: function (response) {
+                    if (response.response.n == 1) {
+                        swal({ icon: "success", text: response.response.msg }).then(() => {
+                            Pagination();
+                        });
+
+                    } else {
+                        swal({ icon: "error", text: response.response.msg });
+                    }
                 }
-            })
-    }
-
-
-
+            });
+        }
+    });
+}
 
 </script>
-{%endblock page_js %}
+
+{% endblock %}
