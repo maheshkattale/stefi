@@ -1,0 +1,402 @@
+
+    /* ---------- BASE ---------- */
+    :root {
+        --accent: #e33b3b;
+        --accent-2: #ff9f1c;
+        --muted: #7b8a96;
+        --card: #ffffff;
+        --bg: #f7f9fb;
+        --max-width: 1200px;
+    }
+
+    * {
+        box-sizing: border-box
+    }
+
+    body {
+        background: var(--bg);
+        font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+        color: #222;
+        margin: 0
+    }
+
+    .container {
+        max-width: var(--max-width);
+        margin: 0 auto;
+        padding: 0 20px
+    }
+
+    /* ---------- HERO ---------- */
+    .hero {
+        position: relative;
+        height: 58vh;
+        min-height: 380px;
+        display: flex;
+        align-items: flex-end;
+        padding: 40px 0;
+        overflow: hidden;
+    }
+
+    .hero-slider {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        inset: 0;
+        display: flex;
+        transition: transform .6s ease
+    }
+
+    .hero-slide {
+        min-width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-position: center;
+        position: relative
+    }
+
+    .hero-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.55));
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 3;
+        color: #fff;
+        padding: 30px;
+        max-width: 1100px;
+        margin-left: 60px
+    }
+
+    .hero-breadcrumb {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.85);
+        margin-bottom: 8px
+    }
+
+    .hero-title {
+        font-size: 44px;
+        margin: 0;
+        text-transform: capitalize;
+        letter-spacing: 0.3px
+    }
+
+    .hero-sub {
+        color: rgba(255, 255, 255, 0.95);
+        margin-top: 8px;
+        font-size: 16px
+    }
+
+    /* slider controls */
+    .hero-controls {
+        position: absolute;
+        left: 20px;
+        bottom: 22px;
+        display: flex;
+        gap: 8px;
+        z-index: 4
+    }
+
+    .hero-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.4);
+        cursor: pointer;
+        border: 2px solid rgba(255, 255, 255, 0.15)
+    }
+
+    .hero-dot.active {
+        background: var(--accent);
+        transform: scale(1.05)
+    }
+
+    /* ---------- SUMMARY + INFO CARD ---------- */
+    .summary-row {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 24px;
+    padding: 30px 0;
+    margin-top: -60px;
+    }
+
+    @media(max-width:980px) {
+        .summary-row {
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-top: 0;
+            padding: 18px
+        }
+    }
+
+    .summary-card {
+        background: var(--card);
+        padding: 40px 10px;
+        border-radius: 10px;
+        box-shadow: 0 8px 28px rgba(10, 20, 40, 0.08)
+    }
+
+    .info-card {
+        background: linear-gradient(180deg, #fff, #fff);
+        border-radius: 10px;
+        padding: 18px;
+        box-shadow: 0 6px 18px rgba(10, 20, 40, 0.06);
+        position: relative
+    }
+
+    .info-card .badge {
+        background: var(--accent);
+        color: #fff;
+        padding: 8px 12px;
+        border-radius: 6px;
+        display: inline-block;
+        font-weight: 600;
+        margin-bottom: 12px
+    }
+
+    .small-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center
+    }
+
+    .meta-list {
+        font-size: 14px;
+        color: var(--muted);
+        margin-top: 10px
+    }
+
+    /* ---------- ATTRACTIONS ---------- */
+    .section {
+        padding: 52px 0px
+    }
+
+    .section-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px
+    }
+
+    .section-head h2 {
+        margin: 0;
+        font-size: 28px;
+        text-transform: uppercase;
+        color: #18394d;
+        letter-spacing: 1px
+    }
+
+    .card-carousel {
+        display: flex;
+        gap: 18px;
+        overflow-x: auto;
+        padding: 18px 2px 14px;
+        scroll-behavior: smooth
+    }
+
+    .attraction {
+        min-width: 260px;
+        background: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(11, 22, 40, 0.06)
+    }
+
+    .attraction img {
+        width: 100%;
+        height: 160px;
+        object-fit: cover
+    }
+
+    .attraction .title {
+        padding: 12px 14px;
+        font-weight: 700;
+        color: #153a4d
+    }
+
+    /* ---------- EXPERIENCES (color stripes) ---------- */
+    .experiences {
+        padding: 44px 0;
+        background: linear-gradient(180deg, #fff8f2, #fff)
+    }
+
+    .exp-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px;
+    }
+
+    .exp-card {
+        background: #fff;
+        border-radius: 10px;
+        padding: 14px;
+        box-shadow: 0 6px 22px rgba(10, 20, 40, 0.05);
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        min-height: 160px
+    }
+
+    .exp-card img {
+        width: 100%;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 8px
+    }
+
+    .exp-card h4 {
+        margin: 0;
+        font-size: 16px
+    }
+
+    /* ---------- ITINERARIES ---------- */
+    .itineraries {
+        padding: 40px 0
+    }
+
+    .it-grid {
+        display: flex;
+        gap: 18px;
+        flex-wrap: wrap;
+        justify-content: center
+    }
+
+    .it-item {
+        background: #fff;
+        border-radius: 12px;
+        min-width: 220px;
+        max-width: 300px;
+        padding: 14px;
+        text-align: center;
+        box-shadow: 0 8px 28px rgba(10, 20, 40, 0.06)
+    }
+
+    .it-item img {
+        width: 100%;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 8px
+    }
+
+    .it-item .days {
+        font-weight: 800;
+        color: var(--accent-2);
+        margin-top: 10px
+    }
+
+    /* ---------- MAP & TABS ---------- */
+    .map-section {
+        padding: 40px 30px;
+        /* background: linear-gradient(180deg, #f9fcff, #fff) */
+    }
+
+    .map-panel {
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 320px 1fr;
+        gap: 18px;
+        padding: 10px
+    }
+
+    @media(max-width:980px) {
+        .map-panel {
+            grid-template-columns: 1fr
+        }
+    }
+
+    .map-sidebar {
+        background: #fff;
+        border-radius: 10px;
+        padding: 18px;
+        box-shadow: 0 10px 26px rgba(10, 20, 40, 0.06)
+    }
+
+    .map-tabs {
+        display: flex;
+        flex-direction: column;
+        gap: 10px
+    }
+
+    .tab-btn {
+        padding: 10px;
+        border-radius: 8px;
+        background: transparent;
+        border: 1px solid rgba(20, 30, 40, 0.06);
+        cursor: pointer;
+        text-align: left
+    }
+
+    .tab-btn.active {
+        background: linear-gradient(90deg, rgba(227, 59, 59, 0.06), rgba(255, 159, 28, 0.06));
+        border-color: rgba(227, 59, 59, 0.12)
+    }
+
+    #map {
+        width: 100%;
+        height: 520px;
+        border-radius: 10px;
+        box-shadow: 0 10px 26px rgba(10, 20, 40, 0.06)
+    }
+
+    /* ---------- NEARBY ---------- */
+    .nearby {
+        padding: 40px 20px
+    }
+
+    .nearby-grid {
+        display: flex;
+        gap: 16px;
+        overflow-x: auto;
+        padding: 12px 6px
+    }
+
+    .nearby-card {
+        min-width: 200px;
+        border-radius: 10px;
+        overflow: hidden;
+        background: #fff;
+        box-shadow: 0 8px 22px rgba(10, 20, 40, 0.06)
+    }
+
+    .nearby-card img {
+        width: 100%;
+        height: 140px;
+        object-fit: cover
+    }
+
+    .nearby-card p {
+        padding: 10px;
+        margin: 0;
+        font-weight: 700
+    }
+
+    /* ---------- FOOTER ---------- */
+    .site-footer {
+        background: #06121a;
+        color: #cbd7df;
+        padding: 26px;
+        text-align: center;
+        margin-top: 30px
+    }
+
+    /* responsive tweaks */
+    @media(max-width:680px) {
+        .hero-title {
+            font-size: 28px
+        }
+
+        .hero-content {
+            margin-left: 18px;
+            padding: 18px
+        }
+
+        .hero-controls {
+            left: 12px;
+            bottom: 12px
+        }
+
+        .card-carousel .attraction {
+            min-width: 200px
+        }
+    }

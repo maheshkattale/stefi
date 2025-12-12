@@ -612,13 +612,85 @@ def admin_dashboard(request):
     return render(request, 'admin/dashboard/admin_dashboard.html', context)
 
 
-def state_details(request,state):
-    
-    context = {
-        'state': state.capitalize(),
+def state_details(request, state):
+
+    state_name = state.capitalize()
+
+    # -------------------------
+    # Dummy dynamic content
+    # Later, replace with database / API
+    # -------------------------
+
+    hero_images = [
+        "https://images.unsplash.com/photo-1524492412937-b28074a5d7da",
+        "https://images.unsplash.com/photo-1507525428034-b723cf961d3e",
+        "https://images.unsplash.com/photo-1521295121783-8a321d551ad2"
+    ]
+
+    summary = f"{state_name} is one of the most vibrant and diverse destinations, offering a mix of culture, heritage, cuisine, landscapes, and unique experiences."
+
+    weather = {
+        "today_text": "Sunny",
+        "temp_min": 18,
+        "temp_max": 28,
     }
-    
-    return render(request, 'Home/state.html', context)
+
+    major_airports = [
+        "Indira Gandhi International Airport (DEL)",
+        "Nearest Regional Airport – City Airport"
+    ]
+
+
+    attractions = [
+        {"title": "Heritage Fort", "image": "https://picsum.photos/id/1015/400/300", "lat": 28.61, "lng": 77.23},
+        {"title": "Lake View Point", "image": "https://picsum.photos/id/1024/400/300", "lat": 28.55, "lng": 77.15},
+        {"title": "National Museum", "image": "https://picsum.photos/id/1039/400/300", "lat": 28.60, "lng": 77.18},
+    ]
+
+    experiences = [
+        {"title": "Cultural Festival", "subtitle": "Experience the rich traditions", "image": "https://picsum.photos/id/1040/400/300", "link": "#"},
+        {"title": "Local Market Walk", "subtitle": "Discover handicrafts and food", "image": "https://picsum.photos/id/1050/400/300", "link": "#"},
+        {"title": "Adventure Trails", "subtitle": "Ideal for trekking lovers", "image": "https://picsum.photos/id/1060/400/300", "link": "#"},
+    ]
+
+    itineraries = [
+        {"days": 2, "title": "Weekend Getaway", "desc": "Explore highlights in 2 days.", "image": "https://picsum.photos/id/1070/400/300", "link": "#"},
+        {"days": 3, "title": "City + Nature Mix", "desc": "Balanced cultural and nature trip.", "image": "https://picsum.photos/id/1080/400/300", "link": "#"},
+        {"days": 5, "title": "Deep Dive Journey", "desc": "Perfect for travelers who want more.", "image": "https://picsum.photos/id/1060/400/300", "link": "#"},
+    ]
+
+    # Map default center = India
+    map_center = {
+        "lat": 22.9734,
+        "lng": 78.6569,
+        "zoom": 6
+    }
+
+    nearby = [
+        {"title": "Nearby City 1", "image": "https://picsum.photos/id/110/300/200", "link": "#"},
+        {"title": "Nearby City 2", "image": "https://picsum.photos/id/111/300/200", "link": "#"},
+        {"title": "Nearby City 3", "image": "https://picsum.photos/id/112/300/200", "link": "#"},
+        {"title": "Nearby City 4", "image": "https://picsum.photos/id/113/300/200", "link": "#"},
+    ]
+    tags = ["Heritage", "Nature", "Food", "Culture"]
+
+    context = {
+        "state": state_name,
+        "hero_images": hero_images,
+        "summary": summary,
+        "weather": weather,
+        "major_airports": major_airports,
+        "attractions": attractions,
+        "experiences": experiences,
+        "itineraries": itineraries,
+        "map_center": map_center,
+        "nearby": nearby,
+                'tags': tags,
+
+    }
+
+    return render(request, "Home/state.html", context)
+
 
 def indian_states(request,):
     

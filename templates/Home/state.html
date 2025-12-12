@@ -1,279 +1,312 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% load static %}
-
-{% block title %}Stefi - Plan Your Perfect Trip{% endblock %}
+{% block title %}{{ state }} — Explore & Plan | MyTravelSite{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<link rel="stylesheet" href="{% static 'assets/css/state-details.css'%}" />
 
-<link href="{% static 'assets/css/landing-page.css' %}" rel="stylesheet">
-<style>
-    body {
-    margin: 0;
-    background: #f7f9fb;
-}
-
-
-/* HERO */
-.hero {
-    position: relative;
-    height: 45vh;
-    background: url("https://picsum.photos/id/1018/1200/500") center/cover no-repeat;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.hero-overlay {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: rgba(10, 20, 40, 0.4);
-}
-
-.hero-content {
-    position: relative;
-    text-align: center;
-    color: #fff;
-}
-
-.hero-content h1 {
-    font-size: 48px;
-    margin: 0;
-}
-
-.subtitle {
-    margin-top: 10px;
-    font-size: 18px;
-    opacity: 0.9;
-}
-
-/* DESCRIPTION */
-.description-section {
-    padding: 40px 10%;
-}
-
-.description-section h2 {
-    margin-bottom: 15px;
-    font-size: 28px;
-}
-
-.description {
-    line-height: 1.7;
-    color: #444;
-    margin-bottom: 15px;
-}
-
-.highlighted {
-    padding: 15px;
-    border-left: 4px solid #4a90e2;
-    background: #eef6ff;
-}
-
-/* ATTRACTIONS */
-.attractions {
-    background: #e9f7ff;
-    padding: 40px 10%;
-}
-
-.attractions h2 {
-    margin-bottom: 20px;
-}
-
-.attractions-wrapper {
-    position: relative;
-}
-
-.attractions-carousel {
-    display: flex;
-    overflow-x: auto;
-    scroll-behavior: smooth;
-    gap: 20px;
-    padding-bottom: 10px;
-}
-
-.attraction-card {
-    min-width: 220px;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    overflow: hidden;
-}
-
-.attraction-card img {
-    width: 100%;
-    height: 150px;
-    object-fit: cover;
-}
-
-.attraction-card p {
-    margin: 10px;
-    font-weight: 600;
-}
-
-/* SCROLL BUTTONS */
-.scroll-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 32px;
-    border: none;
-    background: #fff;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    cursor: pointer;
-    opacity: 0.8;
-    transition: 0.3s;
-}
-
-.scroll-btn:hover {
-    opacity: 1;
-}
-
-.left { left: -20px; }
-.right { right: -20px; }
-
-/* MAP */
-.map {
-    padding: 40px 10%;
-}
-
-.map img {
-    width: 100%;
-    height: auto;
-    border-radius: 10px;
-}
-
-</style>
 {% endblock %}
 
-
 {% block content %}
-
-
-
-<!-- HERO SECTION -->
-<section class="hero">
-    <div class="hero-overlay"></div>
-    <div class="hero-content">
-        <h1 style="text-transform: capitalize;">{{state}}</h1>
-        <p class="subtitle">Explore Popular Cities & Destinations</p>
+<!-- HERO -->
+<section class="hero" aria-label="Hero">
+    <div class="hero-slider" id="heroSlider">
+        {% comment %} hero_images: list of image URLs {% endcomment %}
+        {% if hero_images %}
+        {% for img in hero_images %}
+        <div class="hero-slide" style="background-image:url('{{ img }}')"></div>
+        {% endfor %}
+        {% else %}
+        <div class="hero-slide" style="background-image:url('{% static 'default_hero.jpg' %}')"></div>
+        {% endif %}
     </div>
+    <div class="hero-overlay"></div>
+
+    <div class="container hero-content">
+        <div class="hero-breadcrumb">Home › Destinations › <strong>{{ state }}</strong></div>
+        <h1 class="hero-title">{{ state }}</h1>
+        <p class="hero-sub">{{ summary|default:"Discover places, experiences, and itineraries to plan your perfect  trip." }}</p>
+    </div>
+
+    <div class="hero-controls" id="heroDots"></div>
 </section>
 
-<!-- DESCRIPTION SECTION -->
-<section class="description-section">
-    <h2 class="text-transform:capitalize;">{{state}}</h2>
+<!-- SUMMARY + INFO -->
+<section class="summary-row page-wrapper">
+    <div class="summary-card">
+        <h3 style="margin-top:0">About {{ state|title }}</h3>
+        <p style="color:var(--muted);line-height:1.6">{{ summary|default:"A beautiful place to explore." }}</p>
 
-    <p class="description">
-        {{state}} is located in the western peninsular region of India occupying a substantial portion of the Deccan Plateau.
-        It is the second-most populous state and third-largest by area. Its major cities include Mumbai, Pune, Nagpur, Nashik,
-        Aurangabad, and Solapur. The state is known for its cuisine, cultural heritage, historical sites, and coastal beauty.
-    </p>
+        <div style="margin-top:18px;display:flex;gap:12px;flex-wrap:wrap">
+            {% for tag in tags %}
+            <span
+                style="background:#f2f9ff;padding:8px 12px;border-radius:18px;font-weight:600;color:#1b4762;font-size:13px">
+                {{ tag }}
+            </span>
+            {% endfor %}
 
-    <p class="description highlighted">
-        {{state}} is home to tourist attractions like the Gateway of India, Ajanta & Ellora Caves, Shirdi Sai Temple,
-        Mahabaleshwar, Lonavala, Khandala, Alibag, Matheran, and several wildlife sanctuaries. The diverse landscape includes
-        beaches, mountains, forests, and urban hubs, offering experiences for nature lovers, pilgrims, trekkers, and travelers.
-    </p>
-</section>
+        </div>
+    </div>
 
-<!-- ATTRACTIONS -->
-<section class="attractions">
-    <h2>Attractions of {{state}}</h2>
-
-    <div class="attractions-wrapper">
-        <button class="scroll-btn left" id="scrollLeft">‹</button>
-
-        <div class="attractions-carousel" id="carousel">
-            <div class="attraction-card">
-                <img src="https://picsum.photos/id/1060/300/200" alt="">
-                <p>Hotel – South Mumbai</p>
-            </div>
-
-            <div class="attraction-card">
-                <img src="https://picsum.photos/id/1059/300/200" alt="">
-                <p>Hotel – Powai, Mumbai</p>
-            </div>
-
-            <div class="attraction-card">
-                <img src="https://picsum.photos/id/1039/300/200" alt="">
-                <p>Hotel – Pune</p>
-            </div>
-
-            <div class="attraction-card">
-                <img src="https://picsum.photos/id/1025/300/200" alt="">
-                <p>Hotel – Nashik</p>
+    <aside class="info-card">
+        <div class="badge">Plan your trip</div>
+        <!-- weather box -->
+        
+        <div style="display:flex;gap:14px;align-items:center">
+            <div style="font-size:40px;font-weight:800;color:var(--accent)">{{ weather.temp_max|default:"--" }}°</div>
+            <div>
+                <div style="font-weight:700">{{ weather.today_text|default:"Clear" }}</div>
+                <div class="meta-list">Min: {{ weather.temp_min|default:"--" }}° • Max: {{ weather.temp_max|default:"--"}}°</div>
             </div>
         </div>
 
-        <button class="scroll-btn right" id="scrollRight">›</button>
+        <hr style="margin:14px 0;border:none;border-top:1px solid rgba(20,30,40,0.06)">
+
+        <div>
+            <h4 style="margin:0 0 8px 0">Major Airports</h4>
+            <ul style="margin:0;padding-left:18px;color:var(--muted)">
+                {% for a in major_airports %}
+                <li>{{ a }}</li>
+                {% empty %}
+                <li>Airport data unavailable</li>
+                {% endfor %}
+            </ul>
+
+        </div>
+
+        <div style="margin-top:12px;display:flex;gap:10px">
+            <a class="tab-btn" href="#" style="flex:1;text-align:center;text-decoration:none;color:#c33">Share</a>
+            <a class="tab-btn" href="#" style="flex:1;text-align:center;text-decoration:none">Save</a>
+        </div>
+    </aside>
+</section>
+
+<!-- ATTRACTIONS -->
+<section class="section page-wrapper">
+    <div class="section-head">
+        <h2>Attractions</h2>
+        <a href="#" style="color:var(--accent);font-weight:700;text-decoration:none">Discover more ›</a>
+    </div>
+
+    <div class="card-carousel" id="attractionsCarousel">
+        {% for item in attractions %}
+        <article class="attraction">
+            <img src="{{ item.image }}" alt="{{ item.title }}">
+            <div class="title">{{ item.title }}</div>
+        </article>
+        {% empty %}
+        <div style="padding:20px;color:var(--muted)">No attractions available yet.</div>
+        {% endfor %}
     </div>
 </section>
 
-<!-- MAP SECTION -->
-<!-- MAP SECTION -->
-<section class="container my-3">
-    <h2>Map of <span id="stateNameLabel">{{state}}</span></h2>
-    <div id="map" style="height: 450px; border-radius: 12px;"></div>
+<!-- EXPERIENCES -->
+<section class="experiences page-wrapper">
+    <div class="">
+        <div style="text-align:center;margin-bottom:22px">
+            <h2 style="margin:0">Experiences</h2>
+            <p style="color:var(--muted)">Unique local experiences that make {{ state }} special</p>
+        </div>
+
+        <div class="exp-grid">
+            {% for e in experiences %}
+            <div class="exp-card">
+                <img src="{{ e.image }}" alt="{{ e.title }}">
+                <h4>{{ e.title }}</h4>
+                <div style="color:var(--muted);font-size:14px">{{ e.subtitle }}</div>
+                <div style="margin-top:auto">
+                    <a href="{{ e.link }}"
+                        style="display:inline-block;margin-top:10px;padding:8px 12px;background:var(--accent);color:#fff;border-radius:8px;text-decoration:none;font-weight:700">Explore</a>
+                </div>
+            </div>
+            {% empty %}
+            <div style="color:var(--muted)">No experiences listed.</div>
+            {% endfor %}
+        </div>
+    </div>
 </section>
 
+<!-- ITINERARIES -->
+<section class="itineraries page-wrapper">
+    <div class="" style="text-align:center;margin-bottom:18px">
+        <h2>Itineraries</h2>
+        <p style="color:var(--muted)">Suggested trip plans for different trip lengths</p>
+    </div>
+
+    <div class="it-grid">
+        {% for it in itineraries %}
+        <div class="it-item">
+            <img src="{{ it.image }}" alt="{{ it.title }}">
+            <div style="padding:10px 6px">
+                <div class="days">{{ it.days }} Days</div>
+                <h3 style="margin:8px 0 6px 0;font-size:18px">{{ it.title }}</h3>
+                <p style="color:var(--muted);font-size:14px">{{ it.desc }}</p>
+                <a href="{{ it.link }}"
+                    style="display:inline-block;margin-top:10px;color:var(--accent);font-weight:700;text-decoration:none">View
+                    itinerary →</a>
+            </div>
+        </div>
+        {% empty %}
+        <div style="color:var(--muted)">No itineraries available.</div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- MAP -->
+<section class="map-section page-wrapper">
+    <div class="map-panel">
+        <aside class="map-sidebar">
+            <h4 style="margin-top:0">Explore {{ state }}</h4>
+            <div class="map-tabs">
+                <button class="tab-btn active" data-layer="poi">Points of interest</button>
+                <button class="tab-btn" data-layer="atms">ATMs</button>
+                <button class="tab-btn" data-layer="police">Police Stations</button>
+                <button class="tab-btn" data-layer="health">Health Facilities</button>
+            </div>
+
+            <div style="margin-top:14px">
+                <label style="font-size:13px;color:var(--muted)">Search</label>
+                <input id="mapSearch" placeholder="Search places, hotels..."
+                    style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(10,20,30,0.06);margin-top:8px">
+            </div>
+        </aside>
+
+        <div id="map" role="application" aria-label="Map of {{ state }}"></div>
+    </div>
+</section>
+
+<!-- NEARBY DESTINATIONS -->
+<section class="nearby  page-wrapper">
+    <div class="container" style="display:flex;align-items:center;justify-content:space-between">
+        <h2 style="margin:0">Destinations Nearby</h2>
+        <a href="#" style="color:var(--accent);font-weight:700;text-decoration:none">See all</a>
+    </div>
+
+    <div class="nearby-grid">
+        {% for n in nearby %}
+        <a class="nearby-card" href="{{ n.link }}">
+            <img src="{{ n.image }}" alt="{{ n.title }}">
+            <p>{{ n.title }}</p>
+        </a>
+        {% empty %}
+        <div style="color:var(--muted);padding:16px">No nearby destinations found.</div>
+        {% endfor %}
+    </div>
+</section>
 
 
 {% endblock %}
 
 {% block extra_js %}
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
 <script>
-async function loadStateBoundary(state) {
-    debugger
-    const map = L.map('map').setView([20.59, 78.96], 5);
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 18
-    }).addTo(map);
-
-    // Fetch India state boundary dynamically
-    const url = `https://nominatim.openstreetmap.org/search?state=${state}&country=India&polygon_geojson=1&format=json`;
-    console.log("url",url)
-    const res = await fetch(url);
-    const data = await res.json();
-
-    if (!data.length) return alert("Boundary not found!");
-
-    const geo = data[0].geojson;
-
-    const layer = L.geoJSON(geo, {
-        style: {
-            color: "#0055CC",
-            weight: 2,
-            fillColor: "#4DA3FF",
-            fillOpacity: 0.3
+    /* ---------- HERO SLIDER ---------- */
+    (function () {
+        const slider = document.getElementById('heroSlider');
+        const slides = slider.children;
+        const dotsContainer = document.getElementById('heroDots');
+        const total = slides.length;
+        let idx = 0;
+        if (total <= 1) {
+            // hide controls
+            dotsContainer.style.display = 'none';
+            return;
         }
-    }).addTo(map);
+        for (let i = 0; i < total; i++) {
+            const d = document.createElement('button');
+            d.className = 'hero-dot' + (i === 0 ? ' active' : '');
+            d.dataset.i = i;
+            d.addEventListener('click', () => goTo(i));
+            dotsContainer.appendChild(d);
+        }
+        function goTo(i) {
+            idx = i;
+            slider.style.transform = `translateX(-${i * 100}%)`;
+            [...dotsContainer.children].forEach((b, bi) => b.classList.toggle('active', bi === i));
+        }
+        // auto-advance every 5s
+        let t = setInterval(() => goTo((idx + 1) % total), 5000);
+        // pause on hover
+        slider.addEventListener('mouseenter', () => clearInterval(t));
+        slider.addEventListener('mouseleave', () => t = setInterval(() => goTo((idx + 1) % total), 5000));
+    })();
 
-    map.fitBounds(layer.getBounds());
-}
+    /* ---------- SIMPLE CAROUSEL DRAG FOR ATTRACTIONS ---------- */
+    (function () {
+        const carousel = document.getElementById('attractionsCarousel');
+        if (!carousel) return;
+        let pressed = false, startX, scrollLeft;
+        carousel.addEventListener('mousedown', (e) => { pressed = true; carousel.classList.add('dragging'); startX = e.pageX - carousel.offsetLeft; scrollLeft = carousel.scrollLeft });
+        window.addEventListener('mouseup', () => { pressed = false; carousel.classList.remove('dragging') });
+        carousel.addEventListener('mousemove', (e) => { if (!pressed) return; e.preventDefault(); const x = e.pageX - carousel.offsetLeft; const walk = (x - startX); carousel.scrollLeft = scrollLeft - walk; });
+    })();
 
-loadStateBoundary("{{state}}");
-</script>
+    /* ---------- MAP ---------- */
+(function () {
+    const defaultCenter = {
+        lat: {{ map_center.lat|default:20.5937 }},
+        lng: {{ map_center.lng|default:78.9629 }},
+        zoom: {{ map_center.zoom|default:6 }}
+    };
 
 
-<script>
-    // Scroll buttons for attractions
-const carousel = document.getElementById("carousel");
-const scrollLeft = document.getElementById("scrollLeft");
-const scrollRight = document.getElementById("scrollRight");
 
-scrollLeft.addEventListener("click", () => {
-    carousel.scrollBy({ left: -300, behavior: "smooth" });
-});
 
-scrollRight.addEventListener("click", () => {
-    carousel.scrollBy({ left: 300, behavior: "smooth" });
-});
 
+
+    const map = L.map('map').setView([defaultCenter.lat, defaultCenter.lng], defaultCenter.zoom);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+
+    // Add a primary marker at center
+    const centerMarker = L.circleMarker([defaultCenter.lat, defaultCenter.lng], { radius: 6, fillColor: '#e33b3b', color: '#fff', weight: 2, fillOpacity: 1 }).addTo(map);
+
+    // Basic POI layer (example points from attractions)
+    const poiData = [
+        {% for a in attractions %}
+        { 
+            title: "{{ a.title|escapejs }}",
+            lat: {{ a.lat|default:map_center.lat }},
+            lng: {{ a.lng|default:map_center.lng }}
+        }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    ];
+
+
+    const poiLayer = L.layerGroup();
+    poiData.forEach(p => {
+        if (p.lat && p.lng) {
+            const m = L.marker([p.lat, p.lng]).bindPopup(`<strong>${p.title}</strong>`);
+            poiLayer.addLayer(m);
+        }
+    });
+    poiLayer.addTo(map);
+
+    // Map tab switching — just toggles which layer is visible (expand with real data)
+    document.querySelectorAll('.map-tabs .tab-btn').forEach(btn => {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelectorAll('.map-tabs .tab-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            const layer = this.dataset.layer;
+            // demo behaviour: if 'poi' show markers, else clear and show center only
+            if (layer === 'poi') {
+                if (!map.hasLayer(poiLayer)) poiLayer.addTo(map);
+            } else {
+                if (map.hasLayer(poiLayer)) map.removeLayer(poiLayer);
+            }
+        });
+    });
+
+    // Search box: just zooms to center for now (placeholder for geocoding)
+    document.getElementById('mapSearch').addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+            const q = this.value.trim();
+            if (!q) return;
+            alert('Search placeholder — implement geocoding for: ' + q);
+        }
+    });
+
+}) ();
 </script>
 {% endblock %}
